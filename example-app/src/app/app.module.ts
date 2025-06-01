@@ -30,7 +30,7 @@ export const COMPONENTS = [
     MaterialModule,
     SharedModule,
     HttpClientModule,
-    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(routes, {}),
     StoreModule.forRoot(reducers),
     StoreRouterConnectingModule.forRoot(),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
