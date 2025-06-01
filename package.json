@@ -62,7 +62,7 @@
     "karma-typescript": "5.5.2",
     "karma-typescript-es6-transform": "5.5.2",
     "ng-packagr": "17.3.0",
-    "@ngrx/store": "16.3.0",
+    "@ngrx/store": "17.2.0",
     "codecov": "3.8.3",
     "codelyzer": "6.0.2",
     "core-js": "3.19.1",
