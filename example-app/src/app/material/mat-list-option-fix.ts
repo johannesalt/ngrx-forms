@@ -1,6 +1,6 @@
 
 import { Directive, Host, OnDestroy } from '@angular/core';
-import { MatLegacyListOption as MatListOption } from '@angular/material/legacy-list';
+import { MatListOption } from '@angular/material/list';
 
 /**
  * This directive fixes an issue with the selection list component

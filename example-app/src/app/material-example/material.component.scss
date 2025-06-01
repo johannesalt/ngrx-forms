@@ -16,15 +16,15 @@ form {
   margin-top: 20px;
 }
 
-.mat-form-field {
+.mat-mdc-form-field {
   width: 100%;
 }
 
-.mat-radio-group {
+.mat-mdc-radio-group {
   display: block;
   margin-bottom: 20px;
 
-  .mat-radio-button + .mat-radio-button {
+  .mat-mdc-radio-button + .mat-radio-button {
     margin-left: 10px;
   }
 }
@@ -33,6 +33,7 @@ form {
   font-size: 75%;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
 mat-selection-list {
   margin-bottom: 20px;
 }
