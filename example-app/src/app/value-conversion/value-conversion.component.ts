@@ -6,10 +6,11 @@ import { Observable } from 'rxjs';
 import { FormValue, State } from './value-conversion.reducer';
 
 @Component({
-  selector: 'ngf-value-conversion',
-  templateUrl: './value-conversion.component.html',
-  styleUrls: ['./value-conversion.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-value-conversion',
+    templateUrl: './value-conversion.component.html',
+    styleUrls: ['./value-conversion.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ValueConversionPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

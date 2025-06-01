@@ -7,10 +7,11 @@ import { map } from 'rxjs/operators';
 import { BlockUIAction, FormValue, State, UnblockUIAction } from './recursive-update.reducer';
 
 @Component({
-  selector: 'ngf-recursive-update',
-  templateUrl: './recursive-update.component.html',
-  styleUrls: ['./recursive-update.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-recursive-update',
+    templateUrl: './recursive-update.component.html',
+    styleUrls: ['./recursive-update.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class RecursiveUpdatePageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

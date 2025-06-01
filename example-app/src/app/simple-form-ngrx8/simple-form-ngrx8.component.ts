@@ -7,10 +7,11 @@ import { map, take } from 'rxjs/operators';
 import { FormValue, INITIAL_STATE, setSubmittedValue, State } from './simple-form-ngrx8.reducer';
 
 @Component({
-  selector: 'ngf-simple-form-ngrx8',
-  templateUrl: './simple-form-ngrx8.component.html',
-  styleUrls: ['./simple-form-ngrx8.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-simple-form-ngrx8',
+    templateUrl: './simple-form-ngrx8.component.html',
+    styleUrls: ['./simple-form-ngrx8.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SimpleFormNgrx8PageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

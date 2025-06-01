@@ -6,10 +6,11 @@ import { Observable } from 'rxjs';
 import { FormValue, State } from './array.reducer';
 
 @Component({
-  selector: 'ngf-array',
-  templateUrl: './array.component.html',
-  styleUrls: ['./array.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-array',
+    templateUrl: './array.component.html',
+    styleUrls: ['./array.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ArrayPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

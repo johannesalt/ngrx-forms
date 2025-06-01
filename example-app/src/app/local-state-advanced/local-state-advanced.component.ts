@@ -6,10 +6,11 @@ import { Subscription } from 'rxjs';
 import { GetManufacturersAction, INITIAL_LOCAL_STATE, reducer } from './local-state-advanced.reducer';
 
 @Component({
-  selector: 'ngf-local-state-advanced',
-  templateUrl: './local-state-advanced.component.html',
-  styleUrls: ['./local-state-advanced.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-local-state-advanced',
+    templateUrl: './local-state-advanced.component.html',
+    styleUrls: ['./local-state-advanced.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class LocalStateAdvancedComponent implements OnInit, OnDestroy {
   localState = INITIAL_LOCAL_STATE;

@@ -7,10 +7,11 @@ import { filter, map, take } from 'rxjs/operators';
 import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './sync-validation.reducer';
 
 @Component({
-  selector: 'ngf-sync-validation',
-  templateUrl: './sync-validation.component.html',
-  styleUrls: ['./sync-validation.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-sync-validation',
+    templateUrl: './sync-validation.component.html',
+    styleUrls: ['./sync-validation.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SyncValidationPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

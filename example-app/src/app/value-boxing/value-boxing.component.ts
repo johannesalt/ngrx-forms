@@ -6,10 +6,11 @@ import { Observable } from 'rxjs';
 import { FormValue, State } from './value-boxing.reducer';
 
 @Component({
-  selector: 'ngf-value-boxing',
-  templateUrl: './value-boxing.component.html',
-  styleUrls: ['./value-boxing.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-value-boxing',
+    templateUrl: './value-boxing.component.html',
+    styleUrls: ['./value-boxing.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ValueBoxingPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

@@ -6,10 +6,11 @@ import { Observable } from 'rxjs';
 import { FormValue, State } from './async-validation.reducer';
 
 @Component({
-  selector: 'ngf-async-validation',
-  templateUrl: './async-validation.component.html',
-  styleUrls: ['./async-validation.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-async-validation',
+    templateUrl: './async-validation.component.html',
+    styleUrls: ['./async-validation.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AsyncValidationPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

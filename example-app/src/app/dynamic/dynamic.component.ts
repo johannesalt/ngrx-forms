@@ -7,10 +7,11 @@ import { map, take } from 'rxjs/operators';
 import { CreateGroupElementAction, FormValue, RemoveGroupElementAction, State } from './dynamic.reducer';
 
 @Component({
-  selector: 'ngf-dynamic',
-  templateUrl: './dynamic.component.html',
-  styleUrls: ['./dynamic.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-dynamic',
+    templateUrl: './dynamic.component.html',
+    styleUrls: ['./dynamic.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DynamicPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

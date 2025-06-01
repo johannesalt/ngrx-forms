@@ -7,10 +7,11 @@ import { filter, map, take } from 'rxjs/operators';
 import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './material.reducer';
 
 @Component({
-  selector: 'ngf-material',
-  templateUrl: './material.component.html',
-  styleUrls: ['./material.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngf-material',
+    templateUrl: './material.component.html',
+    styleUrls: ['./material.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DynamicPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;
