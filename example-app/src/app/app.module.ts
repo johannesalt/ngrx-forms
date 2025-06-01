@@ -33,7 +33,7 @@ export const COMPONENTS = [
     RouterModule.forRoot(routes, {}),
     StoreModule.forRoot(reducers),
     StoreRouterConnectingModule.forRoot(),
-    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    !environment.production ? StoreDevtoolsModule.instrument({connectInZone: true}) : [],
     EffectsModule.forRoot([]),
     LayoutModule.forRoot(),
   ],
