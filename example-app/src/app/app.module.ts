@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,26 +22,20 @@ export const COMPONENTS = [
   AppComponent,
 ];
 
-@NgModule({
-  imports: [
-    CommonModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    MaterialModule,
-    SharedModule,
-    HttpClientModule,
-    RouterModule.forRoot(routes, {}),
-    StoreModule.forRoot(reducers),
-    StoreRouterConnectingModule.forRoot(),
-    !environment.production ? StoreDevtoolsModule.instrument({connectInZone: true}) : [],
-    EffectsModule.forRoot([]),
-    LayoutModule.forRoot(),
-  ],
-  declarations: COMPONENTS,
-  exports: COMPONENTS,
-  providers: [
-    { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
-  ],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: COMPONENTS,
+    exports: COMPONENTS,
+    bootstrap: [AppComponent], imports: [CommonModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        MaterialModule,
+        SharedModule,
+        RouterModule.forRoot(routes, {}),
+        StoreModule.forRoot(reducers),
+        StoreRouterConnectingModule.forRoot(),
+        !environment.production ? StoreDevtoolsModule.instrument({ connectInZone: true }) : [],
+        EffectsModule.forRoot([]),
+        LayoutModule.forRoot()], providers: [
+        { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }
