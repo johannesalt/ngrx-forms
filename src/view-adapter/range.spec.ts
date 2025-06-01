@@ -6,13 +6,14 @@ import { NgrxRangeViewAdapter } from './range';
 const TEST_ID = 'test ID';
 
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'range-test',
-  template: `
+    // tslint:disable-next-line:component-selector
+    selector: 'range-test',
+    template: `
 <input type="range" [ngrxFormControlState]="state" />
 <input type="range" [ngrxFormControlState]="state" id="customId" />
 <input type="range" [ngrxFormControlState]="state" [id]="boundId" />
 `,
+    standalone: false
 })
 export class RangeTestComponent {
   boundId = 'boundId';

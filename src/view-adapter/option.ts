@@ -28,8 +28,9 @@ const NULL_RENDERER: Renderer2 = {
  * directives that try to set the `[value]` but that is very unlikely.
  */
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: 'option',
+    // tslint:disable-next-line:directive-selector
+    selector: 'option',
+    standalone: false
 })
 export class NgrxFallbackSelectOption {
   constructor(

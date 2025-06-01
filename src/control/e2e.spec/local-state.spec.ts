@@ -11,12 +11,13 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'select-test',
-  template: `
+    // tslint:disable-next-line:component-selector
+    selector: 'select-test',
+    template: `
   <select [ngrxFormControlState]="state" (ngrxFormsAction)="handleAction($event)">
     <option *ngFor="let o of options" [value]="o">{{ o }}</option>
   </select>`,
+    standalone: false
 })
 export class NumberSelectComponentLocalStateComponent {
   @Input() state: FormControlState<number>;

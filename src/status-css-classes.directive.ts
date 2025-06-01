@@ -18,8 +18,9 @@ export const NGRX_STATUS_CLASS_NAMES = {
 };
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: 'form[ngrxFormState],[ngrxFormControlState]',
+    // tslint:disable-next-line:directive-selector
+    selector: 'form[ngrxFormState],[ngrxFormControlState]',
+    standalone: false
 })
 export class NgrxStatusCssClassesDirective {
   private state: AbstractControlState<any>;

@@ -9,9 +9,9 @@ const OPTION1_VALUE = 'op1';
 const OPTION2_VALUE = 'op2';
 
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'radio-test',
-  template: `
+    // tslint:disable-next-line:component-selector
+    selector: 'radio-test',
+    template: `
 <input type="radio" value="op1" [ngrxFormControlState]="state" />
 <input type="radio" value="op2" checked="checked" [ngrxFormControlState]="state" />
 
@@ -24,6 +24,7 @@ const OPTION2_VALUE = 'op2';
 
 <input type="radio" *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
 `,
+    standalone: false
 })
 export class RadioTestComponent {
   boundName = 'boundName';

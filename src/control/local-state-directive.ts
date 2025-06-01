@@ -15,8 +15,9 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '../view-adapter/view-ad
 import { Document, NgrxFormControlDirective, NgrxFormControlValueType } from './directive';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[ngrxFormControlState][ngrxFormsAction]',
+    // tslint:disable-next-line:directive-selector
+    selector: '[ngrxFormControlState][ngrxFormsAction]',
+    standalone: false
 })
 export class NgrxLocalFormControlDirective<TStateValue, TViewValue = TStateValue>
   extends NgrxFormControlDirective<TStateValue, TViewValue> {

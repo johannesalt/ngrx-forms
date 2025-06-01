@@ -10,9 +10,9 @@ const OPTION2_VALUE = 'op2';
 const OPTION3_VALUE = 'op3';
 
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'select-test',
-  template: `
+    // tslint:disable-next-line:component-selector
+    selector: 'select-test',
+    template: `
 <select multiple [ngrxFormControlState]="state">
   <option value="op1">op1</option>
   <option value="op2" selected>op2</option>
@@ -43,6 +43,7 @@ const OPTION3_VALUE = 'op3';
   <option *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
 </select>
 `,
+    standalone: false
 })
 export class SelectTestComponent {
   boundId = 'boundId';

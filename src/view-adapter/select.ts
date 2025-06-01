@@ -17,13 +17,14 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 // tslint:disable:directive-class-suffix
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: 'select:not([multiple])[ngrxFormControlState]',
-  providers: [{
-    provide: NGRX_FORM_VIEW_ADAPTER,
-    useExisting: forwardRef(() => NgrxSelectViewAdapter),
-    multi: true,
-  }],
+    // tslint:disable-next-line:directive-selector
+    selector: 'select:not([multiple])[ngrxFormControlState]',
+    providers: [{
+            provide: NGRX_FORM_VIEW_ADAPTER,
+            useExisting: forwardRef(() => NgrxSelectViewAdapter),
+            multi: true,
+        }],
+    standalone: false
 })
 export class NgrxSelectViewAdapter implements FormViewAdapter, AfterViewInit {
   private state: FormControlState<any>;
@@ -134,8 +135,9 @@ const NULL_RENDERER: Renderer2 = {
 } as any;
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: 'option',
+    // tslint:disable-next-line:directive-selector
+    selector: 'option',
+    standalone: false
 })
 export class NgrxSelectOption implements OnDestroy {
   private isInitialized = false;

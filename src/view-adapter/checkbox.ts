@@ -6,13 +6,14 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 // tslint:disable:directive-class-suffix
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: 'input[type=checkbox][ngrxFormControlState]',
-  providers: [{
-    provide: NGRX_FORM_VIEW_ADAPTER,
-    useExisting: forwardRef(() => NgrxCheckboxViewAdapter),
-    multi: true,
-  }],
+    // tslint:disable-next-line:directive-selector
+    selector: 'input[type=checkbox][ngrxFormControlState]',
+    providers: [{
+            provide: NGRX_FORM_VIEW_ADAPTER,
+            useExisting: forwardRef(() => NgrxCheckboxViewAdapter),
+            multi: true,
+        }],
+    standalone: false
 })
 export class NgrxCheckboxViewAdapter implements FormViewAdapter, AfterViewInit {
   private state: FormControlState<any>;

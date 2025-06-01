@@ -24,12 +24,13 @@ function isAndroid(navigator: Navigator): boolean {
 // out whether it is the "active" view adapter and only perform its side effects if it
 // is active
 @Directive({
-  selector: 'input:not([type=checkbox]):not([type=number]):not([type=radio]):not([type=range])[ngrxFormControlState],textarea[ngrxFormControlState]',
-  providers: [{
-    provide: NGRX_FORM_VIEW_ADAPTER,
-    useExisting: forwardRef(() => NgrxDefaultViewAdapter),
-    multi: true,
-  }],
+    selector: 'input:not([type=checkbox]):not([type=number]):not([type=radio]):not([type=range])[ngrxFormControlState],textarea[ngrxFormControlState]',
+    providers: [{
+            provide: NGRX_FORM_VIEW_ADAPTER,
+            useExisting: forwardRef(() => NgrxDefaultViewAdapter),
+            multi: true,
+        }],
+    standalone: false
 })
 export class NgrxDefaultViewAdapter implements FormViewAdapter, AfterViewInit {
   private state: FormControlState<any>;

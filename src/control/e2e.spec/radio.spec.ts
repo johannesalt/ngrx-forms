@@ -11,9 +11,10 @@ import { createFormControlState, FormControlState } from '../../state';
 const RADIO_OPTIONS = ['op1', 'op2'] as readonly string[];
 
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'radio-test',
-  template: '<input *ngFor="let o of options; trackBy: trackByIndex" type="radio" [value]="o" [ngrxFormControlState]="state" />',
+    // tslint:disable-next-line:component-selector
+    selector: 'radio-test',
+    template: '<input *ngFor="let o of options; trackBy: trackByIndex" type="radio" [value]="o" [ngrxFormControlState]="state" />',
+    standalone: false
 })
 export class RadioTestComponent {
   @Input() state: FormControlState<string>;

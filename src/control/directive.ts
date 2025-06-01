@@ -54,8 +54,9 @@ class ControlValueAccessorAdapter implements FormViewAdapter {
 export type NgrxFormControlValueType<TStateValue> = TStateValue extends FormControlValueTypes ? TStateValue : never;
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: ':not([ngrxFormsAction])[ngrxFormControlState]',
+    // tslint:disable-next-line:directive-selector
+    selector: ':not([ngrxFormsAction])[ngrxFormControlState]',
+    standalone: false
 })
 export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> implements AfterViewInit, OnInit {
   private isInitialized = false;

@@ -10,8 +10,9 @@ import { FormGroupState, KeyValue } from '../state';
 interface CustomEvent extends Event { }
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: 'form:not([ngrxFormsAction])[ngrxFormState]',
+    // tslint:disable-next-line:directive-selector
+    selector: 'form:not([ngrxFormsAction])[ngrxFormState]',
+    standalone: false
 })
 export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
   // tslint:disable-next-line:no-input-rename

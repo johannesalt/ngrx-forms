@@ -11,9 +11,10 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'select-test',
-  template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
+    // tslint:disable-next-line:component-selector
+    selector: 'select-test',
+    template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
+    standalone: false
 })
 export class SelectComponent {
   @Input() state: FormControlState<string>;
@@ -21,9 +22,10 @@ export class SelectComponent {
 }
 
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'select-test-fallback',
-  template: '<select><option *ngFor="let o of options" [value]="o">{{ o }} Label</option></select>',
+    // tslint:disable-next-line:component-selector
+    selector: 'select-test-fallback',
+    template: '<select><option *ngFor="let o of options" [value]="o">{{ o }} Label</option></select>',
+    standalone: false
 })
 export class SelectFallbackComponent {
   options = SELECT_OPTIONS;
@@ -104,9 +106,10 @@ describe(SelectComponent.name, () => {
 const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'select-test',
-  template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
+    // tslint:disable-next-line:component-selector
+    selector: 'select-test',
+    template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
+    standalone: false
 })
 export class NumberSelectComponent {
   @Input() state: FormControlState<number>;
