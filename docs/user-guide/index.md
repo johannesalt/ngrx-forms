@@ -13,17 +13,12 @@ import { NgrxFormsModule } from 'ngrx-forms';
 import { reducers } from './reducer';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    NgrxFormsModule,
-    StoreModule.forRoot(reducers),
-  ],
+  declarations: [AppComponent],
+  imports: [NgrxFormsModule, StoreModule.forRoot(reducers)],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
 ```
 
 Add a group state somewhere in your state tree via `createFormGroupState` and call the `formGroupReducer` inside your reducer:
@@ -86,7 +81,7 @@ import { onNgrxForms } from 'ngrx-forms';
 
 export const appReducer = createReducer(
   initialState,
-  onNgrxForms(),
+  onNgrxForms()
   // your other reducers...
 );
 ```
@@ -109,23 +104,21 @@ export class MyComponent {
   formState$: Observable<FormGroupState<MyFormValue>>;
 
   constructor(private store: Store<AppState>) {
-    this.formState$ = store.select(s => s.myForm);
+    this.formState$ = store.select((s) => s.myForm);
   }
 }
 ```
 
 Set the control states in your template:
+
 ```html
 <ng-container *ngIf="formState$ | async as formState">
   <form novalidate [ngrxFormState]="formState">
-    <input type="text"
-           [ngrxFormControlState]="formState.controls.someTextInput">
+    <input type="text" [ngrxFormControlState]="formState.controls.someTextInput" />
 
-    <input type="checkbox"
-           [ngrxFormControlState]="formState.controls.someCheckbox">
+    <input type="checkbox" [ngrxFormControlState]="formState.controls.someCheckbox" />
 
-    <input type="number"
-           [ngrxFormControlState]="formState.controls.nested.controls.someNumber">
+    <input type="number" [ngrxFormControlState]="formState.controls.nested.controls.someNumber" />
   </form>
 </ng-container>
 ```

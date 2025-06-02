@@ -11,13 +11,9 @@ import { LocalStateIntroductionComponent } from './local-state-introduction.comp
     CommonModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: LocalStateIntroductionComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: LocalStateIntroductionComponent }]),
     // Notice that StoreModule.forFeature is not included here!
   ],
-  declarations: [
-    LocalStateIntroductionComponent,
-  ],
+  declarations: [LocalStateIntroductionComponent],
 })
-export class LocalStateIntroductionModule { }
+export class LocalStateIntroductionModule {}

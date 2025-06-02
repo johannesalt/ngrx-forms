@@ -1,9 +1,9 @@
 ---
 name: Feature request
 about: Please let us know about your idea for improving ngrx-forms
-title: ""
-labels: "enhancement"
-assignees: ""
+title: ''
+labels: 'enhancement'
+assignees: ''
 ---
 
 **Is your feature request related to a problem? Please describe.**

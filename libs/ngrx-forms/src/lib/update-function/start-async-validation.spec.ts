@@ -72,7 +72,7 @@ describe(startAsyncValidation.name, () => {
 
   it('should work inside an updateGroup uncurried', () => {
     const resultState = updateGroup<typeof INITIAL_STATE.value>(INITIAL_STATE, {
-      inner: inner => startAsyncValidation(inner, 'error'),
+      inner: (inner) => startAsyncValidation(inner, 'error'),
     });
 
     expect(resultState).not.toEqual(INITIAL_STATE);

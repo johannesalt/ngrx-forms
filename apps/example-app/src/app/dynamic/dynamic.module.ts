@@ -15,13 +15,9 @@ import { reducer } from './dynamic.reducer';
     MaterialModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: DynamicPageComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: DynamicPageComponent }]),
     StoreModule.forFeature('dynamic', reducer),
   ],
-  declarations: [
-    DynamicPageComponent,
-  ],
+  declarations: [DynamicPageComponent],
 })
-export class DynamicModule { }
+export class DynamicModule {}

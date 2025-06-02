@@ -3,8 +3,7 @@ import { setUserDefinedPropertyReducer } from './set-user-defined-property';
 import { FORM_CONTROL_ID, FORM_CONTROL_INNER_ID, INITIAL_STATE } from './test-util';
 
 describe(`form group ${setUserDefinedPropertyReducer.name}`, () => {
-  it('should skip any actionof the wrong type', () =>
-    expect(setUserDefinedPropertyReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));
+  it('should skip any actionof the wrong type', () => expect(setUserDefinedPropertyReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));
 
   it('should update state user defined properties if different', () => {
     const prop = 'prop';

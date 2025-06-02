@@ -26,20 +26,12 @@ function updateGroupSingle<TValue extends KeyValue>(updateFns: StateUpdateFns<TV
   return (state: FormGroupState<TValue>): FormGroupState<TValue> => {
     const newControls = updateGroupControlsState<TValue>(updateFns)(state);
     return newControls !== state.controls
-      ? computeGroupState<TValue>(
-        state.id,
-        newControls,
-        state.value,
-        state.errors,
-        state.pendingValidations,
-        state.userDefinedProperties,
-        {
+      ? computeGroupState<TValue>(state.id, newControls, state.value, state.errors, state.pendingValidations, state.userDefinedProperties, {
           wasOrShouldBeDirty: state.isDirty,
           wasOrShouldBeEnabled: state.isEnabled,
           wasOrShouldBeTouched: state.isTouched,
           wasOrShouldBeSubmitted: state.isSubmitted,
-        },
-      )
+        })
       : state;
   };
 }
@@ -109,9 +101,7 @@ const groupUpdateFn = updateGroup<FormValue>(
 const updatedState = groupUpdateFn(state);
 ```
  */
-export function updateGroup<TValue extends KeyValue>(
-  updateFnsArr: StateUpdateFns<TValue>[],
-): (state: FormGroupState<TValue>) => FormGroupState<TValue>;
+export function updateGroup<TValue extends KeyValue>(updateFnsArr: StateUpdateFns<TValue>[]): (state: FormGroupState<TValue>) => FormGroupState<TValue>;
 
 /**
  * This update function takes a form group state and one or more update
@@ -181,10 +171,7 @@ const updatedState = updateGroup<FormValue>(
 );
 ```
  */
-export function updateGroup<TValue extends KeyValue>(
-  state: FormGroupState<TValue>,
-  updateFnsArr: StateUpdateFns<TValue>[],
-): FormGroupState<TValue>;
+export function updateGroup<TValue extends KeyValue>(state: FormGroupState<TValue>, updateFnsArr: StateUpdateFns<TValue>[]): FormGroupState<TValue>;
 
 export function updateGroup<TValue extends KeyValue>(
   stateOrUpdateFnOrUpdateFnArray: FormGroupState<TValue> | StateUpdateFns<TValue> | StateUpdateFns<TValue>[],

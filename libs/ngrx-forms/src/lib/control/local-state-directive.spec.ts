@@ -31,7 +31,7 @@ describe(NgrxLocalFormControlDirective.name, () => {
     actions$ = actionsSubject as any; // required due to mismatch of lift() function signature
     viewAdapter = {
       setViewValue: () => void 0,
-      setOnChangeCallback: fn => onChange = fn,
+      setOnChangeCallback: (fn) => (onChange = fn),
       setOnTouchedCallback: () => void 0,
       setIsDisabled: () => void 0,
     };
@@ -44,10 +44,10 @@ describe(NgrxLocalFormControlDirective.name, () => {
       directive.ngOnInit();
     });
 
-    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value changes`, done => {
+    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value changes`, (done) => {
       const newValue = 'new value';
 
-      actions$.pipe(count()).subscribe(c => {
+      actions$.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });
@@ -56,10 +56,10 @@ describe(NgrxLocalFormControlDirective.name, () => {
       actionsSubject.complete();
     });
 
-    it(`should dispatch a ${SetValueAction.name} to the output event emitter if the view value changes`, done => {
+    it(`should dispatch a ${SetValueAction.name} to the output event emitter if the view value changes`, (done) => {
       const newValue = 'new value';
 
-      directive.ngrxFormsAction.pipe(first()).subscribe(a => {
+      directive.ngrxFormsAction.pipe(first()).subscribe((a) => {
         expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
         done();
       });
@@ -67,8 +67,8 @@ describe(NgrxLocalFormControlDirective.name, () => {
       onChange(newValue);
     });
 
-    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value is the same as the state`, done => {
-      actions$.pipe(count()).subscribe(c => {
+    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value is the same as the state`, (done) => {
+      actions$.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });
@@ -77,8 +77,8 @@ describe(NgrxLocalFormControlDirective.name, () => {
       actionsSubject.complete();
     });
 
-    it(`should not dispatch a ${SetValueAction.name} to the output event emitter if the view value is the same as the state`, done => {
-      directive.ngrxFormsAction.pipe(count()).subscribe(c => {
+    it(`should not dispatch a ${SetValueAction.name} to the output event emitter if the view value is the same as the state`, (done) => {
+      directive.ngrxFormsAction.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });

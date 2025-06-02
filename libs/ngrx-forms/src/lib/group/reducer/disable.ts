@@ -2,10 +2,7 @@ import { Actions, DisableAction } from '../../actions';
 import { computeGroupState, FormGroupState, KeyValue } from '../../state';
 import { childReducer, dispatchActionPerChild } from './util';
 
-export function disableReducer<TValue extends KeyValue>(
-  state: FormGroupState<TValue>,
-  action: Actions<TValue>,
-): FormGroupState<TValue> {
+export function disableReducer<TValue extends KeyValue>(state: FormGroupState<TValue>, action: Actions<TValue>): FormGroupState<TValue> {
   if (action.type !== DisableAction.TYPE) {
     return state;
   }
@@ -20,7 +17,7 @@ export function disableReducer<TValue extends KeyValue>(
 
   return computeGroupState(
     state.id,
-    dispatchActionPerChild(state.controls, controlId => new DisableAction(controlId)),
+    dispatchActionPerChild(state.controls, (controlId) => new DisableAction(controlId)),
     state.value,
     {},
     [],
@@ -30,6 +27,6 @@ export function disableReducer<TValue extends KeyValue>(
       wasOrShouldBeEnabled: false,
       wasOrShouldBeTouched: state.isTouched,
       wasOrShouldBeSubmitted: state.isSubmitted,
-    },
+    }
   );
 }

@@ -1,16 +1,4 @@
-import {
-  AfterViewInit,
-  Directive,
-  ElementRef,
-  forwardRef,
-  Host,
-  HostListener,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional,
-  Renderer2,
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, forwardRef, Host, HostListener, Input, OnDestroy, OnInit, Optional, Renderer2 } from '@angular/core';
 
 import { FormControlState } from '../state';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
@@ -18,14 +6,16 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 // tslint:disable:directive-class-suffix
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'select[multiple][ngrxFormControlState]',
-    providers: [{
-            provide: NGRX_FORM_VIEW_ADAPTER,
-            useExisting: forwardRef(() => NgrxSelectMultipleViewAdapter),
-            multi: true,
-        }],
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: 'select[multiple][ngrxFormControlState]',
+  providers: [
+    {
+      provide: NGRX_FORM_VIEW_ADAPTER,
+      useExisting: forwardRef(() => NgrxSelectMultipleViewAdapter),
+      multi: true,
+    },
+  ],
+  standalone: false,
 })
 export class NgrxSelectMultipleViewAdapter implements FormViewAdapter, AfterViewInit {
   private state: FormControlState<any>;
@@ -38,7 +28,7 @@ export class NgrxSelectMultipleViewAdapter implements FormViewAdapter, AfterView
   onChangeFn: (value: any) => void = () => void 0;
 
   @HostListener('blur')
-  onTouched: () => void = () => void 0
+  onTouched: () => void = () => void 0;
 
   @Input() set ngrxFormControlState(value: FormControlState<any>) {
     if (!value) {
@@ -53,7 +43,7 @@ export class NgrxSelectMultipleViewAdapter implements FormViewAdapter, AfterView
     }
   }
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) { }
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
   ngAfterViewInit() {
     const nativeId = this.elementRef.nativeElement.id;
@@ -73,14 +63,17 @@ export class NgrxSelectMultipleViewAdapter implements FormViewAdapter, AfterView
       throw new Error(`the value provided to a NgrxSelectMultipleViewAdapter must be null or an array; got ${value} of type ${typeof value}`); // `
     }
 
-    this.selectedIds = value.map(v => this.getOptionId(v)).filter(id => id !== null).map(id => id as string);
-    Object.keys(this.options).forEach(id => this.options[id].isSelected = this.selectedIds.indexOf(id) >= 0);
+    this.selectedIds = value
+      .map((v) => this.getOptionId(v))
+      .filter((id) => id !== null)
+      .map((id) => id as string);
+    Object.keys(this.options).forEach((id) => (this.options[id].isSelected = this.selectedIds.indexOf(id) >= 0));
   }
 
   @HostListener('change')
   onChange() {
-    this.selectedIds = Object.keys(this.options).filter(id => this.options[id].isSelected);
-    const value = this.selectedIds.map(id => this.optionValues[id]);
+    this.selectedIds = Object.keys(this.options).filter((id) => this.options[id].isSelected);
+    const value = this.selectedIds.map((id) => this.optionValues[id]);
     this.onChangeFn(value);
   }
 
@@ -138,18 +131,14 @@ const NULL_RENDERER: Renderer2 = {
 } as any;
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'option',
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: 'option',
+  standalone: false,
 })
 export class NgrxSelectMultipleOption implements OnInit, OnDestroy {
   id: string;
 
-  constructor(
-    private element: ElementRef,
-    private renderer: Renderer2,
-    @Host() @Optional() private viewAdapter: NgrxSelectMultipleViewAdapter,
-  ) {
+  constructor(private element: ElementRef, private renderer: Renderer2, @Host() @Optional() private viewAdapter: NgrxSelectMultipleViewAdapter) {
     this.renderer = viewAdapter ? renderer : NULL_RENDERER;
     this.viewAdapter = viewAdapter || NULL_VIEW_ADAPTER;
     this.id = this.viewAdapter.registerOption(this);

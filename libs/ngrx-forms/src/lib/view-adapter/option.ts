@@ -1,11 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  Host,
-  Input,
-  Optional,
-  Renderer2,
-} from '@angular/core';
+import { Directive, ElementRef, Host, Input, Optional, Renderer2 } from '@angular/core';
 
 import { NgrxSelectViewAdapter } from './select';
 import { NgrxSelectMultipleViewAdapter } from './select-multiple';
@@ -28,16 +21,16 @@ const NULL_RENDERER: Renderer2 = {
  * directives that try to set the `[value]` but that is very unlikely.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'option',
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: 'option',
+  standalone: false,
 })
 export class NgrxFallbackSelectOption {
   constructor(
     private element: ElementRef,
     private renderer: Renderer2,
     @Host() @Optional() viewAdapter: NgrxSelectViewAdapter,
-    @Host() @Optional() multipleViewAdapter: NgrxSelectMultipleViewAdapter,
+    @Host() @Optional() multipleViewAdapter: NgrxSelectMultipleViewAdapter
   ) {
     this.renderer = viewAdapter || multipleViewAdapter ? NULL_RENDERER : renderer;
   }

@@ -7,8 +7,7 @@ describe(`form control ${resetReducer.name}`, () => {
   const INITIAL_FORM_CONTROL_VALUE = '';
   const INITIAL_STATE = createFormControlState<string>(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  it('should skip any action of the wrong type', () =>
-    expect(resetReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));
+  it('should skip any action of the wrong type', () => expect(resetReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));
 
   it('should update state if dirty', () => {
     const state = { ...INITIAL_STATE, isDirty: true, isPristine: false };

@@ -2,10 +2,7 @@ import { Actions, ResetAction } from '../../actions';
 import { computeGroupState, FormGroupState, KeyValue } from '../../state';
 import { childReducer, dispatchActionPerChild } from './util';
 
-export function resetReducer<TValue extends KeyValue>(
-  state: FormGroupState<TValue>,
-  action: Actions<TValue>,
-): FormGroupState<TValue> {
+export function resetReducer<TValue extends KeyValue>(state: FormGroupState<TValue>, action: Actions<TValue>): FormGroupState<TValue> {
   if (action.type !== ResetAction.TYPE) {
     return state;
   }
@@ -20,7 +17,7 @@ export function resetReducer<TValue extends KeyValue>(
 
   return computeGroupState(
     state.id,
-    dispatchActionPerChild(state.controls, controlId => new ResetAction(controlId)),
+    dispatchActionPerChild(state.controls, (controlId) => new ResetAction(controlId)),
     state.value,
     state.errors,
     state.pendingValidations,
@@ -30,6 +27,6 @@ export function resetReducer<TValue extends KeyValue>(
       wasOrShouldBeEnabled: state.isEnabled,
       wasOrShouldBeTouched: false,
       wasOrShouldBeSubmitted: false,
-    },
+    }
   );
 }

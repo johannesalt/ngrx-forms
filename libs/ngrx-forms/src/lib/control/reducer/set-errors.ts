@@ -2,10 +2,7 @@ import { Actions, SetErrorsAction } from '../../actions';
 import { FormControlState, FormControlValueTypes, ValidationErrors } from '../../state';
 import { deepEquals, isEmpty } from '../../util';
 
-export function setErrorsReducer<TValue extends FormControlValueTypes>(
-  state: FormControlState<TValue>,
-  action: Actions<TValue>,
-): FormControlState<TValue> {
+export function setErrorsReducer<TValue extends FormControlValueTypes>(state: FormControlState<TValue>, action: Actions<TValue>): FormControlState<TValue> {
   if (action.type !== SetErrorsAction.TYPE) {
     return state;
   }
@@ -26,14 +23,13 @@ export function setErrorsReducer<TValue extends FormControlValueTypes>(
     throw new Error(`Control errors must be an object; got ${action.errors}`); // `;
   }
 
-  if (Object.keys(action.errors).some(key => key.startsWith('$'))) {
+  if (Object.keys(action.errors).some((key) => key.startsWith('$'))) {
     throw new Error(`Control errors must not use $ as a prefix; got ${JSON.stringify(action.errors)}`); // `;
   }
 
-  const asyncErrors =
-    Object.keys(state.errors)
-      .filter(key => key.startsWith('$'))
-      .reduce((res, key) => Object.assign(res, { [key]: state.errors[key] }), {} as ValidationErrors);
+  const asyncErrors = Object.keys(state.errors)
+    .filter((key) => key.startsWith('$'))
+    .reduce((res, key) => Object.assign(res, { [key]: state.errors[key] }), {} as ValidationErrors);
 
   const newErrors = isEmpty(asyncErrors) ? action.errors : Object.assign(asyncErrors, action.errors);
   const isValid = isEmpty(newErrors);

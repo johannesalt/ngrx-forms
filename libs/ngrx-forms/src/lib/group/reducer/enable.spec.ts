@@ -4,7 +4,10 @@ import { FORM_CONTROL_ID, INITIAL_STATE_FULL, setPropertiesRecursively } from '.
 
 describe(`form group ${enableReducer.name}`, () => {
   it('should enable itself and all children recursively', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isEnabled', false], ['isDisabled', true]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isEnabled', false],
+      ['isDisabled', true],
+    ]);
     const resultState = enableReducer(state, new EnableAction(FORM_CONTROL_ID));
     expect(resultState).toEqual(INITIAL_STATE_FULL);
   });

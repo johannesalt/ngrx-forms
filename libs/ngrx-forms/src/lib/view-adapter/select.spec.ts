@@ -8,37 +8,37 @@ const TEST_ID = 'test ID';
 const OPTION1_VALUE = 'op1';
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'select-test',
-    template: `
-<select [ngrxFormControlState]="state">
-  <option value="op1">op1</option>
-  <option value="op2" selected>op2</option>
-</select>
+  // tslint:disable-next-line:component-selector
+  selector: 'select-test',
+  template: `
+    <select [ngrxFormControlState]="state">
+      <option value="op1">op1</option>
+      <option value="op2" selected>op2</option>
+    </select>
 
-<select [ngrxFormControlState]="state" id="customId">
-  <option value="op1">op1</option>
-  <option value="op2" selected>op2</option>
-</select>
+    <select [ngrxFormControlState]="state" id="customId">
+      <option value="op1">op1</option>
+      <option value="op2" selected>op2</option>
+    </select>
 
-<select [ngrxFormControlState]="state" [id]="boundId">
-  <option value="op1">op1</option>
-  <option value="op2" selected>op2</option>
-</select>
+    <select [ngrxFormControlState]="state" [id]="boundId">
+      <option value="op1">op1</option>
+      <option value="op2" selected>op2</option>
+    </select>
 
-<select [ngrxFormControlState]="state">
-  <option *ngFor="let o of stringOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
-</select>
+    <select [ngrxFormControlState]="state">
+      <option *ngFor="let o of stringOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
+    </select>
 
-<select [ngrxFormControlState]="state">
-  <option *ngFor="let o of numberOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
-</select>
+    <select [ngrxFormControlState]="state">
+      <option *ngFor="let o of numberOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
+    </select>
 
-<select [ngrxFormControlState]="state">
-  <option *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
-</select>
-`,
-    standalone: false
+    <select [ngrxFormControlState]="state">
+      <option *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
+    </select>
+  `,
+  standalone: false,
 })
 export class SelectTestComponent {
   boundId = 'boundId';
@@ -59,11 +59,7 @@ describe(NgrxSelectViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        NgrxSelectViewAdapter,
-        NgrxSelectOption,
-        SelectTestComponent,
-      ],
+      declarations: [NgrxSelectViewAdapter, NgrxSelectOption, SelectTestComponent],
     }).compileComponents();
   }));
 
@@ -169,7 +165,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should throw if state is undefined', () => {
-      expect(() => viewAdapter.ngrxFormControlState = undefined as any).toThrowError();
+      expect(() => (viewAdapter.ngrxFormControlState = undefined as any)).toThrowError();
     });
 
     it('should not throw if calling callbacks before they are registered', () => {
@@ -220,7 +216,7 @@ describe(NgrxSelectViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(component.stringOptions[0]);
     });
 
-    it('should call the registered function whenever the selected option\'s value changes', () => {
+    it("should call the registered function whenever the selected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 'new value';
@@ -229,7 +225,7 @@ describe(NgrxSelectViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(newValue);
     });
 
-    it('should not call the registered function whenever an unselected option\'s value changes', () => {
+    it("should not call the registered function whenever an unselected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 'new value';
@@ -298,7 +294,7 @@ describe(NgrxSelectViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(component.numberOptions[0]);
     });
 
-    it('should call the registered function whenever the selected option\'s value changes', () => {
+    it("should call the registered function whenever the selected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 3;
@@ -307,7 +303,7 @@ describe(NgrxSelectViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(newValue);
     });
 
-    it('should not call the registered function whenever an unselected option\'s value changes', () => {
+    it("should not call the registered function whenever an unselected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 3;
@@ -376,7 +372,7 @@ describe(NgrxSelectViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(component.booleanOptions[0]);
     });
 
-    it('should call the registered function whenever the selected option\'s value changes', () => {
+    it("should call the registered function whenever the selected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter.setOnChangeCallback(spy);
       const newValue = true;

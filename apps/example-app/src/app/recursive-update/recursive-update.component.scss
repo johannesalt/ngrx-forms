@@ -5,11 +5,11 @@
 }
 
 form {
-  >div:not(.buttons) {
+  > div:not(.buttons) {
     display: flex;
     padding: 5px;
 
-    >label {
+    > label {
       width: 110px;
       float: right;
       display: flex;
@@ -19,21 +19,21 @@ form {
       line-height: 21px;
     }
 
-    >div {
+    > div {
       flex: 1;
     }
   }
 
-  >.buttons {
+  > .buttons {
     display: flex;
     padding: 5px;
 
-    >div:nth-child(1) {
+    > div:nth-child(1) {
       width: 110px;
       margin-right: 10px;
     }
 
-    >div:nth-child(2) {
+    > div:nth-child(2) {
       flex: 1;
     }
   }

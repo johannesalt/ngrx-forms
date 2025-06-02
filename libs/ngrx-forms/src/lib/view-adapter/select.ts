@@ -1,15 +1,4 @@
-import {
-  AfterViewInit,
-  Directive,
-  ElementRef,
-  forwardRef,
-  Host,
-  HostListener,
-  Input,
-  OnDestroy,
-  Optional,
-  Renderer2,
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, forwardRef, Host, HostListener, Input, OnDestroy, Optional, Renderer2 } from '@angular/core';
 
 import { FormControlState } from '../state';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
@@ -17,14 +6,16 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 // tslint:disable:directive-class-suffix
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'select:not([multiple])[ngrxFormControlState]',
-    providers: [{
-            provide: NGRX_FORM_VIEW_ADAPTER,
-            useExisting: forwardRef(() => NgrxSelectViewAdapter),
-            multi: true,
-        }],
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: 'select:not([multiple])[ngrxFormControlState]',
+  providers: [
+    {
+      provide: NGRX_FORM_VIEW_ADAPTER,
+      useExisting: forwardRef(() => NgrxSelectViewAdapter),
+      multi: true,
+    },
+  ],
+  standalone: false,
 })
 export class NgrxSelectViewAdapter implements FormViewAdapter, AfterViewInit {
   private state: FormControlState<any>;
@@ -37,7 +28,7 @@ export class NgrxSelectViewAdapter implements FormViewAdapter, AfterViewInit {
   onChangeFn: (value: any) => void = () => void 0;
 
   @HostListener('blur')
-  onTouched: () => void = () => void 0
+  onTouched: () => void = () => void 0;
 
   @Input() set ngrxFormControlState(value: FormControlState<any>) {
     if (!value) {
@@ -52,7 +43,7 @@ export class NgrxSelectViewAdapter implements FormViewAdapter, AfterViewInit {
     }
   }
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) { }
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
   ngAfterViewInit() {
     const nativeId = this.elementRef.nativeElement.id;
@@ -135,19 +126,15 @@ const NULL_RENDERER: Renderer2 = {
 } as any;
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'option',
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: 'option',
+  standalone: false,
 })
 export class NgrxSelectOption implements OnDestroy {
   private isInitialized = false;
   id: string;
 
-  constructor(
-    private element: ElementRef,
-    private renderer: Renderer2,
-    @Host() @Optional() private viewAdapter: NgrxSelectViewAdapter,
-  ) {
+  constructor(private element: ElementRef, private renderer: Renderer2, @Host() @Optional() private viewAdapter: NgrxSelectViewAdapter) {
     this.renderer = viewAdapter ? renderer : NULL_RENDERER;
     this.viewAdapter = viewAdapter || NULL_VIEW_ADAPTER;
     this.id = this.viewAdapter.createOptionId();

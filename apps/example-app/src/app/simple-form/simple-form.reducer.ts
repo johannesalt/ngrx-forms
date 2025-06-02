@@ -23,7 +23,7 @@ export interface State extends RootState {
 export class SetSubmittedValueAction implements Action {
   static readonly TYPE = 'simpleForm/SET_SUBMITTED_VALUE';
   readonly type = SetSubmittedValueAction.TYPE;
-  constructor(public submittedValue: FormValue) { }
+  constructor(public submittedValue: FormValue) {}
 }
 
 export const FORM_ID = 'simpleForm';

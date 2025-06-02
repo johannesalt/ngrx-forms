@@ -32,7 +32,9 @@ describe(`form group ${removeControlReducer.name}`, () => {
   });
 
   it('should remove child errors for removed child', () => {
-    interface FormValue { inner?: number; }
+    interface FormValue {
+      inner?: number;
+    }
     const id = 'ID';
     const errors = { required: true };
     let state = createFormGroupState<FormValue>(id, { inner: 5 });
@@ -56,7 +58,9 @@ describe(`form group ${removeControlReducer.name}`, () => {
   });
 
   it('should remove child errors for removed child and keep own errors', () => {
-    interface FormValue { inner?: number; }
+    interface FormValue {
+      inner?: number;
+    }
     const id = 'ID';
     const errors = { required: true };
     let state = createFormGroupState<FormValue>(id, { inner: 5 });

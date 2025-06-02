@@ -9,7 +9,7 @@ import { ensureState } from './util';
  */
 export function addGroupControl<TValue extends KeyValue, TControlKey extends keyof TValue = keyof TValue>(
   name: TControlKey,
-  value: TValue[TControlKey],
+  value: TValue[TControlKey]
 ): (state: FormGroupState<TValue>) => FormGroupState<TValue>;
 
 /**
@@ -19,13 +19,13 @@ export function addGroupControl<TValue extends KeyValue, TControlKey extends key
 export function addGroupControl<TValue extends KeyValue, TControlKey extends keyof TValue = keyof TValue>(
   state: FormGroupState<TValue>,
   name: TControlKey,
-  value: TValue[TControlKey],
+  value: TValue[TControlKey]
 ): FormGroupState<TValue>;
 
 export function addGroupControl<TValue extends KeyValue, TControlKey extends keyof TValue = keyof TValue>(
   nameOrState: TControlKey | FormGroupState<TValue>,
   valueOrName: TValue[TControlKey] | TControlKey,
-  value?: TValue[TControlKey],
+  value?: TValue[TControlKey]
 ) {
   if (isGroupState(nameOrState)) {
     return formGroupReducer(nameOrState, new AddGroupControlAction<TValue, TControlKey>(nameOrState.id, valueOrName as TControlKey, value!));

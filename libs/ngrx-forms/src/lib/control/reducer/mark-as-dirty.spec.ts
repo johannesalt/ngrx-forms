@@ -7,8 +7,7 @@ describe('form control markAsDirtyReducer', () => {
   const INITIAL_FORM_CONTROL_VALUE = '';
   const INITIAL_STATE = createFormControlState<string>(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  it('should skip any actionof the wrong type', () =>
-    expect(markAsDirtyReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));
+  it('should skip any actionof the wrong type', () => expect(markAsDirtyReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));
 
   it('should update state if pristine', () => {
     const resultState = markAsDirtyReducer(INITIAL_STATE, new MarkAsDirtyAction(FORM_CONTROL_ID));

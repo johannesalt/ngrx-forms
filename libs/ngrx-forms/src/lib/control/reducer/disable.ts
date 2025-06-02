@@ -1,10 +1,7 @@
 import { Actions, DisableAction } from '../../actions';
 import { FormControlState, FormControlValueTypes } from '../../state';
 
-export function disableReducer<TValue extends FormControlValueTypes>(
-  state: FormControlState<TValue>,
-  action: Actions<TValue>,
-): FormControlState<TValue> {
+export function disableReducer<TValue extends FormControlValueTypes>(state: FormControlState<TValue>, action: Actions<TValue>): FormControlState<TValue> {
   if (action.type !== DisableAction.TYPE) {
     return state;
   }

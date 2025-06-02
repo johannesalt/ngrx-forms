@@ -7,19 +7,19 @@ import { filter, map, take } from 'rxjs/operators';
 import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './material.reducer';
 
 @Component({
-    selector: 'ngf-material',
-    templateUrl: './material.component.html',
-    styleUrls: ['./material.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'ngf-material',
+  templateUrl: './material.component.html',
+  styleUrls: ['./material.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DynamicPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;
   submittedValue$: Observable<FormValue | undefined>;
 
   constructor(private store: Store<State>) {
-    this.formState$ = store.pipe(select(s => s.material.formState));
-    this.submittedValue$ = store.pipe(select(s => s.material.submittedValue));
+    this.formState$ = store.pipe(select((s) => s.material.formState));
+    this.submittedValue$ = store.pipe(select((s) => s.material.submittedValue));
   }
 
   hobbyOptions = ['Sports', 'Video Games'];
@@ -44,10 +44,12 @@ export class DynamicPageComponent {
   }
 
   submit() {
-    this.formState$.pipe(
-      take(1),
-      filter(s => s.isValid),
-      map(fs => new SetSubmittedValueAction(fs.value)),
-    ).subscribe(this.store);
+    this.formState$
+      .pipe(
+        take(1),
+        filter((s) => s.isValid),
+        map((fs) => new SetSubmittedValueAction(fs.value))
+      )
+      .subscribe(this.store);
   }
 }

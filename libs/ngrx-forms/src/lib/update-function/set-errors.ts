@@ -7,20 +7,13 @@ import { ensureState } from './util';
  * This update function takes a form state and a number of error objects and sets the
  * errors of the state.
  */
-export function setErrors<TValue>(
-  state: AbstractControlState<TValue>,
-  errors: ValidationErrors,
-  ...rest: ValidationErrors[]
-): FormState<TValue>;
+export function setErrors<TValue>(state: AbstractControlState<TValue>, errors: ValidationErrors, ...rest: ValidationErrors[]): FormState<TValue>;
 
 /**
  * This update function takes a form state and an array of error objects and sets the
  * errors of the state.
  */
-export function setErrors<TValue>(
-  state: AbstractControlState<TValue>,
-  errorsArray: ValidationErrors[],
-): FormState<TValue>;
+export function setErrors<TValue>(state: AbstractControlState<TValue>, errorsArray: ValidationErrors[]): FormState<TValue>;
 
 /**
  * This update function takes a number of error objects and returns a projection

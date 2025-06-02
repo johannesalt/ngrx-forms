@@ -6,11 +6,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroupState } from 'ngrx-forms';
 
 @Component({
-    selector: 'ngf-form-example',
-    templateUrl: './form-example.component.html',
-    styleUrls: ['./form-example.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'ngf-form-example',
+  templateUrl: './form-example.component.html',
+  styleUrls: ['./form-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormExampleComponent {
   @Input() exampleName = '';

@@ -7,8 +7,7 @@ describe('form control markAsUnsubmittedReducer', () => {
   const INITIAL_FORM_CONTROL_VALUE = '';
   const INITIAL_STATE = createFormControlState<string>(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  it('should skip any actionof the wrong type', () =>
-    expect(markAsUnsubmittedReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));
+  it('should skip any actionof the wrong type', () => expect(markAsUnsubmittedReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));
 
   describe(MarkAsUnsubmittedAction.name, () => {
     it('should update state if submitted', () => {

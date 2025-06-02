@@ -6,17 +6,17 @@ import { Observable } from 'rxjs';
 import { FormValue, State } from './array.reducer';
 
 @Component({
-    selector: 'ngf-array',
-    templateUrl: './array.component.html',
-    styleUrls: ['./array.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'ngf-array',
+  templateUrl: './array.component.html',
+  styleUrls: ['./array.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ArrayPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;
 
   constructor(store: Store<State>) {
-    this.formState$ = store.pipe(select(s => s.array.formState));
+    this.formState$ = store.pipe(select((s) => s.array.formState));
   }
 
   trackByIndex(index: number) {

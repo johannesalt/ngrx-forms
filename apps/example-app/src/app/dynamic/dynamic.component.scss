@@ -7,7 +7,7 @@
 form {
   display: flex;
 
-  >div {
+  > div {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -20,7 +20,7 @@ form {
   flex-direction: column;
   align-items: flex-start;
 
-  >div {
+  > div {
     display: flex;
     align-items: center;
 
@@ -36,7 +36,7 @@ form {
   align-items: flex-start;
   margin: 5px 0;
 
-  >div {
+  > div {
     display: flex;
     align-items: center;
 

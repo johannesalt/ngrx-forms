@@ -7,8 +7,12 @@ export type NgrxFormControlId = string;
 /**
  * This type represents a collection of named errors.
  */
-export interface ValidationErrors { readonly [key: string]: any; }
-export interface KeyValue { [key: string]: any; }
+export interface ValidationErrors {
+  readonly [key: string]: any;
+}
+export interface KeyValue {
+  [key: string]: any;
+}
 
 /**
  * Base interface for all types of form states.
@@ -512,49 +516,57 @@ export interface InferenceWrapper<T> {
  * This is a helper type that infers the correct form state type based
  * on the boxed type contained in the inference wrapper.
  */
-export type InferredBoxedFormState<T extends InferenceWrapper<any>> =
-  T extends InferenceWrapper<Boxed<infer U>> ? FormControlState<Boxed<U>>
-  : T extends InferenceWrapper<Boxed<infer U> | undefined> ? FormControlState<Boxed<U> | undefined>
-  : T extends InferenceWrapper<Boxed<infer U> | null> ? FormControlState<Boxed<U> | null>
-  : T extends InferenceWrapper<Boxed<infer U> | undefined | null> ? FormControlState<Boxed<U> | undefined | null>
-  : never
-  ;
+export type InferredBoxedFormState<T extends InferenceWrapper<any>> = T extends InferenceWrapper<Boxed<infer U>>
+  ? FormControlState<Boxed<U>>
+  : T extends InferenceWrapper<Boxed<infer U> | undefined>
+  ? FormControlState<Boxed<U> | undefined>
+  : T extends InferenceWrapper<Boxed<infer U> | null>
+  ? FormControlState<Boxed<U> | null>
+  : T extends InferenceWrapper<Boxed<infer U> | undefined | null>
+  ? FormControlState<Boxed<U> | undefined | null>
+  : never;
 
 /**
  * This is a helper type that infers the correct form state type based
  * on the string type contained in the inference wrapper.
  */
-export type InferredStringFormState<T extends InferenceWrapper<any>> =
-  T extends InferenceWrapper<string> ? FormControlState<string>
-  : T extends InferenceWrapper<string | undefined> ? FormControlState<string | undefined>
-  : T extends InferenceWrapper<string | null> ? FormControlState<string | null>
-  : T extends InferenceWrapper<string | undefined | null> ? FormControlState<string | undefined | null>
-  : never
-  ;
+export type InferredStringFormState<T extends InferenceWrapper<any>> = T extends InferenceWrapper<string>
+  ? FormControlState<string>
+  : T extends InferenceWrapper<string | undefined>
+  ? FormControlState<string | undefined>
+  : T extends InferenceWrapper<string | null>
+  ? FormControlState<string | null>
+  : T extends InferenceWrapper<string | undefined | null>
+  ? FormControlState<string | undefined | null>
+  : never;
 
 /**
  * This is a helper type that infers the correct form state type based
  * on the number type contained in the inference wrapper.
  */
-export type InferredNumberFormState<T extends InferenceWrapper<any>> =
-  T extends InferenceWrapper<number> ? FormControlState<number>
-  : T extends InferenceWrapper<number | undefined> ? FormControlState<number | undefined>
-  : T extends InferenceWrapper<number | null> ? FormControlState<number | null>
-  : T extends InferenceWrapper<number | undefined | null> ? FormControlState<number | undefined | null>
-  : never
-  ;
+export type InferredNumberFormState<T extends InferenceWrapper<any>> = T extends InferenceWrapper<number>
+  ? FormControlState<number>
+  : T extends InferenceWrapper<number | undefined>
+  ? FormControlState<number | undefined>
+  : T extends InferenceWrapper<number | null>
+  ? FormControlState<number | null>
+  : T extends InferenceWrapper<number | undefined | null>
+  ? FormControlState<number | undefined | null>
+  : never;
 
 /**
  * This is a helper type that infers the correct form state type based
  * on the boolean type contained in the inference wrapper.
  */
-export type InferredBooleanFormState<T extends InferenceWrapper<any>> =
-  T extends InferenceWrapper<boolean> ? FormControlState<boolean>
-  : T extends InferenceWrapper<boolean | undefined> ? FormControlState<boolean | undefined>
-  : T extends InferenceWrapper<boolean | null> ? FormControlState<boolean | null>
-  : T extends InferenceWrapper<boolean | undefined | null> ? FormControlState<boolean | undefined | null>
-  : never
-  ;
+export type InferredBooleanFormState<T extends InferenceWrapper<any>> = T extends InferenceWrapper<boolean>
+  ? FormControlState<boolean>
+  : T extends InferenceWrapper<boolean | undefined>
+  ? FormControlState<boolean | undefined>
+  : T extends InferenceWrapper<boolean | null>
+  ? FormControlState<boolean | null>
+  : T extends InferenceWrapper<boolean | undefined | null>
+  ? FormControlState<boolean | undefined | null>
+  : never;
 
 /**
  * This is a helper type that infers the correct form state type based
@@ -562,25 +574,31 @@ export type InferredBooleanFormState<T extends InferenceWrapper<any>> =
  */
 export type InferredFormState<T extends InferenceWrapper<any>> =
   // (ab)use 'symbol' to catch 'any' typing
-  T extends InferenceWrapper<symbol> ? AbstractControlState<any>
-  : T extends InferenceWrapper<undefined> ? AbstractControlState<any>
-  : T extends InferenceWrapper<null> ? AbstractControlState<any>
-
-  // control
-  : T extends InferenceWrapper<Boxed<any> | undefined | null> ? InferredBoxedFormState<T>
-  : T extends InferenceWrapper<string | undefined | null> ? InferredStringFormState<T>
-  : T extends InferenceWrapper<number | undefined | null> ? InferredNumberFormState<T>
-  : T extends InferenceWrapper<boolean | undefined | null> ? InferredBooleanFormState<T>
-
-  // array
-  : T extends InferenceWrapper<readonly (infer U)[] | undefined | null> ? FormArrayState<U>
-
-  // group
-  : T extends InferenceWrapper<infer U | undefined | null> ? U extends KeyValue ? FormGroupState<U> : never
-
-  // fallback type (this case should never (no pun intended) be hit)
-  : never
-  ;
+  T extends InferenceWrapper<symbol>
+    ? AbstractControlState<any>
+    : T extends InferenceWrapper<undefined>
+    ? AbstractControlState<any>
+    : T extends InferenceWrapper<null>
+    ? AbstractControlState<any>
+    : // control
+    T extends InferenceWrapper<Boxed<any> | undefined | null>
+    ? InferredBoxedFormState<T>
+    : T extends InferenceWrapper<string | undefined | null>
+    ? InferredStringFormState<T>
+    : T extends InferenceWrapper<number | undefined | null>
+    ? InferredNumberFormState<T>
+    : T extends InferenceWrapper<boolean | undefined | null>
+    ? InferredBooleanFormState<T>
+    : // array
+    T extends InferenceWrapper<readonly (infer U)[] | undefined | null>
+    ? FormArrayState<U>
+    : // group
+    T extends InferenceWrapper<infer U | undefined | null>
+    ? U extends KeyValue
+      ? FormGroupState<U>
+      : never
+    : // fallback type (this case should never (no pun intended) be hit)
+      never;
 
 /**
  * This is a type that can infer the concrete type of a form state based
@@ -652,10 +670,7 @@ export function verifyFormControlValueIsValid<TValue>(value: TValue) {
 /**
  * This function creates a form control state with an ID and a value.
  */
-export function createFormControlState<TValue extends FormControlValueTypes>(
-  id: NgrxFormControlId,
-  value: TValue,
-): FormControlState<TValue> {
+export function createFormControlState<TValue extends FormControlValueTypes>(id: NgrxFormControlId, value: TValue): FormControlState<TValue> {
   return {
     id,
     value: verifyFormControlValueIsValid(value),
@@ -678,10 +693,7 @@ export function createFormControlState<TValue extends FormControlValueTypes>(
   };
 }
 
-export function getFormGroupValue<TValue extends KeyValue>(
-  controls: FormGroupControls<TValue>,
-  originalValue: TValue,
-): TValue {
+export function getFormGroupValue<TValue extends KeyValue>(controls: FormGroupControls<TValue>, originalValue: TValue): TValue {
   let hasChanged = Object.keys(originalValue).length !== Object.keys(controls).length;
   const newValue = Object.keys(controls).reduce((res, key: keyof TValue) => {
     const control = controls[key] as AbstractControlState<TValue[keyof TValue]>;
@@ -693,15 +705,11 @@ export function getFormGroupValue<TValue extends KeyValue>(
   return hasChanged ? newValue : originalValue;
 }
 
-export function getFormGroupErrors<TValue extends KeyValue>(
-  controls: FormGroupControls<TValue>,
-  originalErrors: ValidationErrors,
-): ValidationErrors {
+export function getFormGroupErrors<TValue extends KeyValue>(controls: FormGroupControls<TValue>, originalErrors: ValidationErrors): ValidationErrors {
   let hasChanged = false;
-  const groupErrors =
-    Object.keys(originalErrors)
-      .filter(key => !key.startsWith('_'))
-      .reduce((res, key) => Object.assign(res, { [key]: originalErrors[key] }), {} as ValidationErrors);
+  const groupErrors = Object.keys(originalErrors)
+    .filter((key) => !key.startsWith('_'))
+    .reduce((res, key) => Object.assign(res, { [key]: originalErrors[key] }), {} as ValidationErrors);
 
   const newErrors = Object.keys(controls).reduce((res, key: any) => {
     const control = controls[key] as AbstractControlState<TValue[keyof TValue]>;
@@ -733,17 +741,17 @@ export function computeGroupState<TValue extends KeyValue>(
     wasOrShouldBeEnabled?: boolean;
     wasOrShouldBeTouched?: boolean;
     wasOrShouldBeSubmitted?: boolean;
-  },
+  }
 ): FormGroupState<TValue> {
   value = getFormGroupValue<TValue>(controls, value);
   errors = getFormGroupErrors(controls, errors);
   const isValid = isEmpty(errors);
-  const typedControls = Object.keys(controls).map(key => controls[key] as AbstractControlState<TValue[keyof TValue]>);
-  const isDirty = flags.wasOrShouldBeDirty || typedControls.some(control => control.isDirty);
-  const isEnabled = flags.wasOrShouldBeEnabled || typedControls.some(control => control.isEnabled);
-  const isTouched = flags.wasOrShouldBeTouched || typedControls.some(control => control.isTouched);
-  const isSubmitted = flags.wasOrShouldBeSubmitted || typedControls.some(control => control.isSubmitted);
-  const isValidationPending = pendingValidations.length > 0 || typedControls.some(control => control.isValidationPending);
+  const typedControls = Object.keys(controls).map((key) => controls[key] as AbstractControlState<TValue[keyof TValue]>);
+  const isDirty = flags.wasOrShouldBeDirty || typedControls.some((control) => control.isDirty);
+  const isEnabled = flags.wasOrShouldBeEnabled || typedControls.some((control) => control.isEnabled);
+  const isTouched = flags.wasOrShouldBeTouched || typedControls.some((control) => control.isTouched);
+  const isSubmitted = flags.wasOrShouldBeSubmitted || typedControls.some((control) => control.isSubmitted);
+  const isValidationPending = pendingValidations.length > 0 || typedControls.some((control) => control.isValidationPending);
   return {
     id,
     value,
@@ -772,10 +780,7 @@ export function computeGroupState<TValue extends KeyValue>(
  * are inferred as form arrays, and primitive properties are inferred
  * as form controls.
  */
-export function createFormGroupState<TValue extends KeyValue>(
-  id: NgrxFormControlId,
-  initialValue: TValue,
-): FormGroupState<TValue> {
+export function createFormGroupState<TValue extends KeyValue>(id: NgrxFormControlId, initialValue: TValue): FormGroupState<TValue> {
   const controls = Object.keys(initialValue)
     .map((key: keyof TValue) => [key, createChildState(`${id}.${key as string}`, initialValue[key])] as [string, FormState<any>])
     .reduce((res, [controlId, state]) => Object.assign(res, { [controlId]: state }), {} as FormGroupControls<TValue>);
@@ -783,10 +788,7 @@ export function createFormGroupState<TValue extends KeyValue>(
   return computeGroupState(id, controls, initialValue, {}, [], {}, { wasOrShouldBeEnabled: true });
 }
 
-function getFormArrayValue<TValue>(
-  controls: readonly AbstractControlState<TValue>[],
-  originalValue: TValue[],
-): TValue[] {
+function getFormArrayValue<TValue>(controls: readonly AbstractControlState<TValue>[], originalValue: TValue[]): TValue[] {
   let hasChanged = Object.keys(originalValue).length !== Object.keys(controls).length;
   const newValue = controls.map((state, i) => {
     hasChanged = hasChanged || originalValue[i] !== state.value;
@@ -796,15 +798,11 @@ function getFormArrayValue<TValue>(
   return hasChanged ? newValue : originalValue;
 }
 
-function getFormArrayErrors<TValue>(
-  controls: readonly AbstractControlState<TValue>[],
-  originalErrors: ValidationErrors,
-): ValidationErrors {
+function getFormArrayErrors<TValue>(controls: readonly AbstractControlState<TValue>[], originalErrors: ValidationErrors): ValidationErrors {
   let hasChanged = false;
-  const groupErrors =
-    Object.keys(originalErrors)
-      .filter(key => !key.startsWith('_'))
-      .reduce((res, key) => Object.assign(res, { [key]: originalErrors[key] }), {} as ValidationErrors);
+  const groupErrors = Object.keys(originalErrors)
+    .filter((key) => !key.startsWith('_'))
+    .reduce((res, key) => Object.assign(res, { [key]: originalErrors[key] }), {} as ValidationErrors);
 
   const newErrors = controls.reduce((res, state, i) => {
     const controlErrors = state.errors;
@@ -835,18 +833,18 @@ export function computeArrayState<TValue>(
     wasOrShouldBeEnabled?: boolean;
     wasOrShouldBeTouched?: boolean;
     wasOrShouldBeSubmitted?: boolean;
-  },
+  }
 ): FormArrayState<TValue> {
   const controls = inferredControls as readonly AbstractControlState<any>[];
 
   value = getFormArrayValue<TValue>(controls, value);
   errors = getFormArrayErrors(controls, errors);
   const isValid = isEmpty(errors);
-  const isDirty = flags.wasOrShouldBeDirty || controls.some(state => state.isDirty);
-  const isEnabled = flags.wasOrShouldBeEnabled || controls.some(state => state.isEnabled);
-  const isTouched = flags.wasOrShouldBeTouched || controls.some(state => state.isTouched);
-  const isSubmitted = flags.wasOrShouldBeSubmitted || controls.some(state => state.isSubmitted);
-  const isValidationPending = pendingValidations.length > 0 || controls.some(state => state.isValidationPending);
+  const isDirty = flags.wasOrShouldBeDirty || controls.some((state) => state.isDirty);
+  const isEnabled = flags.wasOrShouldBeEnabled || controls.some((state) => state.isEnabled);
+  const isTouched = flags.wasOrShouldBeTouched || controls.some((state) => state.isTouched);
+  const isSubmitted = flags.wasOrShouldBeSubmitted || controls.some((state) => state.isSubmitted);
+  const isValidationPending = pendingValidations.length > 0 || controls.some((state) => state.isValidationPending);
   return {
     id,
     value,
@@ -875,12 +873,8 @@ export function computeArrayState<TValue>(
  * are inferred as form arrays, and primitive values are inferred
  * as form controls.
  */
-export function createFormArrayState<TValue>(
-  id: NgrxFormControlId,
-  initialValue: TValue[],
-): FormArrayState<TValue> {
-  const controls = initialValue
-    .map((value, i) => createChildState(`${id}.${i}`, value));
+export function createFormArrayState<TValue>(id: NgrxFormControlId, initialValue: TValue[]): FormArrayState<TValue> {
+  const controls = initialValue.map((value, i) => createChildState(`${id}.${i}`, value));
 
   return computeArrayState(id, controls, initialValue, {}, [], {}, { wasOrShouldBeEnabled: true });
 }

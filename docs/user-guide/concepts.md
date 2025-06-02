@@ -2,9 +2,9 @@ Everything in **ngrx-forms** revolves around the concept of form states. A form 
 
 There are three different kinds of form states:
 
-* [Form Controls](form-controls.md): The core kind of form state. Each form control represents a single value in your form. Usually form controls are directly associated with an HTML form element, e.g. `input`, `select`, etc. The simplest possible form consists of exactly one form control.
-* [Form Groups](form-groups.md): Groups are a logical grouping of multiple named form states. These states can be of any kind, not only controls, and can therefore be nested arbitrarily. Most parts of a group are computed by aggregating properties of its child states. Most of your forms will be groups.
-* [Form Arrays](form-arrays.md): Arrays are similar to groups in that they are a logical grouping of multiple form states. However, instead of each state having an explicit name, form arrays just contain a plain array of form states (with all states usually having the same value type, e.g. `string` etc.).
+- [Form Controls](form-controls.md): The core kind of form state. Each form control represents a single value in your form. Usually form controls are directly associated with an HTML form element, e.g. `input`, `select`, etc. The simplest possible form consists of exactly one form control.
+- [Form Groups](form-groups.md): Groups are a logical grouping of multiple named form states. These states can be of any kind, not only controls, and can therefore be nested arbitrarily. Most parts of a group are computed by aggregating properties of its child states. Most of your forms will be groups.
+- [Form Arrays](form-arrays.md): Arrays are similar to groups in that they are a logical grouping of multiple form states. However, instead of each state having an explicit name, form arrays just contain a plain array of form states (with all states usually having the same value type, e.g. `string` etc.).
 
 **ngrx-forms** determines the type of a form state based on its value. Primitive values result in form controls, non-array objects result in form groups, and arrays result in form arrays. By leveraging TypeScript's advanced type inference features **ngrx-forms** can provide a very minimal API where most of the heavy lifting (and most importantly correctness checking) can be done by the TypeScript compiler. When the type of the value is not known the state is treated as an abstract form state which contains all properties that are common to all kinds of form states.
 

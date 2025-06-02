@@ -3,7 +3,10 @@ import { markAsTouchedReducer } from './mark-as-touched';
 import { FORM_CONTROL_ID, INITIAL_STATE, INITIAL_STATE_FULL, setPropertiesRecursively } from './test-util';
 
 describe(`form group ${markAsTouchedReducer.name}`, () => {
-  const INITIAL_STATE_FULL_TOUCHED = setPropertiesRecursively(INITIAL_STATE_FULL, [['isTouched', true], ['isUntouched', false]]);
+  const INITIAL_STATE_FULL_TOUCHED = setPropertiesRecursively(INITIAL_STATE_FULL, [
+    ['isTouched', true],
+    ['isUntouched', false],
+  ]);
 
   it('should mark itself and all children recursively as touched', () => {
     const resultState = markAsTouchedReducer(INITIAL_STATE_FULL, new MarkAsTouchedAction(FORM_CONTROL_ID));

@@ -17,14 +17,10 @@ import { reducer } from './async-validation.reducer';
     MaterialModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: AsyncValidationPageComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: AsyncValidationPageComponent }]),
     StoreModule.forFeature('asyncValidation', reducer),
     EffectsModule.forFeature([AsyncValidationEffects]),
   ],
-  declarations: [
-    AsyncValidationPageComponent,
-  ],
+  declarations: [AsyncValidationPageComponent],
 })
-export class AsyncValidationModule { }
+export class AsyncValidationModule {}

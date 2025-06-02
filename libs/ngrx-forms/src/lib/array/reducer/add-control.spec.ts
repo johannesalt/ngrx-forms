@@ -91,11 +91,7 @@ describe(`form array ${addControlReducer.name}`, () => {
     const value: DeeplyNestedGroupFormValue = {
       i: 'NEW_CONTROL',
       deep: {
-        inners: [
-          { inner: 'NEW_INNER_0' },
-          { inner: 'NEW_INNER_1' },
-          { inner: 'NEW_INNER_2' },
-        ],
+        inners: [{ inner: 'NEW_INNER_0' }, { inner: 'NEW_INNER_1' }, { inner: 'NEW_INNER_2' }],
       },
     };
 

@@ -13,14 +13,10 @@ import { LocalStateAdvancedEffects } from './local-state-advanced.effects';
     CommonModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: LocalStateAdvancedComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: LocalStateAdvancedComponent }]),
     // Notice that StoreModule.forFeature is not included here!
     EffectsModule.forFeature([LocalStateAdvancedEffects]),
   ],
-  declarations: [
-    LocalStateAdvancedComponent,
-  ],
+  declarations: [LocalStateAdvancedComponent],
 })
-export class LocalStateAdvancedModule { }
+export class LocalStateAdvancedModule {}

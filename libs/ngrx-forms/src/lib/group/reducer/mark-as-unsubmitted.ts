@@ -2,10 +2,7 @@ import { Actions, MarkAsUnsubmittedAction } from '../../actions';
 import { computeGroupState, FormGroupState, KeyValue } from '../../state';
 import { childReducer, dispatchActionPerChild } from './util';
 
-export function markAsUnsubmittedReducer<TValue extends KeyValue>(
-  state: FormGroupState<TValue>,
-  action: Actions<TValue>,
-): FormGroupState<TValue> {
+export function markAsUnsubmittedReducer<TValue extends KeyValue>(state: FormGroupState<TValue>, action: Actions<TValue>): FormGroupState<TValue> {
   if (action.type !== MarkAsUnsubmittedAction.TYPE) {
     return state;
   }
@@ -20,7 +17,7 @@ export function markAsUnsubmittedReducer<TValue extends KeyValue>(
 
   return computeGroupState(
     state.id,
-    dispatchActionPerChild(state.controls, controlId => new MarkAsUnsubmittedAction(controlId)),
+    dispatchActionPerChild(state.controls, (controlId) => new MarkAsUnsubmittedAction(controlId)),
     state.value,
     state.errors,
     state.pendingValidations,
@@ -30,6 +27,6 @@ export function markAsUnsubmittedReducer<TValue extends KeyValue>(
       wasOrShouldBeEnabled: state.isEnabled,
       wasOrShouldBeTouched: state.isTouched,
       wasOrShouldBeSubmitted: false,
-    },
+    }
   );
 }

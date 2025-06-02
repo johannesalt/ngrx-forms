@@ -35,11 +35,13 @@ export function deepEquals<T>(_1: T, _2: T, options: DeepEqualsOptions = {}) {
     // Works in case when functions are created in constructor.
     // Comparing dates is a common scenario. Another built-ins?
     // We can even handle functions passed across iframes
-    if ((typeof x === 'function' && typeof y === 'function') ||
+    if (
+      (typeof x === 'function' && typeof y === 'function') ||
       (x instanceof Date && y instanceof Date) ||
       (x instanceof RegExp && y instanceof RegExp) ||
       (x instanceof String && y instanceof String) ||
-      (x instanceof Number && y instanceof Number)) {
+      (x instanceof Number && y instanceof Number)
+    ) {
       return x.toString() === y.toString();
     }
 
@@ -82,10 +84,9 @@ export function deepEquals<T>(_1: T, _2: T, options: DeepEqualsOptions = {}) {
         }
       }
 
-      switch (typeof (x[p])) {
+      switch (typeof x[p]) {
         case 'object':
         case 'function':
-
           leftChain.push(x);
           rightChain.push(y);
 

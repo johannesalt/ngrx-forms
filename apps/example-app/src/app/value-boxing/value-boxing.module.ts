@@ -13,13 +13,9 @@ import { reducer } from './value-boxing.reducer';
     CommonModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: ValueBoxingPageComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: ValueBoxingPageComponent }]),
     StoreModule.forFeature('valueBoxing', reducer),
   ],
-  declarations: [
-    ValueBoxingPageComponent,
-  ],
+  declarations: [ValueBoxingPageComponent],
 })
-export class ValueBoxingModule { }
+export class ValueBoxingModule {}

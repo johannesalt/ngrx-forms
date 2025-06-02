@@ -6,14 +6,14 @@ import { NgrxRangeViewAdapter } from './range';
 const TEST_ID = 'test ID';
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'range-test',
-    template: `
-<input type="range" [ngrxFormControlState]="state" />
-<input type="range" [ngrxFormControlState]="state" id="customId" />
-<input type="range" [ngrxFormControlState]="state" [id]="boundId" />
-`,
-    standalone: false
+  // tslint:disable-next-line:component-selector
+  selector: 'range-test',
+  template: `
+    <input type="range" [ngrxFormControlState]="state" />
+    <input type="range" [ngrxFormControlState]="state" id="customId" />
+    <input type="range" [ngrxFormControlState]="state" [id]="boundId" />
+  `,
+  standalone: false,
 })
 export class RangeTestComponent {
   boundId = 'boundId';
@@ -28,10 +28,7 @@ describe(NgrxRangeViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        NgrxRangeViewAdapter,
-        RangeTestComponent,
-      ],
+      declarations: [NgrxRangeViewAdapter, RangeTestComponent],
     }).compileComponents();
   }));
 
@@ -96,7 +93,7 @@ describe(NgrxRangeViewAdapter.name, () => {
     expect(renderer.setProperty).toHaveBeenCalledTimes(1);
   });
 
-  it('should set the input\'s value', () => {
+  it("should set the input's value", () => {
     const newValue = 10;
     viewAdapter.setViewValue(newValue);
     expect(element.value).toBe(newValue.toString());
@@ -146,7 +143,7 @@ describe(NgrxRangeViewAdapter.name, () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => viewAdapter.ngrxFormControlState = undefined as any).toThrowError();
+    expect(() => (viewAdapter.ngrxFormControlState = undefined as any)).toThrowError();
   });
 
   it('should not throw if calling callbacks before they are registered', () => {

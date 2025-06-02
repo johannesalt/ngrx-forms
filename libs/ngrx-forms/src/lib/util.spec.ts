@@ -39,9 +39,9 @@ describe(deepEquals.name, () => {
 
   it('should compare prototypes and constructors', () => {
     // tslint:disable
-    class A { }
-    class B extends A { }
-    class C extends B { }
+    class A {}
+    class B extends A {}
+    class C extends B {}
     const c = new C();
     const b1 = new B();
     const b2 = new B();

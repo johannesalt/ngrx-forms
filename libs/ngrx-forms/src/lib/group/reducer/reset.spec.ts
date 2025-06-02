@@ -42,28 +42,40 @@ describe(`form group ${resetReducer.name}`, () => {
   });
 
   it('should reset control children', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isDirty', true], ['isPristine', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isDirty', true],
+      ['isPristine', false],
+    ]);
     const resultState = resetReducer(state, new ResetAction(FORM_CONTROL_ID));
     expect(resultState.controls.inner.isDirty).toEqual(false);
     expect(resultState.controls.inner.isPristine).toEqual(true);
   });
 
   it('should reset group children', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isDirty', true], ['isPristine', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isDirty', true],
+      ['isPristine', false],
+    ]);
     const resultState = resetReducer(state, new ResetAction(FORM_CONTROL_ID));
     expect(resultState.controls.inner3!.isDirty).toEqual(false);
     expect(resultState.controls.inner3!.isPristine).toEqual(true);
   });
 
   it('should reset array children', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isDirty', true], ['isPristine', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isDirty', true],
+      ['isPristine', false],
+    ]);
     const resultState = resetReducer(state, new ResetAction(FORM_CONTROL_ID));
     expect(resultState.controls.inner5!.isDirty).toEqual(false);
     expect(resultState.controls.inner5!.isPristine).toEqual(true);
   });
 
   it('should forward actions to children', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE, [['isDirty', true], ['isPristine', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE, [
+      ['isDirty', true],
+      ['isPristine', false],
+    ]);
     const resultState = resetReducer(state, new ResetAction(state.controls.inner.id));
     expect(resultState).not.toBe(state);
   });

@@ -16,28 +16,40 @@ describe(`form group ${markAsUntouchedReducer.name}`, () => {
   });
 
   it('should mark control children as untouched', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isTouched', true], ['isUntouched', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isTouched', true],
+      ['isUntouched', false],
+    ]);
     const resultState = markAsUntouchedReducer(state, new MarkAsUntouchedAction(FORM_CONTROL_ID));
     expect(resultState.controls.inner.isTouched).toEqual(false);
     expect(resultState.controls.inner.isUntouched).toEqual(true);
   });
 
   it('should mark group children as untouched', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isTouched', true], ['isUntouched', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isTouched', true],
+      ['isUntouched', false],
+    ]);
     const resultState = markAsUntouchedReducer(state, new MarkAsUntouchedAction(FORM_CONTROL_ID));
     expect(resultState.controls.inner3!.isTouched).toEqual(false);
     expect(resultState.controls.inner3!.isUntouched).toEqual(true);
   });
 
   it('should mark array children as untouched', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isTouched', true], ['isUntouched', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isTouched', true],
+      ['isUntouched', false],
+    ]);
     const resultState = markAsUntouchedReducer(state, new MarkAsUntouchedAction(FORM_CONTROL_ID));
     expect(resultState.controls.inner5!.isTouched).toEqual(false);
     expect(resultState.controls.inner5!.isUntouched).toEqual(true);
   });
 
   it('should forward actions to children', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE, [['isTouched', true], ['isUntouched', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE, [
+      ['isTouched', true],
+      ['isUntouched', false],
+    ]);
     const resultState = markAsUntouchedReducer(state, new MarkAsUntouchedAction(state.controls.inner.id));
     expect(resultState).not.toBe(state);
   });

@@ -7,13 +7,15 @@ import { Subscription } from 'rxjs';
 // tslint:disable:directive-class-suffix
 // necessary since material 2 does not properly export the mat-select as a NG_VALUE_ACCESSOR
 @Directive({
-    selector: 'mat-select[ngrxFormControlState]',
-    providers: [{
-            provide: NGRX_FORM_VIEW_ADAPTER,
-            useExisting: forwardRef(() => NgrxMatSelectViewAdapter),
-            multi: true,
-        }],
-    standalone: false
+  selector: 'mat-select[ngrxFormControlState]',
+  providers: [
+    {
+      provide: NGRX_FORM_VIEW_ADAPTER,
+      useExisting: forwardRef(() => NgrxMatSelectViewAdapter),
+      multi: true,
+    },
+  ],
+  standalone: false,
 })
 export class NgrxMatSelectViewAdapter implements FormViewAdapter, AfterViewInit, OnDestroy {
   private value: any;
@@ -30,7 +32,7 @@ export class NgrxMatSelectViewAdapter implements FormViewAdapter, AfterViewInit,
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
   setViewValue(value: any) {
@@ -58,7 +60,7 @@ export class NgrxMatSelectViewAdapter implements FormViewAdapter, AfterViewInit,
   }
 
   setOnChangeCallback(fn: any) {
-    this.matSelect.registerOnChange(value => {
+    this.matSelect.registerOnChange((value) => {
       this.value = value;
       fn(value);
     });

@@ -11,10 +11,10 @@ import { createFormControlState, FormControlState } from '../../state';
 const RADIO_OPTIONS = ['op1', 'op2'] as readonly string[];
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'radio-test',
-    template: '<input *ngFor="let o of options; trackBy: trackByIndex" type="radio" [value]="o" [ngrxFormControlState]="state" />',
-    standalone: false
+  // tslint:disable-next-line:component-selector
+  selector: 'radio-test',
+  template: '<input *ngFor="let o of options; trackBy: trackByIndex" type="radio" [value]="o" [ngrxFormControlState]="state" />',
+  standalone: false,
 })
 export class RadioTestComponent {
   @Input() state: FormControlState<string>;
@@ -60,7 +60,7 @@ describe(RadioTestComponent.name, () => {
     expect(element2.name).toBe(INITIAL_STATE.id);
   });
 
-  it('should update the name of the elements if the state\'s ID changes', () => {
+  it("should update the name of the elements if the state's ID changes", () => {
     const newId = 'new ID';
     component.state = { ...INITIAL_STATE, id: newId };
     fixture.detectChanges();
@@ -77,8 +77,8 @@ describe(RadioTestComponent.name, () => {
     expect(element2.checked).toBe(true);
   });
 
-  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, done => {
-    actions$.pipe(take(1)).subscribe(a => {
+  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, (done) => {
+    actions$.pipe(take(1)).subscribe((a) => {
       expect(a.type).toBe(SetValueAction.TYPE);
       expect((a as SetValueAction<string>).value).toBe(RADIO_OPTIONS[0]);
       done();
@@ -87,8 +87,8 @@ describe(RadioTestComponent.name, () => {
     element1.click();
   });
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, done => {
-    actions$.pipe(skip(1), take(1)).subscribe(a => {
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, (done) => {
+    actions$.pipe(skip(1), take(1)).subscribe((a) => {
       expect(a.type).toBe(MarkAsDirtyAction.TYPE);
       done();
     });
@@ -96,7 +96,7 @@ describe(RadioTestComponent.name, () => {
     element1.click();
   });
 
-  it(`should trigger ${SetValueAction.name}s and ${MarkAsDirtyAction.name}s when switching between options`, done => {
+  it(`should trigger ${SetValueAction.name}s and ${MarkAsDirtyAction.name}s when switching between options`, (done) => {
     actions$.pipe(bufferCount(4), take(1)).subscribe(([a1, a2, a3, a4]) => {
       expect(a1.type).toBe(SetValueAction.TYPE);
       expect(a2.type).toBe(MarkAsDirtyAction.TYPE);
@@ -113,10 +113,10 @@ describe(RadioTestComponent.name, () => {
     element2.click();
   });
 
-  it(`should trigger a ${SetValueAction.name} if the value of the selected option changes`, done => {
+  it(`should trigger a ${SetValueAction.name} if the value of the selected option changes`, (done) => {
     const newValue = 'new value';
 
-    actions$.pipe(take(1)).subscribe(a => {
+    actions$.pipe(take(1)).subscribe((a) => {
       expect(a.type).toBe(SetValueAction.TYPE);
       expect((a as SetValueAction<string>).value).toBe(newValue);
       done();

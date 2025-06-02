@@ -43,7 +43,10 @@ describe(validate.name, () => {
     const errors1 = { required: true };
     const errors2 = { min: 1 };
     const mergedErrors = { required: true, min: 1 };
-    const resultState = validate<string>(() => errors1, () => errors2)(INITIAL_STATE.controls.inner);
+    const resultState = validate<string>(
+      () => errors1,
+      () => errors2
+    )(INITIAL_STATE.controls.inner);
     expect(resultState.errors).toEqual(mergedErrors);
   });
 
@@ -51,7 +54,10 @@ describe(validate.name, () => {
     const errors1 = { min: 1, required: true };
     const errors2 = { min: 2 };
     const mergedErrors = { required: true, min: 2 };
-    const resultState = validate<string>(() => errors1, () => errors2)(INITIAL_STATE.controls.inner);
+    const resultState = validate<string>(
+      () => errors1,
+      () => errors2
+    )(INITIAL_STATE.controls.inner);
     expect(resultState.errors).toEqual(mergedErrors);
   });
 
@@ -75,7 +81,11 @@ describe(validate.name, () => {
     const errors1 = { min: 1, required: true };
     const errors2 = { min: 2 };
     const mergedErrors = { required: true, min: 2 };
-    const resultState = validate(INITIAL_STATE.controls.inner, () => errors1, () => errors2);
+    const resultState = validate(
+      INITIAL_STATE.controls.inner,
+      () => errors1,
+      () => errors2
+    );
     expect(resultState.errors).toEqual(mergedErrors);
   });
 
@@ -122,7 +132,7 @@ describe(validate.name, () => {
   it('should work inside an updateGroup uncurried', () => {
     const errors = { required: true };
     const resultState = updateGroup<typeof INITIAL_STATE.value>(INITIAL_STATE, {
-      inner: inner => validate<string>(inner, () => errors),
+      inner: (inner) => validate<string>(inner, () => errors),
     });
 
     expect(resultState).not.toEqual(INITIAL_STATE);

@@ -2,10 +2,7 @@ import { Actions, RemoveArrayControlAction } from '../../actions';
 import { computeArrayState, FormArrayState } from '../../state';
 import { childReducer, updateIdRecursive } from './util';
 
-export function removeControlReducer<TValue>(
-  state: FormArrayState<TValue>,
-  action: Actions<TValue[]>,
-): FormArrayState<TValue> {
+export function removeControlReducer<TValue>(state: FormArrayState<TValue>, action: Actions<TValue[]>): FormArrayState<TValue> {
   if (action.type !== RemoveArrayControlAction.TYPE) {
     return state;
   }
@@ -21,18 +18,10 @@ export function removeControlReducer<TValue>(
   const index = action.index;
   const controls = state.controls.filter((_, i) => i !== index).map((c, i) => updateIdRecursive(c, `${state.id}.${i}`));
 
-  return computeArrayState(
-    state.id,
-    controls,
-    state.value,
-    state.errors,
-    state.pendingValidations,
-    state.userDefinedProperties,
-    {
-      wasOrShouldBeDirty: true,
-      wasOrShouldBeEnabled: state.isEnabled,
-      wasOrShouldBeTouched: state.isTouched,
-      wasOrShouldBeSubmitted: state.isSubmitted,
-    },
-  );
+  return computeArrayState(state.id, controls, state.value, state.errors, state.pendingValidations, state.userDefinedProperties, {
+    wasOrShouldBeDirty: true,
+    wasOrShouldBeEnabled: state.isEnabled,
+    wasOrShouldBeTouched: state.isTouched,
+    wasOrShouldBeSubmitted: state.isSubmitted,
+  });
 }

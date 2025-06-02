@@ -18,24 +18,25 @@ import { MaterialModule } from './material';
 import { SharedModule } from './shared/shared.module';
 import { CustomRouterStateSerializer } from './shared/utils';
 
-export const COMPONENTS = [
-  AppComponent,
-];
+export const COMPONENTS = [AppComponent];
 
-@NgModule({ declarations: COMPONENTS,
-    exports: COMPONENTS,
-    bootstrap: [AppComponent], imports: [CommonModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        MaterialModule,
-        SharedModule,
-        RouterModule.forRoot(routes, {}),
-        StoreModule.forRoot(reducers),
-        StoreRouterConnectingModule.forRoot(),
-        !environment.production ? StoreDevtoolsModule.instrument({ connectInZone: true }) : [],
-        EffectsModule.forRoot([]),
-        LayoutModule.forRoot()], providers: [
-        { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
-export class AppModule { }
+@NgModule({
+  declarations: COMPONENTS,
+  exports: COMPONENTS,
+  bootstrap: [AppComponent],
+  imports: [
+    CommonModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    SharedModule,
+    RouterModule.forRoot(routes, {}),
+    StoreModule.forRoot(reducers),
+    StoreRouterConnectingModule.forRoot(),
+    !environment.production ? StoreDevtoolsModule.instrument({ connectInZone: true }) : [],
+    EffectsModule.forRoot([]),
+    LayoutModule.forRoot(),
+  ],
+  providers: [{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }, provideHttpClient(withInterceptorsFromDi())],
+})
+export class AppModule {}

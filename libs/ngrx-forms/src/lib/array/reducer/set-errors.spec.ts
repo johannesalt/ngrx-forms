@@ -1,14 +1,7 @@
 import { SetErrorsAction } from '../../actions';
 import { createFormArrayState } from '../../state';
 import { setErrorsReducer } from './set-errors';
-import {
-  FORM_CONTROL_0_ID,
-  FORM_CONTROL_1_ID,
-  FORM_CONTROL_ID,
-  INITIAL_STATE,
-  INITIAL_STATE_NESTED_ARRAY,
-  INITIAL_STATE_NESTED_GROUP,
-} from './test-util';
+import { FORM_CONTROL_0_ID, FORM_CONTROL_1_ID, FORM_CONTROL_ID, INITIAL_STATE, INITIAL_STATE_NESTED_ARRAY, INITIAL_STATE_NESTED_GROUP } from './test-util';
 
 describe(`form array ${setErrorsReducer.name}`, () => {
   it('should update state if there are errors', () => {

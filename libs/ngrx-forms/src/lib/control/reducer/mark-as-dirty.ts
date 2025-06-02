@@ -1,10 +1,7 @@
 import { Actions, MarkAsDirtyAction } from '../../actions';
 import { FormControlState, FormControlValueTypes } from '../../state';
 
-export function markAsDirtyReducer<TValue extends FormControlValueTypes>(
-  state: FormControlState<TValue>,
-  action: Actions<TValue>,
-): FormControlState<TValue> {
+export function markAsDirtyReducer<TValue extends FormControlValueTypes>(state: FormControlState<TValue>, action: Actions<TValue>): FormControlState<TValue> {
   if (action.type !== MarkAsDirtyAction.TYPE) {
     return state;
   }

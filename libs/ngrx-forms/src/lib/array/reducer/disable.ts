@@ -2,10 +2,7 @@ import { Actions, DisableAction } from '../../actions';
 import { computeArrayState, FormArrayState } from '../../state';
 import { childReducer, dispatchActionPerChild } from './util';
 
-export function disableReducer<TValue>(
-  state: FormArrayState<TValue>,
-  action: Actions<TValue[]>,
-): FormArrayState<TValue> {
+export function disableReducer<TValue>(state: FormArrayState<TValue>, action: Actions<TValue[]>): FormArrayState<TValue> {
   if (action.type !== DisableAction.TYPE) {
     return state;
   }
@@ -20,7 +17,7 @@ export function disableReducer<TValue>(
 
   return computeArrayState(
     state.id,
-    dispatchActionPerChild(state.controls, controlId => new DisableAction(controlId)),
+    dispatchActionPerChild(state.controls, (controlId) => new DisableAction(controlId)),
     state.value,
     {},
     [],
@@ -30,6 +27,6 @@ export function disableReducer<TValue>(
       wasOrShouldBeEnabled: false,
       wasOrShouldBeTouched: state.isTouched,
       wasOrShouldBeSubmitted: state.isSubmitted,
-    },
+    }
   );
 }

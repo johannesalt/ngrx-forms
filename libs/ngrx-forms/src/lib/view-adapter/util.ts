@@ -17,7 +17,7 @@ const BUILTIN_ADAPTERS = [
 ];
 
 export function isBuiltInViewAdapter(viewAdapter: FormViewAdapter): boolean {
-  return BUILTIN_ADAPTERS.some(a => viewAdapter.constructor === a);
+  return BUILTIN_ADAPTERS.some((a) => viewAdapter.constructor === a);
 }
 
 export function selectViewAdapter(viewAdapters: FormViewAdapter[]): FormViewAdapter {

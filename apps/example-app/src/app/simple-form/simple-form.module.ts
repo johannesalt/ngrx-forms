@@ -15,13 +15,9 @@ import { reducer } from './simple-form.reducer';
     MaterialModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: SimpleFormPageComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: SimpleFormPageComponent }]),
     StoreModule.forFeature('simpleForm', reducer),
   ],
-  declarations: [
-    SimpleFormPageComponent,
-  ],
+  declarations: [SimpleFormPageComponent],
 })
-export class SimpleFormModule { }
+export class SimpleFormModule {}

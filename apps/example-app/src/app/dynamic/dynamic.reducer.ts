@@ -31,13 +31,13 @@ export interface State extends RootState {
 export class CreateGroupElementAction implements Action {
   static readonly TYPE = 'dynamic/CREATE_GROUP_ELEMENT';
   readonly type = CreateGroupElementAction.TYPE;
-  constructor(public name: string) { }
+  constructor(public name: string) {}
 }
 
 export class RemoveGroupElementAction implements Action {
   static readonly TYPE = 'dynamic/REMOVE_GROUP_ELEMENT';
   readonly type = RemoveGroupElementAction.TYPE;
-  constructor(public name: string) { }
+  constructor(public name: string) {}
 }
 
 export const FORM_ID = 'dynamic';
@@ -50,16 +50,13 @@ export const INITIAL_STATE = createFormGroupState<FormValue>(FORM_ID, {
   },
 });
 
-export function formStateReducer(
-  s = INITIAL_STATE,
-  a: CreateGroupElementAction | RemoveGroupElementAction,
-) {
+export function formStateReducer(s = INITIAL_STATE, a: CreateGroupElementAction | RemoveGroupElementAction) {
   s = formGroupReducer(s, a);
 
   switch (a.type) {
     case CreateGroupElementAction.TYPE:
       return updateGroup<FormValue>({
-        group: group => {
+        group: (group) => {
           const newGroup = addGroupControl(group, a.name, false);
 
           // alternatively we can also use setValue
@@ -72,7 +69,7 @@ export function formStateReducer(
 
     case RemoveGroupElementAction.TYPE:
       return updateGroup<FormValue>({
-        group: group => {
+        group: (group) => {
           const newValue = { ...group.value };
           delete newValue[a.name];
           const newGroup = setValue(group, newValue);
@@ -91,10 +88,7 @@ export function formStateReducer(
 
 const reducers = combineReducers<State['dynamic'], any>({
   formState: formStateReducer,
-  array(
-    s = { maxIndex: 2, options: [1, 2] },
-    a: AddArrayControlAction<boolean> | RemoveArrayControlAction,
-  ) {
+  array(s = { maxIndex: 2, options: [1, 2] }, a: AddArrayControlAction<boolean> | RemoveArrayControlAction) {
     switch (a.type) {
       case AddArrayControlAction.TYPE: {
         const maxIndex = s.maxIndex + 1;
@@ -121,16 +115,13 @@ const reducers = combineReducers<State['dynamic'], any>({
         return s;
     }
   },
-  groupOptions(
-    s: string[] = ['abc', 'xyz'],
-    a: CreateGroupElementAction | RemoveGroupElementAction,
-  ) {
+  groupOptions(s: string[] = ['abc', 'xyz'], a: CreateGroupElementAction | RemoveGroupElementAction) {
     switch (a.type) {
       case CreateGroupElementAction.TYPE:
         return [...s, a.name];
 
       case RemoveGroupElementAction.TYPE:
-        return s.filter(i => i !== a.name);
+        return s.filter((i) => i !== a.name);
 
       default:
         return s;

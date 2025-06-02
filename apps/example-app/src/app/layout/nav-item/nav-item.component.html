@@ -1,12 +1,8 @@
-<a mat-list-item
-   [routerLink]="routerLink"
-   routerLinkActive="active-link">
+<a mat-list-item [routerLink]="routerLink" routerLinkActive="active-link">
   <span mat-line>
     <ng-content></ng-content>
   </span>
-  <span mat-line
-        *ngIf="hint"
-        class="hint">
+  <span mat-line *ngIf="hint" class="hint">
     {{ hint }}
   </span>
 </a>

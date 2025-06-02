@@ -16,28 +16,40 @@ describe(`form group ${markAsUnsubmittedReducer.name}`, () => {
   });
 
   it('should mark control children as unsubmitted', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isSubmitted', true], ['isUnsubmitted', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isSubmitted', true],
+      ['isUnsubmitted', false],
+    ]);
     const resultState = markAsUnsubmittedReducer(state, new MarkAsUnsubmittedAction(FORM_CONTROL_ID));
     expect(resultState.controls.inner.isSubmitted).toEqual(false);
     expect(resultState.controls.inner.isUnsubmitted).toEqual(true);
   });
 
   it('should mark group children as unsubmitted', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isSubmitted', true], ['isUnsubmitted', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isSubmitted', true],
+      ['isUnsubmitted', false],
+    ]);
     const resultState = markAsUnsubmittedReducer(state, new MarkAsUnsubmittedAction(FORM_CONTROL_ID));
     expect(resultState.controls.inner3!.isSubmitted).toEqual(false);
     expect(resultState.controls.inner3!.isUnsubmitted).toEqual(true);
   });
 
   it('should mark array children as unsubmitted', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [['isSubmitted', true], ['isUnsubmitted', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE_FULL, [
+      ['isSubmitted', true],
+      ['isUnsubmitted', false],
+    ]);
     const resultState = markAsUnsubmittedReducer(state, new MarkAsUnsubmittedAction(FORM_CONTROL_ID));
     expect(resultState.controls.inner3!.isSubmitted).toEqual(false);
     expect(resultState.controls.inner3!.isUnsubmitted).toEqual(true);
   });
 
   it('should forward actions to children', () => {
-    const state = setPropertiesRecursively(INITIAL_STATE, [['isSubmitted', true], ['isUnsubmitted', false]]);
+    const state = setPropertiesRecursively(INITIAL_STATE, [
+      ['isSubmitted', true],
+      ['isUnsubmitted', false],
+    ]);
     const resultState = markAsUnsubmittedReducer(state, new MarkAsUnsubmittedAction(state.controls.inner.id));
     expect(resultState).not.toBe(state);
   });

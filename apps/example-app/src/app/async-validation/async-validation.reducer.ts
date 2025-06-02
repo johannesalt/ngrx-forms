@@ -19,7 +19,7 @@ export interface State extends RootState {
 export class SetSearchResultAction implements Action {
   static readonly TYPE = 'asyncValidation/SET_SEARCH_RESULT';
   readonly type = SetSearchResultAction.TYPE;
-  constructor(public results: string[]) { }
+  constructor(public results: string[]) {}
 }
 
 export const FORM_ID = 'asyncValidation';
@@ -29,10 +29,12 @@ export const INITIAL_STATE = createFormGroupState<FormValue>(FORM_ID, {
   numberOfResultsToShow: 5,
 });
 
-const formGroupReducerWithUpdate = createFormStateReducerWithUpdate<FormValue>(updateGroup<FormValue>({
-  searchTerm: validate(required),
-  numberOfResultsToShow: validate(required, greaterThan(0)),
-}));
+const formGroupReducerWithUpdate = createFormStateReducerWithUpdate<FormValue>(
+  updateGroup<FormValue>({
+    searchTerm: validate(required),
+    numberOfResultsToShow: validate(required, greaterThan(0)),
+  })
+);
 
 const reducers = combineReducers<State['asyncValidation']>({
   formState(s = INITIAL_STATE, a: Action) {

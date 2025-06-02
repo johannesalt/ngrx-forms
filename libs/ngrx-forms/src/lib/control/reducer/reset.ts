@@ -1,10 +1,7 @@
 import { Actions, ResetAction } from '../../actions';
 import { FormControlState, FormControlValueTypes } from '../../state';
 
-export function resetReducer<TValue extends FormControlValueTypes>(
-  state: FormControlState<TValue>,
-  action: Actions<TValue>,
-): FormControlState<TValue> {
+export function resetReducer<TValue extends FormControlValueTypes>(state: FormControlState<TValue>, action: Actions<TValue>): FormControlState<TValue> {
   if (action.type !== ResetAction.TYPE) {
     return state;
   }

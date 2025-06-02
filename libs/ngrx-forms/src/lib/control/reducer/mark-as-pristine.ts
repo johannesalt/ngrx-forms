@@ -3,7 +3,7 @@ import { FormControlState, FormControlValueTypes } from '../../state';
 
 export function markAsPristineReducer<TValue extends FormControlValueTypes>(
   state: FormControlState<TValue>,
-  action: Actions<TValue>,
+  action: Actions<TValue>
 ): FormControlState<TValue> {
   if (action.type !== MarkAsPristineAction.TYPE) {
     return state;

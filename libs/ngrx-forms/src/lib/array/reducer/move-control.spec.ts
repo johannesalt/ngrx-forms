@@ -34,25 +34,15 @@ describe(`form array ${moveControlReducer.name}`, () => {
 
   it('should throw an error for negative or too large indices', () => {
     expect(() =>
-      moveControlReducer(
-        INITIAL_STATE_NESTED_GROUP,
-        new MoveArrayControlAction(FORM_CONTROL_ID, 0, INITIAL_STATE_NESTED_GROUP.controls.length))
+      moveControlReducer(INITIAL_STATE_NESTED_GROUP, new MoveArrayControlAction(FORM_CONTROL_ID, 0, INITIAL_STATE_NESTED_GROUP.controls.length))
     ).toThrowError();
     expect(() =>
-      moveControlReducer(
-        INITIAL_STATE_NESTED_GROUP,
-        new MoveArrayControlAction(FORM_CONTROL_ID, INITIAL_STATE_NESTED_GROUP.controls.length, 0))
+      moveControlReducer(INITIAL_STATE_NESTED_GROUP, new MoveArrayControlAction(FORM_CONTROL_ID, INITIAL_STATE_NESTED_GROUP.controls.length, 0))
     ).toThrowError();
     expect(() =>
-      moveControlReducer(
-        INITIAL_STATE_NESTED_GROUP,
-        new MoveArrayControlAction(FORM_CONTROL_ID, INITIAL_STATE_NESTED_GROUP.controls.length, -3))
+      moveControlReducer(INITIAL_STATE_NESTED_GROUP, new MoveArrayControlAction(FORM_CONTROL_ID, INITIAL_STATE_NESTED_GROUP.controls.length, -3))
     ).toThrowError();
-    expect(() =>
-      moveControlReducer(
-        INITIAL_STATE_NESTED_GROUP,
-        new MoveArrayControlAction(FORM_CONTROL_ID, -1, 0))
-    ).toThrowError();
+    expect(() => moveControlReducer(INITIAL_STATE_NESTED_GROUP, new MoveArrayControlAction(FORM_CONTROL_ID, -1, 0))).toThrowError();
   });
 
   it('should return the state on a 0 move', () => {

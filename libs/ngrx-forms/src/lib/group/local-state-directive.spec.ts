@@ -23,8 +23,8 @@ describe(NgrxLocalFormDirective.name, () => {
   });
 
   describe('local action emit', () => {
-    it(`should not dispatch a ${MarkAsSubmittedAction.name} to the global store if the form is submitted and the state is unsubmitted`, done => {
-      actions$.pipe(count()).subscribe(c => {
+    it(`should not dispatch a ${MarkAsSubmittedAction.name} to the global store if the form is submitted and the state is unsubmitted`, (done) => {
+      actions$.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });
@@ -33,8 +33,8 @@ describe(NgrxLocalFormDirective.name, () => {
       actionsSubject.complete();
     });
 
-    it(`should dispatch a ${MarkAsSubmittedAction.name} to the event emitter if the form is submitted and the state is unsubmitted`, done => {
-      directive.ngrxFormsAction.pipe(take(1)).subscribe(a => {
+    it(`should dispatch a ${MarkAsSubmittedAction.name} to the event emitter if the form is submitted and the state is unsubmitted`, (done) => {
+      directive.ngrxFormsAction.pipe(take(1)).subscribe((a) => {
         expect(a).toEqual(new MarkAsSubmittedAction(INITIAL_STATE.id));
         done();
       });
@@ -42,8 +42,8 @@ describe(NgrxLocalFormDirective.name, () => {
       directive.onSubmit({ preventDefault: () => void 0 } as any);
     });
 
-    it(`should not dispatch a ${MarkAsSubmittedAction.name} to the global store if the form is submitted and the state is submitted`, done => {
-      actions$.pipe(count()).subscribe(c => {
+    it(`should not dispatch a ${MarkAsSubmittedAction.name} to the global store if the form is submitted and the state is submitted`, (done) => {
+      actions$.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });
@@ -53,8 +53,8 @@ describe(NgrxLocalFormDirective.name, () => {
       actionsSubject.complete();
     });
 
-    it(`should not dispatch a ${MarkAsSubmittedAction.name} to the event emitter if the form is submitted and the state is submitted`, done => {
-      directive.ngrxFormsAction.pipe(count()).subscribe(c => {
+    it(`should not dispatch a ${MarkAsSubmittedAction.name} to the event emitter if the form is submitted and the state is submitted`, (done) => {
+      directive.ngrxFormsAction.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });

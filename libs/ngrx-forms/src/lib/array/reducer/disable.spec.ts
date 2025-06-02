@@ -1,11 +1,6 @@
 import { DisableAction } from '../../actions';
 import { disableReducer } from './disable';
-import {
-  FORM_CONTROL_ID,
-  INITIAL_STATE,
-  INITIAL_STATE_NESTED_ARRAY,
-  INITIAL_STATE_NESTED_GROUP,
-} from './test-util';
+import { FORM_CONTROL_ID, INITIAL_STATE, INITIAL_STATE_NESTED_ARRAY, INITIAL_STATE_NESTED_GROUP } from './test-util';
 
 describe(`form array ${disableReducer.name}`, () => {
   it('should update state if enabled', () => {

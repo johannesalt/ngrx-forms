@@ -5,9 +5,9 @@ import { MatSelect } from '@angular/material/select';
 import { FormControlState } from 'ngrx-forms';
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: '[ngrxFormControlState]',
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: '[ngrxFormControlState]',
+  standalone: false,
 })
 export class CustomErrorStateMatcherDirective {
   @Input() set ngrxFormControlState(state: FormControlState<any>) {
@@ -29,9 +29,5 @@ export class CustomErrorStateMatcherDirective {
     }
   }
 
-  constructor(
-    @Host() @Optional() private input: MatInput,
-    @Host() @Optional() private select: MatSelect,
-    @Host() @Optional() private chipList: MatChipList,
-  ) { }
+  constructor(@Host() @Optional() private input: MatInput, @Host() @Optional() private select: MatSelect, @Host() @Optional() private chipList: MatChipList) {}
 }

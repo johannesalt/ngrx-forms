@@ -6,14 +6,16 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 // tslint:disable:directive-class-suffix
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'input[type=radio][ngrxFormControlState]',
-    providers: [{
-            provide: NGRX_FORM_VIEW_ADAPTER,
-            useExisting: forwardRef(() => NgrxRadioViewAdapter),
-            multi: true,
-        }],
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: 'input[type=radio][ngrxFormControlState]',
+  providers: [
+    {
+      provide: NGRX_FORM_VIEW_ADAPTER,
+      useExisting: forwardRef(() => NgrxRadioViewAdapter),
+      multi: true,
+    },
+  ],
+  standalone: false,
 })
 export class NgrxRadioViewAdapter implements FormViewAdapter, OnInit, AfterViewInit {
   private state: FormControlState<any>;
@@ -45,15 +47,12 @@ export class NgrxRadioViewAdapter implements FormViewAdapter, OnInit, AfterViewI
   private isChecked: boolean;
 
   @HostListener('change')
-  onChange: () => void = () => void 0
+  onChange: () => void = () => void 0;
 
   @HostListener('blur')
-  onTouched: () => void = () => void 0
+  onTouched: () => void = () => void 0;
 
-  constructor(
-    private renderer: Renderer2,
-    private elementRef: ElementRef,
-  ) { }
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
   ngOnInit() {
     this.isChecked = (this.elementRef.nativeElement as HTMLInputElement).checked;

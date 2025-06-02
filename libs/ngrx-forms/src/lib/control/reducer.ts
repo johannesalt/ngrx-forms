@@ -22,7 +22,7 @@ import { unfocusReducer } from './reducer/unfocus';
 
 export function formControlReducerInternal<TValue extends FormControlValueTypes>(
   state: FormControlState<TValue>,
-  action: Actions<TValue>,
+  action: Actions<TValue>
 ): FormControlState<TValue> {
   if (isGroupState(state) || isArrayState(state)) {
     throw new Error('The state must be a control state');

@@ -9,22 +9,22 @@ const OPTION1_VALUE = 'op1';
 const OPTION2_VALUE = 'op2';
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'radio-test',
-    template: `
-<input type="radio" value="op1" [ngrxFormControlState]="state" />
-<input type="radio" value="op2" checked="checked" [ngrxFormControlState]="state" />
+  // tslint:disable-next-line:component-selector
+  selector: 'radio-test',
+  template: `
+    <input type="radio" value="op1" [ngrxFormControlState]="state" />
+    <input type="radio" value="op2" checked="checked" [ngrxFormControlState]="state" />
 
-<input type="radio" value="op1" [ngrxFormControlState]="state" name="customName" />
-<input type="radio" value="op1" [ngrxFormControlState]="state" [name]="boundName" />
+    <input type="radio" value="op1" [ngrxFormControlState]="state" name="customName" />
+    <input type="radio" value="op1" [ngrxFormControlState]="state" [name]="boundName" />
 
-<input type="radio" *ngFor="let o of stringOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
+    <input type="radio" *ngFor="let o of stringOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
 
-<input type="radio" *ngFor="let o of numberOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
+    <input type="radio" *ngFor="let o of numberOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
 
-<input type="radio" *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
-`,
-    standalone: false
+    <input type="radio" *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
+  `,
+  standalone: false,
 })
 export class RadioTestComponent {
   boundName = 'boundName';
@@ -45,10 +45,7 @@ describe(NgrxRadioViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        NgrxRadioViewAdapter,
-        RadioTestComponent,
-      ],
+      declarations: [NgrxRadioViewAdapter, RadioTestComponent],
     }).compileComponents();
   }));
 
@@ -80,7 +77,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(element.name).toBe(component.boundName);
     });
 
-    it('should set the name of the elements when the state\'s ID changes and the name was set previously', () => {
+    it("should set the name of the elements when the state's ID changes and the name was set previously", () => {
       const newId = 'new ID';
       viewAdapter1.ngrxFormControlState = { id: newId } as any;
       viewAdapter2.ngrxFormControlState = { id: newId } as any;
@@ -89,7 +86,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(element2.name).toBe(newId);
     });
 
-    it('should not set the name of the elements when the state\'s ID changes and the name was not set previously due to manual value', () => {
+    it("should not set the name of the elements when the state's ID changes and the name was not set previously due to manual value", () => {
       const element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[2];
       const viewAdapter = getDebugNode(element)!.injector.get<NgrxRadioViewAdapter>(NgrxRadioViewAdapter);
       const newId = 'new ID';
@@ -98,7 +95,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(element.name).toBe('customName');
     });
 
-    it('should not set the name of the elements when the state\'s ID changes and the name was not set previously due to other binding', () => {
+    it("should not set the name of the elements when the state's ID changes and the name was not set previously due to other binding", () => {
       const element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[3];
       const viewAdapter = getDebugNode(element)!.injector.get<NgrxRadioViewAdapter>(NgrxRadioViewAdapter);
       const newId = 'new ID';
@@ -157,7 +154,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should throw if state is undefined', () => {
-      expect(() => viewAdapter1.ngrxFormControlState = undefined as any).toThrowError();
+      expect(() => (viewAdapter1.ngrxFormControlState = undefined as any)).toThrowError();
     });
 
     it('should not throw if calling callbacks before they are registered', () => {
@@ -201,7 +198,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(component.stringOptions[0]);
     });
 
-    it('should call the registered function whenever the selected option\'s value changes', () => {
+    it("should call the registered function whenever the selected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
@@ -211,7 +208,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(newValue);
     });
 
-    it('should not call the registered function whenever an unselected option\'s value changes', () => {
+    it("should not call the registered function whenever an unselected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
@@ -221,7 +218,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should not call the registered function when the option\'s value does not change', () => {
+    it("should not call the registered function when the option's value does not change", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter1.value = component.stringOptions[0];
@@ -280,7 +277,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(component.numberOptions[0]);
     });
 
-    it('should call the registered function whenever the selected option\'s value changes', () => {
+    it("should call the registered function whenever the selected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
@@ -290,7 +287,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(newValue);
     });
 
-    it('should not call the registered function whenever an unselected option\'s value changes', () => {
+    it("should not call the registered function whenever an unselected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
@@ -351,7 +348,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(component.booleanOptions[0]);
     });
 
-    it('should call the registered function whenever the selected option\'s value changes', () => {
+    it("should call the registered function whenever the selected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
@@ -361,7 +358,7 @@ describe(NgrxRadioViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith(newValue);
     });
 
-    it('should not call the registered function whenever an unselected option\'s value changes', () => {
+    it("should not call the registered function whenever an unselected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);

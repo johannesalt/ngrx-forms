@@ -16,9 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@johannes-it-solution/ngrx-forms": ["libs/ngrx-forms/src/index.ts"],
-      "@johannes-it-solution/ngrx-forms/validation": [
-        "libs/ngrx-forms/validation/src/index.ts"
-      ]
+      "@johannes-it-solution/ngrx-forms/validation": ["libs/ngrx-forms/validation/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

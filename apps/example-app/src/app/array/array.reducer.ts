@@ -1,9 +1,5 @@
 import { Action, combineReducers } from '@ngrx/store';
-import {
-  createFormGroupState,
-  formGroupReducer,
-  FormGroupState,
-} from 'ngrx-forms';
+import { createFormGroupState, formGroupReducer, FormGroupState } from 'ngrx-forms';
 
 import { State as RootState } from '../app.reducer';
 
@@ -20,12 +16,7 @@ export interface State extends RootState {
 export const FORM_ID = 'array';
 
 export const INITIAL_STATE = createFormGroupState<FormValue>(FORM_ID, {
-  options: [
-    false,
-    false,
-    false,
-    false,
-  ],
+  options: [false, false, false, false],
 });
 
 const reducers = combineReducers<State['array']>({

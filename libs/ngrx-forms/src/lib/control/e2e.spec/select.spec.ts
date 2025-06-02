@@ -11,10 +11,10 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'select-test',
-    template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
-    standalone: false
+  // tslint:disable-next-line:component-selector
+  selector: 'select-test',
+  template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
+  standalone: false,
 })
 export class SelectComponent {
   @Input() state: FormControlState<string>;
@@ -22,10 +22,10 @@ export class SelectComponent {
 }
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'select-test-fallback',
-    template: '<select><option *ngFor="let o of options" [value]="o">{{ o }} Label</option></select>',
-    standalone: false
+  // tslint:disable-next-line:component-selector
+  selector: 'select-test-fallback',
+  template: '<select><option *ngFor="let o of options" [value]="o">{{ o }} Label</option></select>',
+  standalone: false,
 })
 export class SelectFallbackComponent {
   options = SELECT_OPTIONS;
@@ -70,8 +70,8 @@ describe(SelectComponent.name, () => {
     expect(option2.selected).toBe(true);
   });
 
-  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, done => {
-    actions$.pipe(first()).subscribe(a => {
+  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, (done) => {
+    actions$.pipe(first()).subscribe((a) => {
       expect(a.type).toBe(SetValueAction.TYPE);
       expect((a as SetValueAction<string>).value).toBe(SELECT_OPTIONS[0]);
       done();
@@ -81,8 +81,8 @@ describe(SelectComponent.name, () => {
     element.dispatchEvent(new Event('change'));
   });
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, done => {
-    actions$.pipe(skip(1), first()).subscribe(a => {
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, (done) => {
+    actions$.pipe(skip(1), first()).subscribe((a) => {
       expect(a.type).toBe(MarkAsDirtyAction.TYPE);
       done();
     });
@@ -106,10 +106,10 @@ describe(SelectComponent.name, () => {
 const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'select-test',
-    template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
-    standalone: false
+  // tslint:disable-next-line:component-selector
+  selector: 'select-test',
+  template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
+  standalone: false,
 })
 export class NumberSelectComponent {
   @Input() state: FormControlState<number>;
@@ -154,8 +154,8 @@ describe(NumberSelectComponent.name, () => {
     expect(option2.selected).toBe(true);
   });
 
-  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, done => {
-    actions$.pipe(first()).subscribe(a => {
+  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, (done) => {
+    actions$.pipe(first()).subscribe((a) => {
       expect(a.type).toBe(SetValueAction.TYPE);
       expect((a as SetValueAction<number>).value).toBe(SELECT_NUMBER_OPTIONS[0]);
       done();
@@ -165,8 +165,8 @@ describe(NumberSelectComponent.name, () => {
     element.dispatchEvent(new Event('change'));
   });
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, done => {
-    actions$.pipe(skip(1), first()).subscribe(a => {
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, (done) => {
+    actions$.pipe(skip(1), first()).subscribe((a) => {
       expect(a.type).toBe(MarkAsDirtyAction.TYPE);
       done();
     });

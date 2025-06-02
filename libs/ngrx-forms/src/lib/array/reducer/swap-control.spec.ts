@@ -20,25 +20,20 @@ describe(`form array ${swapControlReducer.name}`, () => {
     const resultState = swapControlReducer(testArrayState, action);
     expect(resultState.value).toEqual([0, 5, 2, 3, 4, 1]);
     expect(resultState.isDirty).toEqual(true);
-
   });
 
   it('should throw on out of bound or negative indices', () => {
-    expect(() => swapControlReducer(
-      INITIAL_STATE_NESTED_GROUP,
-      new SwapArrayControlAction(FORM_CONTROL_ID, 0, INITIAL_STATE_NESTED_GROUP.controls.length))
+    expect(() =>
+      swapControlReducer(INITIAL_STATE_NESTED_GROUP, new SwapArrayControlAction(FORM_CONTROL_ID, 0, INITIAL_STATE_NESTED_GROUP.controls.length))
     ).toThrow();
-    expect(() => swapControlReducer(
-      INITIAL_STATE_NESTED_GROUP,
-      new SwapArrayControlAction(FORM_CONTROL_ID, INITIAL_STATE_NESTED_GROUP.controls.length, 0))
+    expect(() =>
+      swapControlReducer(INITIAL_STATE_NESTED_GROUP, new SwapArrayControlAction(FORM_CONTROL_ID, INITIAL_STATE_NESTED_GROUP.controls.length, 0))
     ).toThrow();
-    expect(() => swapControlReducer(
-      INITIAL_STATE_NESTED_GROUP,
-      new SwapArrayControlAction(FORM_CONTROL_ID, -3, INITIAL_STATE_NESTED_GROUP.controls.length))
+    expect(() =>
+      swapControlReducer(INITIAL_STATE_NESTED_GROUP, new SwapArrayControlAction(FORM_CONTROL_ID, -3, INITIAL_STATE_NESTED_GROUP.controls.length))
     ).toThrow();
-    expect(() => swapControlReducer(
-      INITIAL_STATE_NESTED_GROUP,
-      new SwapArrayControlAction(FORM_CONTROL_ID, INITIAL_STATE_NESTED_GROUP.controls.length, -2))
+    expect(() =>
+      swapControlReducer(INITIAL_STATE_NESTED_GROUP, new SwapArrayControlAction(FORM_CONTROL_ID, INITIAL_STATE_NESTED_GROUP.controls.length, -2))
     ).toThrow();
   });
 

@@ -1,15 +1,5 @@
 import { Action, combineReducers } from '@ngrx/store';
-import {
-  box,
-  Boxed,
-  createFormGroupState,
-  createFormStateReducerWithUpdate,
-  disable,
-  enable,
-  FormGroupState,
-  updateGroup,
-  validate,
-} from 'ngrx-forms';
+import { box, Boxed, createFormGroupState, createFormStateReducerWithUpdate, disable, enable, FormGroupState, updateGroup, validate } from 'ngrx-forms';
 import { equalTo, minLength, required, requiredTrue } from 'ngrx-forms/validation';
 
 import { State as RootState } from '../app.reducer';
@@ -40,7 +30,7 @@ export interface State extends RootState {
 export class SetSubmittedValueAction implements Action {
   static readonly TYPE = 'material/SET_SUBMITTED_VALUE';
   readonly type = SetSubmittedValueAction.TYPE;
-  constructor(public submittedValue: FormValue) { }
+  constructor(public submittedValue: FormValue) {}
 }
 
 export const FORM_ID = 'material';
@@ -59,21 +49,23 @@ export const INITIAL_STATE = createFormGroupState<FormValue>(FORM_ID, {
   agreeToTermsOfUse: false,
 });
 
-const validationFormGroupReducer = createFormStateReducerWithUpdate<FormValue>(updateGroup<FormValue>({
-  userName: validate(required),
-  password: (state, parentState) => {
-    if (!parentState.value.createAccount) {
-      return disable(state);
-    }
+const validationFormGroupReducer = createFormStateReducerWithUpdate<FormValue>(
+  updateGroup<FormValue>({
+    userName: validate(required),
+    password: (state, parentState) => {
+      if (!parentState.value.createAccount) {
+        return disable(state);
+      }
 
-    state = enable(state);
-    return updateGroup<PasswordValue>(state, {
-      password: validate(required, minLength(8)),
-      confirmPassword: validate(equalTo(state.value.password)),
-    });
-  },
-  agreeToTermsOfUse: validate(requiredTrue),
-}));
+      state = enable(state);
+      return updateGroup<PasswordValue>(state, {
+        password: validate(required, minLength(8)),
+        confirmPassword: validate(equalTo(state.value.password)),
+      });
+    },
+    agreeToTermsOfUse: validate(requiredTrue),
+  })
+);
 
 const reducers = combineReducers<State['material'], any>({
   formState(s = INITIAL_STATE, a: Action) {

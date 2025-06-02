@@ -4,13 +4,13 @@ import { createFormGroupState, formGroupReducer, FormGroupState, setValue, updat
 export class GetManufacturersAction implements Action {
   static readonly TYPE = 'localStateAdvanced/GET_MANUFACTURERS';
   readonly type = GetManufacturersAction.TYPE;
-  constructor(public countryCode: string) { }
+  constructor(public countryCode: string) {}
 }
 
 export class SetManufacturersAction implements Action {
   static readonly TYPE = 'localStateAdvanced/SET_MANUFACTURERS';
   readonly type = SetManufacturersAction.TYPE;
-  constructor(public manufacturers: string[]) { }
+  constructor(public manufacturers: string[]) {}
 }
 
 export interface FormValue {
@@ -58,7 +58,7 @@ export function reducer(oldState: LocalState = INITIAL_LOCAL_STATE, action: Acti
 
   // one overarching reducer handles inter-dependencies
   const formState = updateGroup<FormValue>({
-    manufacturer: manufacturer => {
+    manufacturer: (manufacturer) => {
       if (!state.manufacturers.includes(manufacturer.value)) {
         return setValue('')(manufacturer);
       }

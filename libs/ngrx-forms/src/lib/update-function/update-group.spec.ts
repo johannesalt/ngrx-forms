@@ -33,34 +33,25 @@ describe(updateGroup.name, () => {
 
   it('should apply the provided functions to control children uncurried', () => {
     const expected = { ...INITIAL_STATE.controls.inner, value: 'A' };
-    const resultState = updateGroup<FormGroupValue>(
-      INITIAL_STATE,
-      {
-        inner: () => expected,
-      },
-    );
+    const resultState = updateGroup<FormGroupValue>(INITIAL_STATE, {
+      inner: () => expected,
+    });
     expect(resultState.controls.inner).toBe(expected);
   });
 
   it('should apply the provided functions to group children uncurried', () => {
     const expected = { ...INITIAL_STATE.controls.inner3!, value: { inner4: 'A' } };
-    const resultState = updateGroup<FormGroupValue>(
-      INITIAL_STATE,
-      {
-        inner3: () => expected,
-      },
-    );
+    const resultState = updateGroup<FormGroupValue>(INITIAL_STATE, {
+      inner3: () => expected,
+    });
     expect(resultState.controls.inner3).toBe(expected);
   });
 
   it('should apply the provided functions to array children uncurried', () => {
     const expected = { ...INITIAL_STATE.controls.inner5, value: ['A'] };
-    const resultState = updateGroup<FormGroupValue>(
-      INITIAL_STATE,
-      {
-        inner5: () => expected,
-      },
-    );
+    const resultState = updateGroup<FormGroupValue>(INITIAL_STATE, {
+      inner5: () => expected,
+    });
     expect(resultState.controls.inner5).toBe(expected);
   });
 
@@ -80,7 +71,7 @@ describe(updateGroup.name, () => {
       },
       {
         inner: () => expectedInner1,
-      },
+      }
     )(INITIAL_STATE);
     expect(resultState.controls.inner).toBe(expectedInner1);
     expect(resultState.controls.inner3).toBe(expectedInner3);
@@ -90,13 +81,18 @@ describe(updateGroup.name, () => {
     const updatedInner1 = { ...INITIAL_STATE.controls.inner, value: 'A' };
     const expectedInner1 = { ...INITIAL_STATE.controls.inner, value: 'B' };
     const expectedInner3 = { ...INITIAL_STATE.controls.inner3!, value: { inner4: 'A' } };
-    const updateFnArr: StateUpdateFns<FormGroupValue>[] = [{
-      inner: () => expectedInner1,
-    }];
-    const resultState = updateGroup<FormGroupValue>({
-      inner: () => updatedInner1,
-      inner3: () => expectedInner3,
-    }, updateFnArr as any)(INITIAL_STATE);
+    const updateFnArr: StateUpdateFns<FormGroupValue>[] = [
+      {
+        inner: () => expectedInner1,
+      },
+    ];
+    const resultState = updateGroup<FormGroupValue>(
+      {
+        inner: () => updatedInner1,
+        inner3: () => expectedInner3,
+      },
+      updateFnArr as any
+    )(INITIAL_STATE);
     expect(resultState.controls.inner).toBe(expectedInner1);
     expect(resultState.controls.inner3).toBe(expectedInner3);
   });
@@ -131,7 +127,7 @@ describe(updateGroup.name, () => {
       },
       {
         inner: () => expectedInner1,
-      },
+      }
     );
     expect(resultState.controls.inner).toBe(expectedInner1);
     expect(resultState.controls.inner3).toBe(expectedInner3);
@@ -141,13 +137,19 @@ describe(updateGroup.name, () => {
     const updatedInner1 = { ...INITIAL_STATE.controls.inner, value: 'A' };
     const expectedInner1 = { ...INITIAL_STATE.controls.inner, value: 'B' };
     const expectedInner3 = { ...INITIAL_STATE.controls.inner3!, value: { inner4: 'A' } };
-    const updateFnArr: StateUpdateFns<FormGroupValue>[] = [{
-      inner: () => expectedInner1,
-    }];
-    const resultState = updateGroup(INITIAL_STATE, {
-      inner: () => updatedInner1,
-      inner3: () => expectedInner3,
-    }, updateFnArr as any);
+    const updateFnArr: StateUpdateFns<FormGroupValue>[] = [
+      {
+        inner: () => expectedInner1,
+      },
+    ];
+    const resultState = updateGroup(
+      INITIAL_STATE,
+      {
+        inner: () => updatedInner1,
+        inner3: () => expectedInner3,
+      },
+      updateFnArr as any
+    );
     expect(resultState.controls.inner).toBe(expectedInner1);
     expect(resultState.controls.inner3).toBe(expectedInner3);
   });

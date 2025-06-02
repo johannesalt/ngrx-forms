@@ -19,10 +19,7 @@ export interface State extends RootState {
   };
 }
 
-export const setSubmittedValue = createAction(
-  'simpleFormNgrx8/SET_SUBMITTED_VALUE',
-  props<{ submittedValue: FormValue }>(),
-);
+export const setSubmittedValue = createAction('simpleFormNgrx8/SET_SUBMITTED_VALUE', props<{ submittedValue: FormValue }>());
 
 export const FORM_ID = 'simpleFormNgrx8';
 
@@ -39,7 +36,7 @@ export const INITIAL_STATE = createFormGroupState<FormValue>(FORM_ID, {
 export const combinedReducer = createReducer<State['simpleFormNgrx8']>(
   { formState: INITIAL_STATE, submittedValue: undefined },
   onNgrxForms(),
-  on(setSubmittedValue, (state, { submittedValue }) => ({ ...state, submittedValue })),
+  on(setSubmittedValue, (state, { submittedValue }) => ({ ...state, submittedValue }))
 );
 
 export function reducer(s: State['simpleFormNgrx8'], a: Action) {

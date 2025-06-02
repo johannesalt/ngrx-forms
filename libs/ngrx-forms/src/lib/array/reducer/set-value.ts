@@ -3,10 +3,7 @@ import { formStateReducer } from '../../reducer';
 import { computeArrayState, createChildState, FormArrayState } from '../../state';
 import { childReducer } from './util';
 
-export function setValueReducer<TValue>(
-  state: FormArrayState<TValue>,
-  action: Actions<TValue[]>,
-): FormArrayState<TValue> {
+export function setValueReducer<TValue>(state: FormArrayState<TValue>, action: Actions<TValue[]>): FormArrayState<TValue> {
   if (action.type !== SetValueAction.TYPE) {
     return state;
   }
@@ -25,27 +22,18 @@ export function setValueReducer<TValue>(
 
   const value = action.value;
 
-  const controls = value
-    .map((v, i) => {
-      if (!state.controls[i]) {
-        return createChildState(`${state.id}.${i}`, v);
-      }
+  const controls = value.map((v, i) => {
+    if (!state.controls[i]) {
+      return createChildState(`${state.id}.${i}`, v);
+    }
 
-      return formStateReducer<TValue>(state.controls[i], new SetValueAction(state.controls[i].id, v));
-    });
+    return formStateReducer<TValue>(state.controls[i], new SetValueAction(state.controls[i].id, v));
+  });
 
-  return computeArrayState(
-    state.id,
-    controls,
-    value,
-    state.errors,
-    state.pendingValidations,
-    state.userDefinedProperties,
-    {
-      wasOrShouldBeDirty: state.isDirty,
-      wasOrShouldBeEnabled: state.isEnabled,
-      wasOrShouldBeTouched: state.isTouched,
-      wasOrShouldBeSubmitted: state.isSubmitted,
-    },
-  );
+  return computeArrayState(state.id, controls, value, state.errors, state.pendingValidations, state.userDefinedProperties, {
+    wasOrShouldBeDirty: state.isDirty,
+    wasOrShouldBeEnabled: state.isEnabled,
+    wasOrShouldBeTouched: state.isTouched,
+    wasOrShouldBeSubmitted: state.isSubmitted,
+  });
 }

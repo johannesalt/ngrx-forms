@@ -8,10 +8,7 @@ function swapArrayValues(a: readonly any[], i: number, j: number) {
   return n;
 }
 
-export function swapControlReducer<TValue>(
-  state: FormArrayState<TValue>,
-  action: Actions<TValue[]>,
-): FormArrayState<TValue> {
+export function swapControlReducer<TValue>(state: FormArrayState<TValue>, action: Actions<TValue[]>): FormArrayState<TValue> {
   if (action.type !== SwapArrayControlAction.TYPE) {
     return state;
   }
@@ -36,20 +33,12 @@ export function swapControlReducer<TValue>(
   }
 
   let controls = swapArrayValues(state.controls, fromIndex, toIndex);
-  controls = controls.map((c, i) => (i >= fromIndex || i >= toIndex) ? updateIdRecursive<any>(c, `${state.id}.${i}`) : c);
+  controls = controls.map((c, i) => (i >= fromIndex || i >= toIndex ? updateIdRecursive<any>(c, `${state.id}.${i}`) : c));
 
-  return computeArrayState(
-    state.id,
-    controls,
-    state.value,
-    state.errors,
-    state.pendingValidations,
-    state.userDefinedProperties,
-    {
-      wasOrShouldBeDirty: true,
-      wasOrShouldBeEnabled: state.isEnabled,
-      wasOrShouldBeTouched: state.isTouched,
-      wasOrShouldBeSubmitted: state.isSubmitted,
-    }
-  );
+  return computeArrayState(state.id, controls, state.value, state.errors, state.pendingValidations, state.userDefinedProperties, {
+    wasOrShouldBeDirty: true,
+    wasOrShouldBeEnabled: state.isEnabled,
+    wasOrShouldBeTouched: state.isTouched,
+    wasOrShouldBeSubmitted: state.isSubmitted,
+  });
 }

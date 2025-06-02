@@ -1,16 +1,13 @@
 import { MarkAsDirtyAction } from '../../actions';
 import { createFormArrayState } from '../../state';
 import { markAsDirtyReducer } from './mark-as-dirty';
-import {
-  FORM_CONTROL_ID,
-  INITIAL_STATE,
-  INITIAL_STATE_NESTED_ARRAY,
-  INITIAL_STATE_NESTED_GROUP,
-  setPropertiesRecursively,
-} from './test-util';
+import { FORM_CONTROL_ID, INITIAL_STATE, INITIAL_STATE_NESTED_ARRAY, INITIAL_STATE_NESTED_GROUP, setPropertiesRecursively } from './test-util';
 
 describe(`form array ${markAsDirtyReducer.name}`, () => {
-  const INITIAL_STATE_DIRTY = setPropertiesRecursively(INITIAL_STATE, [['isDirty', true], ['isPristine', false]]);
+  const INITIAL_STATE_DIRTY = setPropertiesRecursively(INITIAL_STATE, [
+    ['isDirty', true],
+    ['isPristine', false],
+  ]);
 
   it('should mark itself and all children recursively as dirty', () => {
     const resultState = markAsDirtyReducer(INITIAL_STATE, new MarkAsDirtyAction(FORM_CONTROL_ID));

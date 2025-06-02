@@ -1,14 +1,5 @@
 import { Action, combineReducers } from '@ngrx/store';
-import {
-  createFormGroupState,
-  disable,
-  enable,
-  formGroupReducer,
-  FormGroupState,
-  updateGroup,
-  validate,
-  ValidationErrors,
-} from 'ngrx-forms';
+import { createFormGroupState, disable, enable, formGroupReducer, FormGroupState, updateGroup, validate, ValidationErrors } from 'ngrx-forms';
 import { minLength, required, requiredTrue } from 'ngrx-forms/validation';
 
 import { State as RootState } from '../app.reducer';
@@ -38,7 +29,7 @@ export interface State extends RootState {
 export class SetSubmittedValueAction implements Action {
   static readonly TYPE = 'syncValidation/SET_SUBMITTED_VALUE';
   readonly type = SetSubmittedValueAction.TYPE;
-  constructor(public submittedValue: FormValue) { }
+  constructor(public submittedValue: FormValue) {}
 }
 
 export const FORM_ID = 'syncValidation';

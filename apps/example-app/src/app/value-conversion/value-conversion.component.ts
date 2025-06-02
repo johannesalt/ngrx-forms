@@ -6,17 +6,17 @@ import { Observable } from 'rxjs';
 import { FormValue, State } from './value-conversion.reducer';
 
 @Component({
-    selector: 'ngf-value-conversion',
-    templateUrl: './value-conversion.component.html',
-    styleUrls: ['./value-conversion.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'ngf-value-conversion',
+  templateUrl: './value-conversion.component.html',
+  styleUrls: ['./value-conversion.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ValueConversionPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;
 
   constructor(store: Store<State>) {
-    this.formState$ = store.pipe(select(s => s.valueConversion.formState));
+    this.formState$ = store.pipe(select((s) => s.valueConversion.formState));
   }
 
   dateToISOString = NgrxValueConverters.dateToISOString;

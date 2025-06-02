@@ -8,22 +8,22 @@ import { GetManufacturersAction, SetManufacturersAction } from './local-state-ad
 
 @Injectable()
 export class LocalStateAdvancedEffects {
+  getManufacturers$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(GetManufacturersAction.TYPE),
+      debounceTime(300),
+      delay(1000),
+      map((action: GetManufacturersAction) => {
+        if (action.countryCode === 'US') {
+          return new SetManufacturersAction(['Ford', 'Chevrolet']);
+        } else if (action.countryCode === 'UK') {
+          return new SetManufacturersAction(['Aston Martin', 'Jaguar']);
+        } else {
+          return new SetManufacturersAction([]);
+        }
+      })
+    )
+  );
 
-  
-  getManufacturers$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(GetManufacturersAction.TYPE),
-    debounceTime(300),
-    delay(1000),
-    map((action: GetManufacturersAction) => {
-      if (action.countryCode === 'US') {
-        return new SetManufacturersAction(['Ford', 'Chevrolet']);
-      } else if (action.countryCode === 'UK') {
-        return new SetManufacturersAction(['Aston Martin', 'Jaguar']);
-      } else {
-        return new SetManufacturersAction([]);
-      }
-    })
-  ));
-
-  constructor(private actions$: Actions) { }
+  constructor(private actions$: Actions) {}
 }

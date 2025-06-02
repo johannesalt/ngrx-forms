@@ -23,28 +23,19 @@ export const INITIAL_DEEPLY_NESTED_GROUPS_FORM_VALUE: DeeplyNestedGroupFormValue
   {
     i: '0',
     deep: {
-      inners: [
-        { inner: 'inner-0-0' },
-        { inner: 'inner-0-1' },
-      ],
+      inners: [{ inner: 'inner-0-0' }, { inner: 'inner-0-1' }],
     },
   },
   {
     i: '1',
     deep: {
-      inners: [
-        { inner: 'inner-1-0' },
-        { inner: 'inner-1-1' },
-        { inner: 'inner-1-2' },
-      ],
+      inners: [{ inner: 'inner-1-0' }, { inner: 'inner-1-1' }, { inner: 'inner-1-2' }],
     },
   },
   {
     i: '2',
     deep: {
-      inners: [
-        { inner: 'inner-2-0' },
-      ],
+      inners: [{ inner: 'inner-2-0' }],
     },
   },
 ];
@@ -54,7 +45,7 @@ export const INITIAL_DEEPLY_NESTED_GROUPS_FORM_STATE = createFormArrayState(FORM
 function setPropertyRecursively<TValue>(
   state: AbstractControlState<TValue>,
   property: keyof AbstractControlState<TValue>,
-  value: any,
+  value: any
 ): AbstractControlState<TValue> {
   state = {
     ...state,
@@ -62,7 +53,7 @@ function setPropertyRecursively<TValue>(
   };
 
   if (isArrayState(state)) {
-    const controls = state.controls.map(s => setPropertyRecursively(s, property, value));
+    const controls = state.controls.map((s) => setPropertyRecursively(s, property, value));
     return {
       ...state,
       controls,
@@ -88,7 +79,7 @@ function setPropertyRecursively<TValue>(
 
 export function setPropertiesRecursively<TValue>(
   state: AbstractControlState<TValue>,
-  properties: [keyof AbstractControlState<TValue>, any][],
+  properties: [keyof AbstractControlState<TValue>, any][]
 ): FormState<TValue> {
   return properties.reduce((s, [p, v]) => setPropertyRecursively(s, p, v), state) as FormState<TValue>;
 }

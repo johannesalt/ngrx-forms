@@ -3,7 +3,10 @@ import { markAsDirtyReducer } from './mark-as-dirty';
 import { FORM_CONTROL_ID, INITIAL_STATE, INITIAL_STATE_FULL, setPropertiesRecursively } from './test-util';
 
 describe(`form group ${markAsDirtyReducer.name}`, () => {
-  const INITIAL_STATE_FULL_DIRTY = setPropertiesRecursively(INITIAL_STATE_FULL, [['isDirty', true], ['isPristine', false]]);
+  const INITIAL_STATE_FULL_DIRTY = setPropertiesRecursively(INITIAL_STATE_FULL, [
+    ['isDirty', true],
+    ['isPristine', false],
+  ]);
 
   it('should mark itself and all children recursively as dirty', () => {
     const resultState = markAsDirtyReducer(INITIAL_STATE_FULL, new MarkAsDirtyAction(FORM_CONTROL_ID));

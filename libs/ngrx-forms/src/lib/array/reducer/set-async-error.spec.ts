@@ -1,13 +1,6 @@
 import { SetAsyncErrorAction } from '../../actions';
 import { setAsyncErrorReducer } from './set-async-error';
-import {
-  FORM_CONTROL_0_ID,
-  FORM_CONTROL_1_ID,
-  FORM_CONTROL_ID,
-  INITIAL_STATE,
-  INITIAL_STATE_NESTED_ARRAY,
-  INITIAL_STATE_NESTED_GROUP,
-} from './test-util';
+import { FORM_CONTROL_0_ID, FORM_CONTROL_1_ID, FORM_CONTROL_ID, INITIAL_STATE, INITIAL_STATE_NESTED_ARRAY, INITIAL_STATE_NESTED_GROUP } from './test-util';
 
 describe(`form array ${setAsyncErrorReducer.name}`, () => {
   it('should skip any action of the wrong type', () => expect(setAsyncErrorReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));

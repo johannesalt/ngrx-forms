@@ -114,7 +114,7 @@ describe(clearAsyncError.name, () => {
 
   it('should work inside an updateGroup uncurried', () => {
     const resultState = updateGroup<typeof stateWithAsyncError.value>(stateWithAsyncError, {
-      inner: inner => clearAsyncError(inner, 'error'),
+      inner: (inner) => clearAsyncError(inner, 'error'),
     });
 
     expect(resultState).not.toEqual(stateWithAsyncError);

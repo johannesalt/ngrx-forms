@@ -6,21 +6,21 @@ import { Subscription } from 'rxjs';
 import { GetManufacturersAction, INITIAL_LOCAL_STATE, reducer } from './local-state-advanced.reducer';
 
 @Component({
-    selector: 'ngf-local-state-advanced',
-    templateUrl: './local-state-advanced.component.html',
-    styleUrls: ['./local-state-advanced.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'ngf-local-state-advanced',
+  templateUrl: './local-state-advanced.component.html',
+  styleUrls: ['./local-state-advanced.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LocalStateAdvancedComponent implements OnInit, OnDestroy {
   localState = INITIAL_LOCAL_STATE;
 
   private subscription = new Subscription();
 
-  constructor(private actionsSubject: ActionsSubject, private cd: ChangeDetectorRef) { }
+  constructor(private actionsSubject: ActionsSubject, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.subscription = this.actionsSubject.subscribe(action => {
+    this.subscription = this.actionsSubject.subscribe((action) => {
       const updated = this.updateState(action);
       if (updated) {
         // since OnPush is used, need to trigger detectChanges

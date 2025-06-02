@@ -5,18 +5,10 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../material';
 import { IntroductionPageComponent } from './introduction.component';
 
-export const COMPONENTS = [
-  IntroductionPageComponent,
-];
+export const COMPONENTS = [IntroductionPageComponent];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MaterialModule,
-    RouterModule.forChild([
-      { path: '', component: IntroductionPageComponent },
-    ]),
-  ],
+  imports: [CommonModule, MaterialModule, RouterModule.forChild([{ path: '', component: IntroductionPageComponent }])],
   declarations: COMPONENTS,
   exports: COMPONENTS,
 })

@@ -15,13 +15,9 @@ import { reducer } from './sync-validation.reducer';
     MaterialModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: SyncValidationPageComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: SyncValidationPageComponent }]),
     StoreModule.forFeature('syncValidation', reducer),
   ],
-  declarations: [
-    SyncValidationPageComponent,
-  ],
+  declarations: [SyncValidationPageComponent],
 })
-export class SyncValidationModule { }
+export class SyncValidationModule {}

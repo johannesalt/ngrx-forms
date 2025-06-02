@@ -1,14 +1,5 @@
 import { Action, combineReducers } from '@ngrx/store';
-import {
-  createFormGroupState,
-  disable,
-  enable,
-  formGroupReducer,
-  FormGroupState,
-  setUserDefinedProperty,
-  updateGroup,
-  updateRecursive,
-} from 'ngrx-forms';
+import { createFormGroupState, disable, enable, formGroupReducer, FormGroupState, setUserDefinedProperty, updateGroup, updateRecursive } from 'ngrx-forms';
 
 import { State as RootState } from '../app.reducer';
 
@@ -54,7 +45,7 @@ export const INITIAL_STATE = updateGroup<FormValue>(
     employed: disable,
     notes: disable,
     sex: disable,
-  },
+  }
 );
 
 export function formStateReducer(state = INITIAL_STATE, a: BlockUIAction | UnblockUIAction) {
@@ -62,19 +53,13 @@ export function formStateReducer(state = INITIAL_STATE, a: BlockUIAction | Unblo
 
   switch (a.type) {
     case BlockUIAction.TYPE: {
-      state = updateRecursive(
-        state,
-        s => setUserDefinedProperty(s, 'wasDisabled', s.isDisabled),
-      );
+      state = updateRecursive(state, (s) => setUserDefinedProperty(s, 'wasDisabled', s.isDisabled));
       return disable(state);
     }
 
     case UnblockUIAction.TYPE: {
       state = enable(state);
-      return updateRecursive(
-        state,
-        s => s.userDefinedProperties.wasDisabled ? disable(s) : s,
-      );
+      return updateRecursive(state, (s) => (s.userDefinedProperties.wasDisabled ? disable(s) : s));
     }
 
     default: {

@@ -6,14 +6,14 @@ import { NgrxNumberViewAdapter } from './number';
 const TEST_ID = 'test ID';
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'number-test',
-    template: `
-<input type="number" [ngrxFormControlState]="state" />
-<input type="number" [ngrxFormControlState]="state" id="customId" />
-<input type="number" [ngrxFormControlState]="state" [id]="boundId" />
-`,
-    standalone: false
+  // tslint:disable-next-line:component-selector
+  selector: 'number-test',
+  template: `
+    <input type="number" [ngrxFormControlState]="state" />
+    <input type="number" [ngrxFormControlState]="state" id="customId" />
+    <input type="number" [ngrxFormControlState]="state" [id]="boundId" />
+  `,
+  standalone: false,
 })
 export class NumberTestComponent {
   boundId = 'boundId';
@@ -28,10 +28,7 @@ describe(NgrxNumberViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        NgrxNumberViewAdapter,
-        NumberTestComponent,
-      ],
+      declarations: [NgrxNumberViewAdapter, NumberTestComponent],
     }).compileComponents();
   }));
 
@@ -96,13 +93,13 @@ describe(NgrxNumberViewAdapter.name, () => {
     expect(renderer.setProperty).toHaveBeenCalledTimes(1);
   });
 
-  it('should set the input\'s value', () => {
+  it("should set the input's value", () => {
     const newValue = 10;
     viewAdapter.setViewValue(newValue);
     expect(element.value).toBe(newValue.toString());
   });
 
-  it('should set the input\'s value to empty string if null', () => {
+  it("should set the input's value to empty string if null", () => {
     viewAdapter.setViewValue(null);
     expect(element.value).toBe('');
   });
@@ -152,7 +149,7 @@ describe(NgrxNumberViewAdapter.name, () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => viewAdapter.ngrxFormControlState = undefined as any).toThrowError();
+    expect(() => (viewAdapter.ngrxFormControlState = undefined as any)).toThrowError();
   });
 
   it('should not throw if calling callbacks before they are registered', () => {

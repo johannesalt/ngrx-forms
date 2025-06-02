@@ -32,11 +32,7 @@ import { NgrxMatSelectViewAdapter } from './mat-select-view-adapter';
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  declarations: [
-    NgrxMatSelectViewAdapter,
-    CustomErrorStateMatcherDirective,
-    MatListOptionFixDirective,
-  ],
+  declarations: [NgrxMatSelectViewAdapter, CustomErrorStateMatcherDirective, MatListOptionFixDirective],
   exports: [
     MatInputModule,
     MatCheckboxModule,
@@ -54,8 +50,6 @@ import { NgrxMatSelectViewAdapter } from './mat-select-view-adapter';
     CustomErrorStateMatcherDirective,
     MatListOptionFixDirective,
   ],
-  providers: [
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { float: 'always' } },
-  ],
+  providers: [{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { float: 'always' } }],
 })
-export class MaterialModule { }
+export class MaterialModule {}

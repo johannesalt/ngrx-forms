@@ -1,10 +1,4 @@
-import {
-  AbstractControlState,
-  FormState,
-  isArrayState,
-  isFormState,
-  isGroupState,
-} from '../state';
+import { AbstractControlState, FormState, isArrayState, isFormState, isGroupState } from '../state';
 import { updateArray } from './update-array';
 import { StateUpdateFns, updateGroup } from './update-group';
 import { ensureState, ProjectFn2 } from './util';
@@ -12,9 +6,13 @@ import { ensureState, ProjectFn2 } from './util';
 function updateRecursiveSingle(parent: AbstractControlState<any>, updateFn: ProjectFn2<AbstractControlState<any>, AbstractControlState<any>>) {
   return (state: AbstractControlState<any>): AbstractControlState<any> => {
     if (isGroupState(state)) {
-      const updateFunctions = Object.keys(state.controls).reduce((agg, key) => Object.assign(agg, {
-        [key]: (s: AbstractControlState<any>, p: AbstractControlState<any>) => updateRecursiveSingle(p, updateFn)(s),
-      }), {} as StateUpdateFns<any>);
+      const updateFunctions = Object.keys(state.controls).reduce(
+        (agg, key) =>
+          Object.assign(agg, {
+            [key]: (s: AbstractControlState<any>, p: AbstractControlState<any>) => updateRecursiveSingle(p, updateFn)(s),
+          }),
+        {} as StateUpdateFns<any>
+      );
       state = updateGroup<any>(updateFunctions)(state);
       return updateFn(state, parent);
     }
@@ -68,7 +66,7 @@ const updatedState = updateRecursive(
  */
 export function updateRecursive<TValue>(
   state: AbstractControlState<TValue>,
-  updateFnArr: ProjectFn2<AbstractControlState<any>, AbstractControlState<any>>[],
+  updateFnArr: ProjectFn2<AbstractControlState<any>, AbstractControlState<any>>[]
 ): FormState<TValue>;
 
 /**
@@ -103,7 +101,7 @@ const updatedState = updateFn(state);
 ```
  */
 export function updateRecursive(
-  updateFnArr: ProjectFn2<AbstractControlState<any>, AbstractControlState<any>>[],
+  updateFnArr: ProjectFn2<AbstractControlState<any>, AbstractControlState<any>>[]
 ): <TValue>(state: AbstractControlState<TValue>) => FormState<TValue>;
 
 export function updateRecursive<TValue>(
@@ -116,7 +114,8 @@ export function updateRecursive<TValue>(
 ) {
   if (isFormState(stateOrFunctionOrFunctionArray)) {
     const updateFnArr = Array.isArray(updateFnOrUpdateFnArr) ? updateFnOrUpdateFnArr : [updateFnOrUpdateFnArr!];
-    return updateFnArr.concat(...rest)
+    return updateFnArr
+      .concat(...rest)
       .reduce((s, updateFn) => updateRecursiveSingle(stateOrFunctionOrFunctionArray, updateFn)(s), stateOrFunctionOrFunctionArray);
   }
 

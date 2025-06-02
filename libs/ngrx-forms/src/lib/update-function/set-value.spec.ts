@@ -47,7 +47,7 @@ describe(setValue.name, () => {
 
   it('should work inside an updateGroup uncurried', () => {
     const resultState = updateGroup<typeof INITIAL_STATE.value>(INITIAL_STATE, {
-      inner: inner => setValue<string>(inner, 'A'),
+      inner: (inner) => setValue<string>(inner, 'A'),
     });
 
     expect(resultState).not.toEqual(INITIAL_STATE);
@@ -72,5 +72,4 @@ describe(setValue.name, () => {
     const resultState = setValue<string | undefined>(INITIAL_STATE.controls.inner, undefined);
     expect(resultState).not.toBe(INITIAL_STATE.controls.inner);
   });
-
 });

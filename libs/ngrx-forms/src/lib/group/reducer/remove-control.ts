@@ -2,10 +2,7 @@ import { Actions, RemoveGroupControlAction } from '../../actions';
 import { computeGroupState, FormGroupState, KeyValue } from '../../state';
 import { childReducer } from './util';
 
-export function removeControlReducer<TValue extends KeyValue>(
-  state: FormGroupState<TValue>,
-  action: Actions<TValue>,
-): FormGroupState<TValue> {
+export function removeControlReducer<TValue extends KeyValue>(state: FormGroupState<TValue>, action: Actions<TValue>): FormGroupState<TValue> {
   if (action.type !== RemoveGroupControlAction.TYPE) {
     return state;
   }
@@ -21,18 +18,10 @@ export function removeControlReducer<TValue extends KeyValue>(
   const controls = Object.assign({}, state.controls);
   delete controls[action.name];
 
-  return computeGroupState(
-    state.id,
-    controls,
-    state.value,
-    state.errors,
-    state.pendingValidations,
-    state.userDefinedProperties,
-    {
-      wasOrShouldBeDirty: true,
-      wasOrShouldBeEnabled: state.isEnabled,
-      wasOrShouldBeTouched: state.isTouched,
-      wasOrShouldBeSubmitted: state.isSubmitted,
-    },
-  );
+  return computeGroupState(state.id, controls, state.value, state.errors, state.pendingValidations, state.userDefinedProperties, {
+    wasOrShouldBeDirty: true,
+    wasOrShouldBeEnabled: state.isEnabled,
+    wasOrShouldBeTouched: state.isTouched,
+    wasOrShouldBeSubmitted: state.isSubmitted,
+  });
 }

@@ -15,13 +15,9 @@ import { reducer } from './recursive-update.reducer';
     MaterialModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: RecursiveUpdatePageComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: RecursiveUpdatePageComponent }]),
     StoreModule.forFeature('recursiveUpdate', reducer),
   ],
-  declarations: [
-    RecursiveUpdatePageComponent,
-  ],
+  declarations: [RecursiveUpdatePageComponent],
 })
-export class RecursiveUpdateModule { }
+export class RecursiveUpdateModule {}

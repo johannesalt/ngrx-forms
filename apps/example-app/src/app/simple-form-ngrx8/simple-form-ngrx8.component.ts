@@ -7,19 +7,19 @@ import { map, take } from 'rxjs/operators';
 import { FormValue, INITIAL_STATE, setSubmittedValue, State } from './simple-form-ngrx8.reducer';
 
 @Component({
-    selector: 'ngf-simple-form-ngrx8',
-    templateUrl: './simple-form-ngrx8.component.html',
-    styleUrls: ['./simple-form-ngrx8.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'ngf-simple-form-ngrx8',
+  templateUrl: './simple-form-ngrx8.component.html',
+  styleUrls: ['./simple-form-ngrx8.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SimpleFormNgrx8PageComponent {
   formState$: Observable<FormGroupState<FormValue>>;
   submittedValue$: Observable<FormValue | undefined>;
 
   constructor(private store: Store<State>) {
-    this.formState$ = store.pipe(select(s => s.simpleFormNgrx8.formState));
-    this.submittedValue$ = store.pipe(select(s => s.simpleFormNgrx8.submittedValue));
+    this.formState$ = store.pipe(select((s) => s.simpleFormNgrx8.formState));
+    this.submittedValue$ = store.pipe(select((s) => s.simpleFormNgrx8.submittedValue));
   }
 
   reset() {
@@ -28,9 +28,11 @@ export class SimpleFormNgrx8PageComponent {
   }
 
   submit() {
-    this.formState$.pipe(
-      take(1),
-      map(fs => setSubmittedValue({ submittedValue: fs.value })),
-    ).subscribe(this.store);
+    this.formState$
+      .pipe(
+        take(1),
+        map((fs) => setSubmittedValue({ submittedValue: fs.value }))
+      )
+      .subscribe(this.store);
   }
 }

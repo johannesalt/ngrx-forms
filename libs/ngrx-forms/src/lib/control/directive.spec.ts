@@ -34,8 +34,8 @@ describe(NgrxFormControlDirective.name, () => {
     actions$ = actionsSubject as any; // required due to mismatch of lift() function signature
     viewAdapter = {
       setViewValue: () => void 0,
-      setOnChangeCallback: fn => onChange = fn,
-      setOnTouchedCallback: fn => onTouched = fn,
+      setOnChangeCallback: (fn) => (onChange = fn),
+      setOnTouchedCallback: (fn) => (onTouched = fn),
       setIsDisabled: () => void 0,
     };
     directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, [viewAdapter], []);
@@ -43,7 +43,7 @@ describe(NgrxFormControlDirective.name, () => {
   });
 
   it('should throw if the provided state is not defined', () => {
-    expect(() => directive.ngrxFormControlState = undefined!).toThrowError();
+    expect(() => (directive.ngrxFormControlState = undefined!)).toThrowError();
   });
 
   it('should throw if state is not set when component is initialized', () => {
@@ -93,7 +93,7 @@ describe(NgrxFormControlDirective.name, () => {
 
     it('should not throw if id changes and new state is disabled but adapter does not support disabling', () => {
       delete (viewAdapter as FormViewAdapter).setIsDisabled;
-      expect(() => directive.ngrxFormControlState = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, isDisabled: true, isEnabled: false }).not.toThrowError();
+      expect(() => (directive.ngrxFormControlState = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, isDisabled: true, isEnabled: false })).not.toThrowError();
     });
 
     it('should write the value when the state value does not change but the id does after a new view value was reported', () => {
@@ -126,10 +126,10 @@ describe(NgrxFormControlDirective.name, () => {
       expect(() => directive.ngAfterViewInit()).not.toThrowError();
     });
 
-    it(`should dispatch a ${SetValueAction.name} if the view value changes`, done => {
+    it(`should dispatch a ${SetValueAction.name} if the view value changes`, (done) => {
       const newValue = 'new value';
 
-      actions$.pipe(first()).subscribe(a => {
+      actions$.pipe(first()).subscribe((a) => {
         expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
         done();
       });
@@ -137,8 +137,8 @@ describe(NgrxFormControlDirective.name, () => {
       onChange(newValue);
     });
 
-    it(`should not dispatch a ${SetValueAction.name} if the view value is the same as the state`, done => {
-      actions$.pipe(count()).subscribe(c => {
+    it(`should not dispatch a ${SetValueAction.name} if the view value is the same as the state`, (done) => {
+      actions$.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });
@@ -147,18 +147,21 @@ describe(NgrxFormControlDirective.name, () => {
       actionsSubject.complete();
     });
 
-    it(`should dispatch a ${MarkAsDirtyAction.name} if the view value changes when the state is not marked as dirty`, done => {
-      actions$.pipe(skip(1)).pipe(first()).subscribe(a => {
-        expect(a).toEqual(new MarkAsDirtyAction(INITIAL_STATE.id));
-        done();
-      });
+    it(`should dispatch a ${MarkAsDirtyAction.name} if the view value changes when the state is not marked as dirty`, (done) => {
+      actions$
+        .pipe(skip(1))
+        .pipe(first())
+        .subscribe((a) => {
+          expect(a).toEqual(new MarkAsDirtyAction(INITIAL_STATE.id));
+          done();
+        });
 
       const newValue = 'new value';
       onChange(newValue);
     });
 
-    it(`should not dispatch a ${MarkAsDirtyAction.name} if the view value changes when the state is marked as dirty`, done => {
-      actions$.pipe(count()).subscribe(c => {
+    it(`should not dispatch a ${MarkAsDirtyAction.name} if the view value changes when the state is marked as dirty`, (done) => {
+      actions$.pipe(count()).subscribe((c) => {
         expect(c).toEqual(1);
         done();
       });
@@ -183,13 +186,13 @@ describe(NgrxFormControlDirective.name, () => {
       const convertedValue = ['A'];
       viewAdapter = {
         ...viewAdapter,
-        setViewValue: v => expect(v).toEqual(convertedValue),
+        setViewValue: (v) => expect(v).toEqual(convertedValue),
       };
       directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, [viewAdapter], []);
       directive.ngrxFormControlState = INITIAL_STATE;
       directive.ngrxValueConverter = {
         convertStateToViewValue: () => convertedValue,
-        convertViewToStateValue: s => s,
+        convertViewToStateValue: (s) => s,
       };
       directive.ngOnInit();
     });
@@ -200,8 +203,8 @@ describe(NgrxFormControlDirective.name, () => {
       directive.ngOnInit();
     });
 
-    it(`should dispatch a ${MarkAsTouchedAction.name} if the view adapter notifies and the state is not touched`, done => {
-      actions$.pipe(first()).subscribe(a => {
+    it(`should dispatch a ${MarkAsTouchedAction.name} if the view adapter notifies and the state is not touched`, (done) => {
+      actions$.pipe(first()).subscribe((a) => {
         expect(a).toEqual(new MarkAsTouchedAction(INITIAL_STATE.id));
         done();
       });
@@ -210,8 +213,8 @@ describe(NgrxFormControlDirective.name, () => {
       actionsSubject.complete();
     });
 
-    it(`should not dispatch a ${MarkAsTouchedAction.name} if the view adapter notifies and the state is touched`, done => {
-      actions$.pipe(count()).subscribe(i => {
+    it(`should not dispatch a ${MarkAsTouchedAction.name} if the view adapter notifies and the state is touched`, (done) => {
+      actions$.pipe(count()).subscribe((i) => {
         expect(i).toEqual(0);
         done();
       });
@@ -229,10 +232,10 @@ describe(NgrxFormControlDirective.name, () => {
       directive.ngrxUpdateOn = NGRX_UPDATE_ON_TYPE.BLUR;
     });
 
-    it('should dispatch an action on blur if the view value has changed with ngrxUpdateOn "blur"', done => {
+    it('should dispatch an action on blur if the view value has changed with ngrxUpdateOn "blur"', (done) => {
       const newValue = 'new value';
 
-      actions$.pipe(first()).subscribe(a => {
+      actions$.pipe(first()).subscribe((a) => {
         expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
         done();
       });
@@ -241,8 +244,8 @@ describe(NgrxFormControlDirective.name, () => {
       onTouched();
     });
 
-    it('should not dispatch an action on blur if the view value has not changed with ngrxUpdateOn "blur"', done => {
-      actions$.pipe(count()).subscribe(c => {
+    it('should not dispatch an action on blur if the view value has not changed with ngrxUpdateOn "blur"', (done) => {
+      actions$.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });
@@ -251,8 +254,8 @@ describe(NgrxFormControlDirective.name, () => {
       actionsSubject.complete();
     });
 
-    it('should not dispatch an action if the view value changes with ngrxUpdateOn "blur"', done => {
-      actions$.pipe(count()).subscribe(c => {
+    it('should not dispatch an action if the view value changes with ngrxUpdateOn "blur"', (done) => {
+      actions$.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });
@@ -277,10 +280,10 @@ describe(NgrxFormControlDirective.name, () => {
       directive.ngrxUpdateOn = NGRX_UPDATE_ON_TYPE.NEVER;
     });
 
-    it('should not dispatch any action even if the view value changed', done => {
+    it('should not dispatch any action even if the view value changed', (done) => {
       const newValue = 'new value';
 
-      actions$.pipe(count()).subscribe(x => {
+      actions$.pipe(count()).subscribe((x) => {
         expect(x).toEqual(0);
         done();
       });
@@ -338,7 +341,7 @@ describe(NgrxFormControlDirective.name, () => {
 
     it('should not throw if setIsDisabled is not defined', () => {
       (viewAdapter as FormViewAdapter).setIsDisabled = undefined;
-      expect(() => directive.ngrxFormControlState = { ...INITIAL_STATE, isEnabled: false, isDisabled: true }).not.toThrow();
+      expect(() => (directive.ngrxFormControlState = { ...INITIAL_STATE, isEnabled: false, isDisabled: true })).not.toThrow();
     });
   });
 
@@ -357,8 +360,8 @@ describe(NgrxFormControlDirective.name, () => {
       expect(spy).toHaveBeenCalledWith(VIEW_VALUE);
     });
 
-    it('should convert the view value if it changes', done => {
-      actions$.pipe(first()).subscribe(a => {
+    it('should convert the view value if it changes', (done) => {
+      actions$.pipe(first()).subscribe((a) => {
         expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, STATE_VALUE));
         done();
       });
@@ -373,8 +376,8 @@ describe(NgrxFormControlDirective.name, () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should not dispatch an action if the view value is the same as the state with conversion', done => {
-      actions$.pipe(count()).subscribe(c => {
+    it('should not dispatch an action if the view value is the same as the state with conversion', (done) => {
+      actions$.pipe(count()).subscribe((c) => {
         expect(c).toEqual(0);
         done();
       });
@@ -425,10 +428,10 @@ describe(NgrxFormControlDirective.name, () => {
         expect(nativeElement.focus).toHaveBeenCalledTimes(1);
       });
 
-      it(`should dispatch a ${FocusAction} when element becomes focused and state is not focused`, done => {
+      it(`should dispatch a ${FocusAction} when element becomes focused and state is not focused`, (done) => {
         directive.ngOnInit();
 
-        actions$.pipe(first()).subscribe(a => {
+        actions$.pipe(first()).subscribe((a) => {
           expect(a).toEqual(new FocusAction(INITIAL_STATE.id));
           done();
         });
@@ -438,10 +441,10 @@ describe(NgrxFormControlDirective.name, () => {
         actionsSubject.complete();
       });
 
-      it('should not dispatch an action when element becomes focused and state is focused', done => {
+      it('should not dispatch an action when element becomes focused and state is focused', (done) => {
         directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe(c => {
+        actions$.pipe(count()).subscribe((c) => {
           expect(c).toEqual(0);
           done();
         });
@@ -452,10 +455,10 @@ describe(NgrxFormControlDirective.name, () => {
         actionsSubject.complete();
       });
 
-      it(`should dispatch an ${UnfocusAction} when element becomes unfocused and state is focused`, done => {
+      it(`should dispatch an ${UnfocusAction} when element becomes unfocused and state is focused`, (done) => {
         directive.ngOnInit();
 
-        actions$.pipe(first()).subscribe(a => {
+        actions$.pipe(first()).subscribe((a) => {
           expect(a).toEqual(new UnfocusAction(INITIAL_STATE.id));
           done();
         });
@@ -465,10 +468,10 @@ describe(NgrxFormControlDirective.name, () => {
         actionsSubject.complete();
       });
 
-      it('should not dispatch an action when element becomes unfocused and state is unfocused', done => {
+      it('should not dispatch an action when element becomes unfocused and state is unfocused', (done) => {
         directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe(c => {
+        actions$.pipe(count()).subscribe((c) => {
           expect(c).toEqual(0);
           done();
         });
@@ -514,10 +517,10 @@ describe(NgrxFormControlDirective.name, () => {
         expect(nativeElement.blur).not.toHaveBeenCalled();
       });
 
-      it(`should not dispatch an action when element becomes focused and state is not focused`, done => {
+      it(`should not dispatch an action when element becomes focused and state is not focused`, (done) => {
         directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe(c => {
+        actions$.pipe(count()).subscribe((c) => {
           expect(c).toEqual(0);
           done();
         });
@@ -527,10 +530,10 @@ describe(NgrxFormControlDirective.name, () => {
         actionsSubject.complete();
       });
 
-      it('should not dispatch an action when element becomes focused and state is focused', done => {
+      it('should not dispatch an action when element becomes focused and state is focused', (done) => {
         directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe(c => {
+        actions$.pipe(count()).subscribe((c) => {
           expect(c).toEqual(0);
           done();
         });
@@ -541,10 +544,10 @@ describe(NgrxFormControlDirective.name, () => {
         actionsSubject.complete();
       });
 
-      it(`should not dispatch an action when element becomes unfocused and state is focused`, done => {
+      it(`should not dispatch an action when element becomes unfocused and state is focused`, (done) => {
         directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe(c => {
+        actions$.pipe(count()).subscribe((c) => {
           expect(c).toEqual(0);
           done();
         });
@@ -554,10 +557,10 @@ describe(NgrxFormControlDirective.name, () => {
         actionsSubject.complete();
       });
 
-      it('should not dispatch an action when element becomes unfocused and state is unfocused', done => {
+      it('should not dispatch an action when element becomes unfocused and state is unfocused', (done) => {
         directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe(c => {
+        actions$.pipe(count()).subscribe((c) => {
           expect(c).toEqual(0);
           done();
         });
@@ -575,7 +578,7 @@ describe(NgrxFormControlDirective.name, () => {
     });
 
     it('should throw when trying to enable focus tracking', () => {
-      expect(() => directive.ngrxEnableFocusTracking = true).toThrowError();
+      expect(() => (directive.ngrxEnableFocusTracking = true)).toThrowError();
     });
   });
 
@@ -599,11 +602,7 @@ describe(NgrxFormControlDirective.name, () => {
     });
 
     it('should adapt a control value accessor without disabling support', () => {
-      const controlValueAccessor: ControlValueAccessor = jasmine.createSpyObj('controlValueAccessor', [
-        'writeValue',
-        'registerOnChange',
-        'registerOnTouched',
-      ]);
+      const controlValueAccessor: ControlValueAccessor = jasmine.createSpyObj('controlValueAccessor', ['writeValue', 'registerOnChange', 'registerOnTouched']);
 
       directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, null as any, [controlValueAccessor]);
 

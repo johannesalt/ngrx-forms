@@ -13,14 +13,14 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'select-multiple-test',
-    template: `
-  <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
-    <option *ngFor="let o of options" [value]="o">{{ o }}</option>
-  </select>
+  // tslint:disable-next-line:component-selector
+  selector: 'select-multiple-test',
+  template: `
+    <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
+      <option *ngFor="let o of options" [value]="o">{{ o }}</option>
+    </select>
   `,
-    standalone: false
+  standalone: false,
 })
 export class SelectMultipleComponent {
   @Input() state: FormControlState<string>;
@@ -68,8 +68,8 @@ describe(SelectMultipleComponent.name, () => {
     expect(option2.selected).toBe(true);
   });
 
-  it('should trigger a SetValueAction with the selected value when an option is selected', done => {
-    actions$.pipe(first()).subscribe(a => {
+  it('should trigger a SetValueAction with the selected value when an option is selected', (done) => {
+    actions$.pipe(first()).subscribe((a) => {
       expect(a.type).toBe(SetValueAction.TYPE);
       expect((a as SetValueAction<string>).value).toBe(JSON.stringify(SELECT_OPTIONS));
       done();
@@ -79,8 +79,8 @@ describe(SelectMultipleComponent.name, () => {
     element.dispatchEvent(new Event('change'));
   });
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, done => {
-    actions$.pipe(skip(1), first()).subscribe(a => {
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, (done) => {
+    actions$.pipe(skip(1), first()).subscribe((a) => {
       expect(a.type).toBe(MarkAsDirtyAction.TYPE);
       done();
     });
@@ -91,14 +91,14 @@ describe(SelectMultipleComponent.name, () => {
 });
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'select-multiple-test',
-    template: `
-  <select multiple [ngrxFormControlState]="state">
-    <option *ngFor="let o of options" [value]="o">{{ o }}</option>
-  </select>
+  // tslint:disable-next-line:component-selector
+  selector: 'select-multiple-test',
+  template: `
+    <select multiple [ngrxFormControlState]="state">
+      <option *ngFor="let o of options" [value]="o">{{ o }}</option>
+    </select>
   `,
-    standalone: false
+  standalone: false,
 })
 export class SelectMultipleWithoutConverterComponent {
   @Input() state: FormControlState<Boxed<string[]>>;
@@ -145,8 +145,8 @@ describe(SelectMultipleWithoutConverterComponent.name, () => {
     expect(option2.selected).toBe(true);
   });
 
-  it('should trigger a SetValueAction with the selected value when an option is selected', done => {
-    actions$.pipe(first()).subscribe(a => {
+  it('should trigger a SetValueAction with the selected value when an option is selected', (done) => {
+    actions$.pipe(first()).subscribe((a) => {
       expect(a.type).toBe(SetValueAction.TYPE);
       expect((a as SetValueAction<Boxed<string[]>>).value).toEqual(box(SELECT_OPTIONS));
       done();
@@ -156,8 +156,8 @@ describe(SelectMultipleWithoutConverterComponent.name, () => {
     element.dispatchEvent(new Event('change'));
   });
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, done => {
-    actions$.pipe(skip(1), first()).subscribe(a => {
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, (done) => {
+    actions$.pipe(skip(1), first()).subscribe((a) => {
       expect(a.type).toBe(MarkAsDirtyAction.TYPE);
       done();
     });

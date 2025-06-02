@@ -141,7 +141,7 @@ describe(setErrors.name, () => {
   it('should work inside an updateGroup uncurried', () => {
     const errors = { required: true };
     const resultState = updateGroup<typeof INITIAL_STATE.value>(INITIAL_STATE, {
-      inner: inner => setErrors(inner, errors),
+      inner: (inner) => setErrors(inner, errors),
     });
 
     expect(resultState).not.toEqual(INITIAL_STATE);

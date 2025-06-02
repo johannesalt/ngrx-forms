@@ -7,20 +7,18 @@ import { FormGroupState, KeyValue } from '../state';
 // this interface just exists to prevent a direct reference to
 // `Event` in our code, which otherwise causes issues in NativeScript
 // applications
-interface CustomEvent extends Event { }
+interface CustomEvent extends Event {}
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'form:not([ngrxFormsAction])[ngrxFormState]',
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: 'form:not([ngrxFormsAction])[ngrxFormState]',
+  standalone: false,
 })
 export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
   // tslint:disable-next-line:no-input-rename
   @Input('ngrxFormState') state: FormGroupState<TStateValue>;
 
-  constructor(
-    @Optional() @Inject(ActionsSubject) private actionsSubject: ActionsSubject | null
-  ) {
+  constructor(@Optional() @Inject(ActionsSubject) private actionsSubject: ActionsSubject | null) {
     this.actionsSubject = actionsSubject;
   }
 

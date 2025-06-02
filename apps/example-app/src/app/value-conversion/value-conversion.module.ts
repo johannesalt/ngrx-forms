@@ -15,13 +15,9 @@ import { reducer } from './value-conversion.reducer';
     MaterialModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: ValueConversionPageComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: ValueConversionPageComponent }]),
     StoreModule.forFeature('valueConversion', reducer),
   ],
-  declarations: [
-    ValueConversionPageComponent,
-  ],
+  declarations: [ValueConversionPageComponent],
 })
-export class ValueConversionModule { }
+export class ValueConversionModule {}

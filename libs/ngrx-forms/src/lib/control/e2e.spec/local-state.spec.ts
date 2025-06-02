@@ -11,13 +11,12 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'select-test',
-    template: `
-  <select [ngrxFormControlState]="state" (ngrxFormsAction)="handleAction($event)">
+  // tslint:disable-next-line:component-selector
+  selector: 'select-test',
+  template: ` <select [ngrxFormControlState]="state" (ngrxFormsAction)="handleAction($event)">
     <option *ngFor="let o of options" [value]="o">{{ o }}</option>
   </select>`,
-    standalone: false
+  standalone: false,
 })
 export class NumberSelectComponentLocalStateComponent {
   @Input() state: FormControlState<number>;
@@ -61,8 +60,8 @@ describe(NumberSelectComponentLocalStateComponent.name, () => {
     element = nativeElement.querySelector('select')!;
   });
 
-  it(`should not trigger a ${MarkAsDirtyAction.name} to the global store when an option is selected`, done => {
-    actions$.pipe(count()).subscribe(c => {
+  it(`should not trigger a ${MarkAsDirtyAction.name} to the global store when an option is selected`, (done) => {
+    actions$.pipe(count()).subscribe((c) => {
       expect(c).toEqual(0);
       done();
     });

@@ -7,10 +7,7 @@ import { formGroupReducer } from './group/reducer';
 import { AbstractControlState, FormArrayState, FormControlState, FormState, isArrayState, isFormState, isGroupState, KeyValue } from './state';
 import { ProjectFn } from './update-function/util';
 
-export function formStateReducer<TValue>(
-  state: FormState<TValue> | AbstractControlState<TValue> | undefined,
-  action: Action,
-): FormState<TValue> {
+export function formStateReducer<TValue>(state: FormState<TValue> | AbstractControlState<TValue> | undefined, action: Action): FormState<TValue> {
   if (!state) {
     throw new Error('The form state must be defined!');
   }
@@ -103,13 +100,13 @@ function reduceNestedFormStates<TState extends KeyValue>(state: TState, action: 
  */
 export function onNgrxForms<TState = any>(): { reducer: ActionReducer<TState>; types: string[] } {
   return {
-    reducer: (state, action) => isFormState(state) ? formStateReducer(state!, action) as unknown as TState : reduceNestedFormStates(state!, action),
+    reducer: (state, action) => (isFormState(state) ? (formStateReducer(state!, action) as unknown as TState) : reduceNestedFormStates(state!, action)),
     types: ALL_NGRX_FORMS_ACTION_TYPES,
   };
 }
 
 export interface ActionConstructor {
-  new(...args: any[]): Actions<any>;
+  new (...args: any[]): Actions<any>;
   readonly TYPE: string;
 }
 
@@ -120,12 +117,9 @@ export type CreatedAction<TActionCons> = TActionCons extends new (...args: any[]
  * ngrx's `on` except that you provide the ngrx-forms action class instead of
  * your action creator as a parameter.
  */
-export function onNgrxFormsAction<
-  TActionCons extends ActionConstructor,
-  TState
->(
+export function onNgrxFormsAction<TActionCons extends ActionConstructor, TState>(
   actionCons: TActionCons,
-  reducer: (state: TState, action: CreatedAction<TActionCons>) => TState,
+  reducer: (state: TState, action: CreatedAction<TActionCons>) => TState
 ): { reducer: ActionReducer<TState>; types: string[] } {
   return {
     reducer: (state, action) => reducer(reduceNestedFormStates(state!, action), action as any),
@@ -144,7 +138,7 @@ export function onNgrxFormsAction<
 export function wrapReducerWithFormStateUpdate<TState extends KeyValue, TFormState extends AbstractControlState<any>>(
   reducer: ActionReducer<TState>,
   formStateLocator: (state: TState) => TFormState,
-  updateFn: (formState: TFormState, state: TState) => TFormState,
+  updateFn: (formState: TFormState, state: TState) => TFormState
 ): ActionReducer<TState> {
   return (state, action) => {
     const updatedState = reducer(state, action);
@@ -152,11 +146,11 @@ export function wrapReducerWithFormStateUpdate<TState extends KeyValue, TFormSta
     const formState = formStateLocator(updatedState);
 
     // if the state itself is the form state, update it directly
-    if (formState === updatedState as unknown) {
+    if (formState === (updatedState as unknown)) {
       return updateFn(formState, updatedState) as unknown as TState;
     }
 
-    const formStateKey = Object.keys(updatedState).find(key => updatedState[key as keyof TState] as any === formState)!;
+    const formStateKey = Object.keys(updatedState).find((key) => (updatedState[key as keyof TState] as any) === formState)!;
 
     const updatedFormState = updateFn(formState, updatedState);
 

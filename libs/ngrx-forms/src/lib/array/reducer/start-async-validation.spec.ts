@@ -1,12 +1,6 @@
 import { StartAsyncValidationAction } from '../../actions';
 import { startAsyncValidationReducer } from './start-async-validation';
-import {
-  FORM_CONTROL_0_ID,
-  FORM_CONTROL_ID,
-  INITIAL_STATE,
-  INITIAL_STATE_NESTED_ARRAY,
-  INITIAL_STATE_NESTED_GROUP,
-} from './test-util';
+import { FORM_CONTROL_0_ID, FORM_CONTROL_ID, INITIAL_STATE, INITIAL_STATE_NESTED_ARRAY, INITIAL_STATE_NESTED_GROUP } from './test-util';
 
 describe(`form array ${startAsyncValidationReducer.name}`, () => {
   it('should skip any action of the wrong type', () => expect(startAsyncValidationReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));

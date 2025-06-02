@@ -6,14 +6,14 @@ import { NgrxDefaultViewAdapter } from './default';
 const TEST_ID = 'test ID';
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'default-test',
-    template: `
-<input type="text" [ngrxFormControlState]="state" />
-<input type="text" [ngrxFormControlState]="state" id="customId" />
-<input type="text" [ngrxFormControlState]="state" [id]="boundId" />
-`,
-    standalone: false
+  // tslint:disable-next-line:component-selector
+  selector: 'default-test',
+  template: `
+    <input type="text" [ngrxFormControlState]="state" />
+    <input type="text" [ngrxFormControlState]="state" id="customId" />
+    <input type="text" [ngrxFormControlState]="state" [id]="boundId" />
+  `,
+  standalone: false,
 })
 export class DefaultInputTestComponent {
   boundId = 'boundId';
@@ -27,15 +27,13 @@ describe(NgrxDefaultViewAdapter.name, () => {
   let element: HTMLInputElement;
 
   // tslint:disable-next-line:max-line-length
-  const androidUserAgent = 'Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36';
+  const androidUserAgent =
+    'Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36';
   const androidNavigator: Navigator = { userAgent: androidUserAgent } as any;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        NgrxDefaultViewAdapter,
-        DefaultInputTestComponent,
-      ],
+      declarations: [NgrxDefaultViewAdapter, DefaultInputTestComponent],
     }).compileComponents();
   }));
 
@@ -100,13 +98,13 @@ describe(NgrxDefaultViewAdapter.name, () => {
     expect(renderer.setProperty).toHaveBeenCalledTimes(1);
   });
 
-  it('should set the input\'s value', () => {
+  it("should set the input's value", () => {
     const newValue = 'new value';
     viewAdapter.setViewValue(newValue);
     expect(element.value).toBe(newValue);
   });
 
-  it('should set the input\'s value to empty string if null', () => {
+  it("should set the input's value to empty string if null", () => {
     viewAdapter.setViewValue(null);
     expect(element.value).toBe('');
   });
@@ -191,7 +189,7 @@ describe(NgrxDefaultViewAdapter.name, () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => viewAdapter.ngrxFormControlState = undefined as any).toThrowError();
+    expect(() => (viewAdapter.ngrxFormControlState = undefined as any)).toThrowError();
   });
 
   it('should not throw if calling callbacks before they are registered', () => {

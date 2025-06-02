@@ -47,7 +47,7 @@ describe(setUserDefinedProperty.name, () => {
 
   it('should work inside an updateGroup uncurried', () => {
     const resultState = updateGroup<typeof INITIAL_STATE.value>(INITIAL_STATE, {
-      inner: inner => setUserDefinedProperty(inner, 'prop', 12),
+      inner: (inner) => setUserDefinedProperty(inner, 'prop', 12),
     });
 
     expect(resultState).not.toEqual(INITIAL_STATE);

@@ -6,14 +6,14 @@ import { NgrxCheckboxViewAdapter } from './checkbox';
 const TEST_ID = 'test ID';
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'checkbox-test',
-    template: `
-<input type="checkbox" [ngrxFormControlState]="state" />
-<input type="checkbox" [ngrxFormControlState]="state" id="customId" />
-<input type="checkbox" [ngrxFormControlState]="state" [id]="boundId" />
-`,
-    standalone: false
+  // tslint:disable-next-line:component-selector
+  selector: 'checkbox-test',
+  template: `
+    <input type="checkbox" [ngrxFormControlState]="state" />
+    <input type="checkbox" [ngrxFormControlState]="state" id="customId" />
+    <input type="checkbox" [ngrxFormControlState]="state" [id]="boundId" />
+  `,
+  standalone: false,
 })
 export class CheckboxTestComponent {
   boundId = 'boundId';
@@ -28,10 +28,7 @@ describe(NgrxCheckboxViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        NgrxCheckboxViewAdapter,
-        CheckboxTestComponent,
-      ],
+      declarations: [NgrxCheckboxViewAdapter, CheckboxTestComponent],
     }).compileComponents();
   }));
 
@@ -139,7 +136,7 @@ describe(NgrxCheckboxViewAdapter.name, () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => viewAdapter.ngrxFormControlState = undefined as any).toThrowError();
+    expect(() => (viewAdapter.ngrxFormControlState = undefined as any)).toThrowError();
   });
 
   it('should not throw if calling callbacks before they are registered', () => {

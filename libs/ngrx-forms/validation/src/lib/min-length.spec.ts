@@ -26,27 +26,27 @@ describe(minLength.name, () => {
     expect(minLength(2)([])).toEqual({});
   });
 
-  it('should not return an error if string value\'s length is greater than minLength', () => {
+  it("should not return an error if string value's length is greater than minLength", () => {
     expect(minLength(2)('abc')).toEqual({});
   });
 
-  it('should not return an error if string value\'s length is equal to minLength', () => {
+  it("should not return an error if string value's length is equal to minLength", () => {
     expect(minLength(2)('ab')).toEqual({});
   });
 
-  it('should return an error if string value\'s length is less than minLength', () => {
+  it("should return an error if string value's length is less than minLength", () => {
     expect(minLength(2)('a')).not.toEqual({});
   });
 
-  it('should not return an error if array value\'s length is greater than minLength', () => {
+  it("should not return an error if array value's length is greater than minLength", () => {
     expect(minLength(2)(['a', 'b', 'c'])).toEqual({});
   });
 
-  it('should not return an error if array value\'s length is equal to minLength', () => {
+  it("should not return an error if array value's length is equal to minLength", () => {
     expect(minLength(2)(['a', 'b'])).toEqual({});
   });
 
-  it('should return an error if array value\'s length is less than minLength', () => {
+  it("should return an error if array value's length is less than minLength", () => {
     expect(minLength(2)(['a'])).not.toEqual({});
   });
 
@@ -74,11 +74,11 @@ describe(minLength.name, () => {
     });
   });
 
-  it('should not return an error if boxed string value\'s length is equal to minLength', () => {
+  it("should not return an error if boxed string value's length is equal to minLength", () => {
     expect(minLength(2)(box('ab'))).toEqual({});
   });
 
-  it('should not return an error if boxed array value\'s length is equal to minLength', () => {
+  it("should not return an error if boxed array value's length is equal to minLength", () => {
     expect(minLength(2)(box(['a', 'b']))).toEqual({});
   });
 

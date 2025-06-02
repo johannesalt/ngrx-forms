@@ -6,27 +6,14 @@ export function move(array: readonly any[], fromIndex: number, toIndex: number) 
   const item = array[fromIndex];
   const length = array.length;
   if (fromIndex > toIndex) {
-    return [
-      ...array.slice(0, toIndex),
-      item,
-      ...array.slice(toIndex, fromIndex),
-      ...array.slice(fromIndex + 1, length),
-    ];
+    return [...array.slice(0, toIndex), item, ...array.slice(toIndex, fromIndex), ...array.slice(fromIndex + 1, length)];
   } else {
     const targetIndex = toIndex + 1;
-    return [
-      ...array.slice(0, fromIndex),
-      ...array.slice(fromIndex + 1, targetIndex),
-      item,
-      ...array.slice(targetIndex, length),
-    ];
+    return [...array.slice(0, fromIndex), ...array.slice(fromIndex + 1, targetIndex), item, ...array.slice(targetIndex, length)];
   }
 }
 
-export function moveControlReducer<TValue>(
-  state: FormArrayState<TValue>,
-  action: Actions<TValue[]>,
-): FormArrayState<TValue> {
+export function moveControlReducer<TValue>(state: FormArrayState<TValue>, action: Actions<TValue[]>): FormArrayState<TValue> {
   if (action.type !== MoveArrayControlAction.TYPE) {
     return state;
   }
@@ -53,18 +40,10 @@ export function moveControlReducer<TValue>(
 
   controls = controls.map((c, i) => updateIdRecursive<any>(c, `${state.id}.${i}`));
 
-  return computeArrayState(
-    state.id,
-    controls,
-    state.value,
-    state.errors,
-    state.pendingValidations,
-    state.userDefinedProperties,
-    {
-      wasOrShouldBeDirty: true,
-      wasOrShouldBeEnabled: state.isEnabled,
-      wasOrShouldBeTouched: state.isTouched,
-      wasOrShouldBeSubmitted: state.isSubmitted,
-    }
-  );
+  return computeArrayState(state.id, controls, state.value, state.errors, state.pendingValidations, state.userDefinedProperties, {
+    wasOrShouldBeDirty: true,
+    wasOrShouldBeEnabled: state.isEnabled,
+    wasOrShouldBeTouched: state.isTouched,
+    wasOrShouldBeSubmitted: state.isSubmitted,
+  });
 }

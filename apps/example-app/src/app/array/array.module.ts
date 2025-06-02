@@ -15,13 +15,9 @@ import { reducer } from './array.reducer';
     MaterialModule,
     NgrxFormsModule,
     SharedModule,
-    RouterModule.forChild([
-      { path: '', component: ArrayPageComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: ArrayPageComponent }]),
     StoreModule.forFeature('array', reducer),
   ],
-  declarations: [
-    ArrayPageComponent,
-  ],
+  declarations: [ArrayPageComponent],
 })
-export class ArrayModule { }
+export class ArrayModule {}

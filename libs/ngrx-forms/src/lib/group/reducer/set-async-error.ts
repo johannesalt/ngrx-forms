@@ -3,10 +3,7 @@ import { computeGroupState, FormGroupState, KeyValue } from '../../state';
 import { deepEquals } from '../../util';
 import { childReducer } from './util';
 
-export function setAsyncErrorReducer<TValue extends KeyValue>(
-  state: FormGroupState<TValue>,
-  action: Actions<TValue>,
-): FormGroupState<TValue> {
+export function setAsyncErrorReducer<TValue extends KeyValue>(state: FormGroupState<TValue>, action: Actions<TValue>): FormGroupState<TValue> {
   if (action.type !== SetAsyncErrorAction.TYPE) {
     return state;
   }
@@ -27,20 +24,12 @@ export function setAsyncErrorReducer<TValue extends KeyValue>(
   }
 
   const errors = { ...state.errors, [name]: value };
-  const pendingValidations = state.pendingValidations.filter(v => v !== action.name);
+  const pendingValidations = state.pendingValidations.filter((v) => v !== action.name);
 
-  return computeGroupState(
-    state.id,
-    state.controls,
-    state.value,
-    errors,
-    pendingValidations,
-    state.userDefinedProperties,
-    {
-      wasOrShouldBeDirty: state.isDirty,
-      wasOrShouldBeEnabled: state.isEnabled,
-      wasOrShouldBeTouched: state.isTouched,
-      wasOrShouldBeSubmitted: state.isSubmitted,
-    },
-  );
+  return computeGroupState(state.id, state.controls, state.value, errors, pendingValidations, state.userDefinedProperties, {
+    wasOrShouldBeDirty: state.isDirty,
+    wasOrShouldBeEnabled: state.isEnabled,
+    wasOrShouldBeTouched: state.isTouched,
+    wasOrShouldBeSubmitted: state.isSubmitted,
+  });
 }

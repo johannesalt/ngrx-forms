@@ -30,7 +30,7 @@ const INITIAL_FORM_STATE = updateGroup<MyFormValue>(
     nested: updateGroup<MyFormValue['nested']>({
       someNumber: setUserDefinedProperty('maxValue', 10),
     }),
-  },
+  }
 );
 ```
 
@@ -41,4 +41,3 @@ Yes, both form mechanisms can be used in the same application. I recommend using
 #### What is the meaning of life?
 
 Sorry, can't help you with that.
-

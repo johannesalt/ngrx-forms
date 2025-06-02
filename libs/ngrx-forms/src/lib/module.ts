@@ -36,4 +36,4 @@ const exportsAndDeclarations = [
   declarations: exportsAndDeclarations,
   exports: exportsAndDeclarations,
 })
-export class NgrxFormsModule { }
+export class NgrxFormsModule {}

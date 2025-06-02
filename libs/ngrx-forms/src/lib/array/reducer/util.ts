@@ -4,30 +4,25 @@ import { computeArrayState, FormArrayState, FormGroupControls, FormGroupState, F
 
 export function dispatchActionPerChild<TValue>(
   controls: readonly FormState<TValue>[],
-  actionCreator: (controlId: string) => Actions<TValue>,
+  actionCreator: (controlId: string) => Actions<TValue>
 ): readonly FormState<TValue>[] {
   let hasChanged = false;
-  const newControls = controls
-    .map(state => {
-      const newState = formStateReducer<TValue>(state, actionCreator(state.id));
-      hasChanged = hasChanged || state !== newState;
-      return newState;
-    });
+  const newControls = controls.map((state) => {
+    const newState = formStateReducer<TValue>(state, actionCreator(state.id));
+    hasChanged = hasChanged || state !== newState;
+    return newState;
+  });
 
   return hasChanged ? newControls : controls;
 }
 
-function callChildReducers<TValue>(
-  controls: readonly FormState<TValue>[],
-  action: Actions<TValue[]>,
-): readonly FormState<TValue>[] {
+function callChildReducers<TValue>(controls: readonly FormState<TValue>[], action: Actions<TValue[]>): readonly FormState<TValue>[] {
   let hasChanged = false;
-  const newControls = controls
-    .map(state => {
-      const newState = formStateReducer<TValue>(state, action);
-      hasChanged = hasChanged || state !== newState;
-      return newState;
-    });
+  const newControls = controls.map((state) => {
+    const newState = formStateReducer<TValue>(state, action);
+    hasChanged = hasChanged || state !== newState;
+    return newState;
+  });
 
   return hasChanged ? newControls : controls;
 }
@@ -39,28 +34,22 @@ export function childReducer<TValue>(state: FormArrayState<TValue>, action: Acti
     return state;
   }
 
-  return computeArrayState(
-    state.id,
-    controls,
-    state.value,
-    state.errors,
-    state.pendingValidations,
-    state.userDefinedProperties,
-    {
-      wasOrShouldBeDirty: state.isDirty,
-      wasOrShouldBeEnabled: state.isEnabled,
-      wasOrShouldBeTouched: state.isTouched,
-      wasOrShouldBeSubmitted: state.isSubmitted,
-    },
-  );
+  return computeArrayState(state.id, controls, state.value, state.errors, state.pendingValidations, state.userDefinedProperties, {
+    wasOrShouldBeDirty: state.isDirty,
+    wasOrShouldBeEnabled: state.isEnabled,
+    wasOrShouldBeTouched: state.isTouched,
+    wasOrShouldBeSubmitted: state.isSubmitted,
+  });
 }
 
-export function updateIdRecursiveForGroup<TValue extends KeyValue = any>(state: FormGroupState<TValue>, newId: string): FormGroupState<TValue> {
+export function updateIdRecursiveForGroup<TValue>(state: FormGroupState<TValue>, newId: string): FormGroupState<TValue> {
   const controls: FormGroupControls<TValue> =
     Object.keys(state.controls)
       .reduce((agg, key) => Object.assign(agg, {
         [key]: updateIdRecursive<TValue[keyof TValue]>(state.controls[key as keyof TValue], `${newId}.${key}`),
-      }), {} as FormGroupControls<TValue>);
+      }),
+    {} as FormGroupControls<TValue>
+  );
 
   return {
     ...state,

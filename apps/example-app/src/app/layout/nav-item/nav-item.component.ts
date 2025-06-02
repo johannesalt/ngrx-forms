@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'ngf-nav-item',
-    templateUrl: './nav-item.component.html',
-    styleUrls: ['./nav-item.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'ngf-nav-item',
+  templateUrl: './nav-item.component.html',
+  styleUrls: ['./nav-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NavItemComponent {
   @Input() hint = '';

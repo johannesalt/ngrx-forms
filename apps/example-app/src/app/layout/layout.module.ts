@@ -7,18 +7,10 @@ import { LayoutComponent } from './layout/layout.component';
 import { NavItemComponent } from './nav-item/nav-item.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 
-export const COMPONENTS = [
-  LayoutComponent,
-  NavItemComponent,
-  SidenavComponent,
-];
+export const COMPONENTS = [LayoutComponent, NavItemComponent, SidenavComponent];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MaterialModule,
-    RouterModule,
-  ],
+  imports: [CommonModule, MaterialModule, RouterModule],
   declarations: COMPONENTS,
   exports: COMPONENTS,
 })

@@ -104,7 +104,7 @@ describe(setAsyncError.name, () => {
 
   it('should work inside an updateGroup uncurried', () => {
     const resultState = updateGroup<typeof stateWithPendingValidations.value>(stateWithPendingValidations, {
-      inner: inner => setAsyncError(inner, 'error', true),
+      inner: (inner) => setAsyncError(inner, 'error', true),
     });
 
     expect(resultState).not.toEqual(stateWithPendingValidations);

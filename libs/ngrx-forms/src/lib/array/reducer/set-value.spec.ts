@@ -1,13 +1,7 @@
 import { SetValueAction } from '../../actions';
 import { FormArrayState } from '../../state';
 import { setValueReducer } from './set-value';
-import {
-  FORM_CONTROL_0_ID,
-  FORM_CONTROL_ID,
-  INITIAL_STATE,
-  INITIAL_STATE_NESTED_ARRAY,
-  INITIAL_STATE_NESTED_GROUP,
-} from './test-util';
+import { FORM_CONTROL_0_ID, FORM_CONTROL_ID, INITIAL_STATE, INITIAL_STATE_NESTED_ARRAY, INITIAL_STATE_NESTED_GROUP } from './test-util';
 
 describe(`form array ${setValueReducer.name}`, () => {
   it('should update state value if different', () => {
@@ -44,14 +38,14 @@ describe(`form array ${setValueReducer.name}`, () => {
 
   it('should create child states on demand for group children', () => {
     const value = [{ inner: '' }, { inner: '' }, { inner: '' }];
-    const resultState = setValueReducer<typeof value[0]>(INITIAL_STATE_NESTED_GROUP, new SetValueAction(FORM_CONTROL_ID, value));
+    const resultState = setValueReducer<(typeof value)[0]>(INITIAL_STATE_NESTED_GROUP, new SetValueAction(FORM_CONTROL_ID, value));
     expect(resultState.value).toEqual(value);
     expect(resultState.controls[2].value).toEqual(value[2]);
   });
 
   it('should create child states on demand for array children', () => {
     const value = [[''], [''], ['']];
-    const resultState = setValueReducer<typeof value[0]>(INITIAL_STATE_NESTED_ARRAY, new SetValueAction(FORM_CONTROL_ID, value));
+    const resultState = setValueReducer<(typeof value)[0]>(INITIAL_STATE_NESTED_ARRAY, new SetValueAction(FORM_CONTROL_ID, value));
     expect(resultState.value).toEqual(value);
     expect(resultState.controls[2].value).toEqual(value[2]);
   });

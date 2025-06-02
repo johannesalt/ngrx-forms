@@ -1,13 +1,6 @@
 import { StartAsyncValidationAction } from '../../actions';
 import { startAsyncValidationReducer } from './start-async-validation';
-import {
-  FORM_CONTROL_ID,
-  FORM_CONTROL_INNER3_ID,
-  FORM_CONTROL_INNER5_ID,
-  FORM_CONTROL_INNER_ID,
-  INITIAL_STATE,
-  INITIAL_STATE_FULL,
-} from './test-util';
+import { FORM_CONTROL_ID, FORM_CONTROL_INNER3_ID, FORM_CONTROL_INNER5_ID, FORM_CONTROL_INNER_ID, INITIAL_STATE, INITIAL_STATE_FULL } from './test-util';
 
 describe(`form group ${startAsyncValidationReducer.name}`, () => {
   it('should skip any action of the wrong type', () => expect(startAsyncValidationReducer(INITIAL_STATE, { type: '' } as any)).toBe(INITIAL_STATE));

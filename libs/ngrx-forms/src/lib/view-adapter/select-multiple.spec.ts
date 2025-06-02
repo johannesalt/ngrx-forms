@@ -10,40 +10,40 @@ const OPTION2_VALUE = 'op2';
 const OPTION3_VALUE = 'op3';
 
 @Component({
-    // tslint:disable-next-line:component-selector
-    selector: 'select-test',
-    template: `
-<select multiple [ngrxFormControlState]="state">
-  <option value="op1">op1</option>
-  <option value="op2" selected>op2</option>
-  <option value="op3" selected>op2</option>
-</select>
+  // tslint:disable-next-line:component-selector
+  selector: 'select-test',
+  template: `
+    <select multiple [ngrxFormControlState]="state">
+      <option value="op1">op1</option>
+      <option value="op2" selected>op2</option>
+      <option value="op3" selected>op2</option>
+    </select>
 
-<select multiple [ngrxFormControlState]="state" id="customId">
-  <option value="op1">op1</option>
-  <option value="op2" selected>op2</option>
-  <option value="op3" selected>op2</option>
-</select>
+    <select multiple [ngrxFormControlState]="state" id="customId">
+      <option value="op1">op1</option>
+      <option value="op2" selected>op2</option>
+      <option value="op3" selected>op2</option>
+    </select>
 
-<select multiple [ngrxFormControlState]="state" [id]="boundId">
-  <option value="op1">op1</option>
-  <option value="op2" selected>op2</option>
-  <option value="op3" selected>op2</option>
-</select>
+    <select multiple [ngrxFormControlState]="state" [id]="boundId">
+      <option value="op1">op1</option>
+      <option value="op2" selected>op2</option>
+      <option value="op3" selected>op2</option>
+    </select>
 
-<select multiple [ngrxFormControlState]="state">
-  <option *ngFor="let o of stringOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
-</select>
+    <select multiple [ngrxFormControlState]="state">
+      <option *ngFor="let o of stringOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
+    </select>
 
-<select multiple [ngrxFormControlState]="state">
-  <option *ngFor="let o of numberOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
-</select>
+    <select multiple [ngrxFormControlState]="state">
+      <option *ngFor="let o of numberOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
+    </select>
 
-<select multiple [ngrxFormControlState]="state">
-  <option *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
-</select>
-`,
-    standalone: false
+    <select multiple [ngrxFormControlState]="state">
+      <option *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
+    </select>
+  `,
+  standalone: false,
 })
 export class SelectTestComponent {
   boundId = 'boundId';
@@ -64,11 +64,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        NgrxSelectMultipleViewAdapter,
-        NgrxSelectMultipleOption,
-        SelectTestComponent,
-      ],
+      declarations: [NgrxSelectMultipleViewAdapter, NgrxSelectMultipleOption, SelectTestComponent],
     }).compileComponents();
   }));
 
@@ -189,7 +185,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should throw if state is undefined', () => {
-      expect(() => viewAdapter.ngrxFormControlState = undefined as any).toThrowError();
+      expect(() => (viewAdapter.ngrxFormControlState = undefined as any)).toThrowError();
     });
 
     it('should not throw if calling callbacks before they are registered', () => {
@@ -253,7 +249,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith([component.stringOptions[0], component.stringOptions[2]]);
     });
 
-    it('should call the registered function whenever a selected option\'s value changes', () => {
+    it("should call the registered function whenever a selected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 'new value';
@@ -268,7 +264,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
       const newValue = 'op4';
       component.stringOptions.push(newValue);
       fixture.detectChanges();
-      (element.querySelectorAll('option')[3]).selected = true;
+      element.querySelectorAll('option')[3].selected = true;
       element.dispatchEvent(new Event('change'));
       expect(spy).toHaveBeenCalledWith([component.stringOptions[1], component.stringOptions[2], component.stringOptions[3]]);
     });
@@ -321,7 +317,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith([component.numberOptions[0], component.numberOptions[2]]);
     });
 
-    it('should call the registered function whenever a selected option\'s value changes', () => {
+    it("should call the registered function whenever a selected option's value changes", () => {
       const spy = jasmine.createSpy('fn');
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 3;
@@ -336,7 +332,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
       const newValue = 4;
       component.numberOptions.push(newValue);
       fixture.detectChanges();
-      (element.querySelectorAll('option')[3]).selected = true;
+      element.querySelectorAll('option')[3].selected = true;
       element.dispatchEvent(new Event('change'));
       expect(spy).toHaveBeenCalledWith([component.numberOptions[1], component.numberOptions[2], component.numberOptions[3]]);
     });
@@ -389,7 +385,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
       expect(spy).toHaveBeenCalledWith([component.booleanOptions[0]]);
     });
 
-    it('should call the registered function whenever a selected option\'s value changes', () => {
+    it("should call the registered function whenever a selected option's value changes", () => {
       component.booleanOptions = [true];
       fixture.detectChanges();
       viewAdapter.setViewValue(component.booleanOptions);
@@ -410,7 +406,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
       const newValue = false;
       component.booleanOptions.push(newValue);
       fixture.detectChanges();
-      (element.querySelectorAll('option')[1]).selected = true;
+      element.querySelectorAll('option')[1].selected = true;
       element.dispatchEvent(new Event('change'));
       expect(spy).toHaveBeenCalledWith([component.booleanOptions[0], component.booleanOptions[1]]);
     });

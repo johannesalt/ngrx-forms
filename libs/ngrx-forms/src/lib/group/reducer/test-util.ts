@@ -7,7 +7,12 @@ export const FORM_CONTROL_INNER3_ID = `${FORM_CONTROL_ID}.inner3`;
 export const FORM_CONTROL_INNER4_ID = `${FORM_CONTROL_INNER3_ID}.inner4`;
 export const FORM_CONTROL_INNER5_ID = `${FORM_CONTROL_ID}.inner5`;
 export const FORM_CONTROL_INNER5_0_ID = `${FORM_CONTROL_ID}.inner5.0`;
-export interface FormGroupValue { inner: string; inner2?: string; inner3?: { inner4: string }; inner5?: string[]; }
+export interface FormGroupValue {
+  inner: string;
+  inner2?: string;
+  inner3?: { inner4: string };
+  inner5?: string[];
+}
 export const INITIAL_FORM_CONTROL_VALUE: FormGroupValue = { inner: '' };
 export const INITIAL_FORM_CONTROL_VALUE_FULL: FormGroupValue = { inner: '', inner2: '', inner3: { inner4: '' }, inner5: [''] };
 export const INITIAL_STATE = createFormGroupState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
@@ -16,7 +21,7 @@ export const INITIAL_STATE_FULL = createFormGroupState(FORM_CONTROL_ID, INITIAL_
 function setPropertyRecursively<TValue>(
   state: AbstractControlState<TValue>,
   property: keyof AbstractControlState<TValue>,
-  value: any,
+  value: any
 ): AbstractControlState<TValue> {
   state = {
     ...state,
@@ -24,7 +29,7 @@ function setPropertyRecursively<TValue>(
   };
 
   if (isArrayState(state)) {
-    const controls = state.controls.map(s => setPropertyRecursively(s, property, value));
+    const controls = state.controls.map((s) => setPropertyRecursively(s, property, value));
     return {
       ...state,
       controls,
@@ -50,7 +55,7 @@ function setPropertyRecursively<TValue>(
 
 export function setPropertiesRecursively<TValue>(
   state: AbstractControlState<TValue>,
-  properties: [keyof AbstractControlState<TValue>, any][],
+  properties: [keyof AbstractControlState<TValue>, any][]
 ): FormState<TValue> {
   return properties.reduce((s, [p, v]) => setPropertyRecursively(s, p, v), state) as FormState<TValue>;
 }

@@ -24,13 +24,15 @@ function isAndroid(navigator: Navigator): boolean {
 // out whether it is the "active" view adapter and only perform its side effects if it
 // is active
 @Directive({
-    selector: 'input:not([type=checkbox]):not([type=number]):not([type=radio]):not([type=range])[ngrxFormControlState],textarea[ngrxFormControlState]',
-    providers: [{
-            provide: NGRX_FORM_VIEW_ADAPTER,
-            useExisting: forwardRef(() => NgrxDefaultViewAdapter),
-            multi: true,
-        }],
-    standalone: false
+  selector: 'input:not([type=checkbox]):not([type=number]):not([type=radio]):not([type=range])[ngrxFormControlState],textarea[ngrxFormControlState]',
+  providers: [
+    {
+      provide: NGRX_FORM_VIEW_ADAPTER,
+      useExisting: forwardRef(() => NgrxDefaultViewAdapter),
+      multi: true,
+    },
+  ],
+  standalone: false,
 })
 export class NgrxDefaultViewAdapter implements FormViewAdapter, AfterViewInit {
   private state: FormControlState<any>;
@@ -39,7 +41,7 @@ export class NgrxDefaultViewAdapter implements FormViewAdapter, AfterViewInit {
   onChange: (value: any) => void = () => void 0;
 
   @HostListener('blur')
-  onTouched: () => void = () => void 0
+  onTouched: () => void = () => void 0;
 
   @Input() set ngrxFormControlState(value: FormControlState<any>) {
     if (!value) {
@@ -63,7 +65,7 @@ export class NgrxDefaultViewAdapter implements FormViewAdapter, AfterViewInit {
     private elementRef: ElementRef,
     @Optional() @Inject(PLATFORM_ID) private platformId: string | null = null,
     // we use a special injection string that should never exist at runtime to allow mocking this dependency for testing
-    @Optional() @Inject('ngrx-forms/never') navigator: Navigator | null = null,
+    @Optional() @Inject('ngrx-forms/never') navigator: Navigator | null = null
   ) {
     this.isCompositionSupported = isPlatformBrowser(this.platformId || '') && !isAndroid(navigator || window.navigator);
   }

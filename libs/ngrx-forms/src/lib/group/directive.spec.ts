@@ -34,8 +34,8 @@ describe(NgrxFormDirective.name, () => {
     expect(() => directive.onSubmit({ preventDefault: () => void 0 } as any)).toThrowError();
   });
 
-  it(`should dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is unsubmitted`, done => {
-    actions$.pipe(take(1)).subscribe(a => {
+  it(`should dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is unsubmitted`, (done) => {
+    actions$.pipe(take(1)).subscribe((a) => {
       expect(a).toEqual(new MarkAsSubmittedAction(INITIAL_STATE.id));
       done();
     });
@@ -43,8 +43,8 @@ describe(NgrxFormDirective.name, () => {
     directive.onSubmit({ preventDefault: () => void 0 } as any);
   });
 
-  it(`should not dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is submitted`, done => {
-    actions$.pipe(count()).subscribe(c => {
+  it(`should not dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is submitted`, (done) => {
+    actions$.pipe(count()).subscribe((c) => {
       expect(c).toEqual(0);
       done();
     });

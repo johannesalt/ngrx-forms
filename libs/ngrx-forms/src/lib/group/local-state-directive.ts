@@ -5,12 +5,11 @@ import { KeyValue } from '../state';
 import { NgrxFormDirective } from './directive';
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'form[ngrxFormState][ngrxFormsAction]',
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: 'form[ngrxFormState][ngrxFormsAction]',
+  standalone: false,
 })
 export class NgrxLocalFormDirective<TStateValue extends KeyValue> extends NgrxFormDirective<TStateValue> {
-
   @Output() ngrxFormsAction = new EventEmitter<Actions<TStateValue>>();
 
   constructor() {

@@ -158,7 +158,7 @@ describe('state', () => {
         INITIAL_STATE.userDefinedProperties,
         {
           wasOrShouldBeEnabled: true,
-        },
+        }
       );
 
       expect(state.id).toBe(INITIAL_STATE.id);
@@ -189,7 +189,7 @@ describe('state', () => {
         initialState.userDefinedProperties,
         {
           wasOrShouldBeEnabled: true,
-        },
+        }
       );
 
       expect(state.id).toBe(initialState.id);
@@ -334,7 +334,7 @@ describe('state', () => {
         INITIAL_STATE.userDefinedProperties,
         {
           wasOrShouldBeEnabled: true,
-        },
+        }
       );
 
       expect(state.id).toBe(INITIAL_STATE.id);
@@ -365,7 +365,7 @@ describe('state', () => {
         initialState.userDefinedProperties,
         {
           wasOrShouldBeEnabled: true,
-        },
+        }
       );
 
       expect(state.id).toBe(initialState.id);

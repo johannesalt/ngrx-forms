@@ -23,20 +23,12 @@ function updateArraySingle<TValue>(filterFn: FilterFn<TValue>, updateFn: Project
   return (state: FormArrayState<TValue>): FormArrayState<TValue> => {
     const newControls = updateArrayControlsState<TValue>(filterFn, updateFn)(state);
     return newControls !== state.controls
-      ? computeArrayState<TValue>(
-        state.id,
-        newControls,
-        state.value,
-        state.errors,
-        state.pendingValidations,
-        state.userDefinedProperties,
-        {
+      ? computeArrayState<TValue>(state.id, newControls, state.value, state.errors, state.pendingValidations, state.userDefinedProperties, {
           wasOrShouldBeDirty: state.isDirty,
           wasOrShouldBeEnabled: state.isEnabled,
           wasOrShouldBeTouched: state.isTouched,
           wasOrShouldBeSubmitted: state.isSubmitted,
-        },
-      )
+        })
       : state;
   };
 }
@@ -87,7 +79,7 @@ const updatedState = arrayUpdateFn(state);
  */
 export function updateArrayWithFilter<TValue>(
   filterFn: FilterFn<TValue>,
-  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[],
+  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[]
 ): (state: FormArrayState<TValue>) => FormArrayState<TValue>;
 
 /**
@@ -136,7 +128,7 @@ const updatedState = updateArray<string>(
 export function updateArrayWithFilter<TValue>(
   state: FormArrayState<TValue>,
   filterFn: FilterFn<TValue>,
-  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[],
+  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[]
 ): FormArrayState<TValue>;
 
 export function updateArrayWithFilter<TValue>(
@@ -199,7 +191,7 @@ const updatedState = arrayUpdateFn(state);
 ```
  */
 export function updateArray<TValue>(
-  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[],
+  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[]
 ): (state: FormArrayState<TValue>) => FormArrayState<TValue>;
 
 /**
@@ -244,7 +236,7 @@ const updatedState = updateArray<string>(
  */
 export function updateArray<TValue>(
   state: FormArrayState<TValue>,
-  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[],
+  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[]
 ): FormArrayState<TValue>;
 
 export function updateArray<TValue>(

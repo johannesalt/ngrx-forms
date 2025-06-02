@@ -2,10 +2,7 @@ import { Actions, SetAsyncErrorAction } from '../../actions';
 import { FormControlState, FormControlValueTypes } from '../../state';
 import { deepEquals } from '../../util';
 
-export function setAsyncErrorReducer<TValue extends FormControlValueTypes>(
-  state: FormControlState<TValue>,
-  action: Actions<TValue>,
-): FormControlState<TValue> {
+export function setAsyncErrorReducer<TValue extends FormControlValueTypes>(state: FormControlState<TValue>, action: Actions<TValue>): FormControlState<TValue> {
   if (action.type !== SetAsyncErrorAction.TYPE) {
     return state;
   }
@@ -22,7 +19,7 @@ export function setAsyncErrorReducer<TValue extends FormControlValueTypes>(
   }
 
   const errors = { ...state.errors, [name]: value };
-  const pendingValidations = state.pendingValidations.filter(v => v !== action.name);
+  const pendingValidations = state.pendingValidations.filter((v) => v !== action.name);
 
   return {
     ...state,

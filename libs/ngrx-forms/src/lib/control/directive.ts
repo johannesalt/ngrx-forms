@@ -1,16 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-  AfterViewInit,
-  Directive,
-  ElementRef,
-  HostBinding,
-  HostListener,
-  Inject,
-  Input,
-  OnInit,
-  Optional,
-  Self,
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostBinding, HostListener, Inject, Input, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ActionsSubject } from '@ngrx/store';
 
@@ -31,7 +20,7 @@ export enum NGRX_UPDATE_ON_TYPE {
 }
 
 class ControlValueAccessorAdapter implements FormViewAdapter {
-  constructor(private valueAccessor: ControlValueAccessor) { }
+  constructor(private valueAccessor: ControlValueAccessor) {}
 
   setViewValue(value: any): void {
     this.valueAccessor.writeValue(value);
@@ -54,9 +43,9 @@ class ControlValueAccessorAdapter implements FormViewAdapter {
 export type NgrxFormControlValueType<TStateValue> = TStateValue extends FormControlValueTypes ? TStateValue : never;
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: ':not([ngrxFormsAction])[ngrxFormControlState]',
-    standalone: false
+  // tslint:disable-next-line:directive-selector
+  selector: ':not([ngrxFormsAction])[ngrxFormControlState]',
+  standalone: false,
 })
 export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> implements AfterViewInit, OnInit {
   private isInitialized = false;
@@ -117,7 +106,7 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
     @Optional() @Inject(DOCUMENT) private dom: Document | null,
     @Optional() @Inject(ActionsSubject) private actionsSubject: ActionsSubject | null,
     @Self() @Optional() @Inject(NGRX_FORM_VIEW_ADAPTER) viewAdapters: FormViewAdapter[],
-    @Self() @Optional() @Inject(NG_VALUE_ACCESSOR) valueAccessors: ControlValueAccessor[],
+    @Self() @Optional() @Inject(NG_VALUE_ACCESSOR) valueAccessors: ControlValueAccessor[]
   ) {
     viewAdapters = viewAdapters || [];
     valueAccessors = valueAccessors || [];
@@ -126,14 +115,12 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
       throw new Error('More than one custom control value accessor matches!');
     }
 
-    this.viewAdapter = valueAccessors.length > 0
-      ? new ControlValueAccessorAdapter(valueAccessors[0])
-      : selectViewAdapter(viewAdapters);
+    this.viewAdapter = valueAccessors.length > 0 ? new ControlValueAccessorAdapter(valueAccessors[0]) : selectViewAdapter(viewAdapters);
   }
 
   updateViewIfControlIdChanged(
     newState: FormControlState<NgrxFormControlValueType<TStateValue>>,
-    oldState: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined,
+    oldState: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined
   ) {
     if (oldState && newState.id === oldState.id) {
       return;
@@ -149,7 +136,7 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
 
   updateViewIfValueChanged(
     newState: FormControlState<NgrxFormControlValueType<TStateValue>>,
-    _: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined,
+    _: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined
   ) {
     if (newState.value === this.stateValue) {
       return;
@@ -162,7 +149,7 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
 
   updateViewIfIsDisabledChanged(
     newState: FormControlState<NgrxFormControlValueType<TStateValue>>,
-    oldState: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined,
+    oldState: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined
   ) {
     if (!this.viewAdapter.setIsDisabled) {
       return;
@@ -177,7 +164,7 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
 
   updateViewIfIsFocusedChanged(
     newState: FormControlState<NgrxFormControlValueType<TStateValue>>,
-    oldState: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined,
+    oldState: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined
   ) {
     if (!this.focusTrackingIsEnabled) {
       return;
