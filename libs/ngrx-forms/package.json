@@ -1,0 +1,27 @@
+{
+  "author": "Jonathan Ziller <jonathan.ziller@gmail.com> (https://github.com/MrWolfZ)",
+  "bugs": {
+    "url": "https://github.com/MrWolfZ/ngrx-forms/issues"
+  },
+  "description": "Proper integration of forms in Angular 4 applications using ngrx",
+  "homepage": "https://github.com/MrWolfZ/ngrx-forms",
+  "keywords": [
+    "angular",
+    "javascript",
+    "typescript",
+    "ngrx",
+    "redux"
+  ],
+  "license": "MIT",
+  "name": "@johannes-it-solution/ngrx-forms",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrWolfZ/ngrx-forms.git"
+  },
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^19.2.0",
+    "@angular/core": "^19.2.0"
+  },
+  "sideEffects": false
+}
