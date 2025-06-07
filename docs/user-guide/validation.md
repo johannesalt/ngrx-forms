@@ -22,8 +22,8 @@ The following table lists all validation functions provided by **ngrx-forms**.
 Below you can see an example of how these functions can be used:
 
 ```typescript
-import { updateGroup, validate } from 'ngrx-forms';
-import { required, greaterThanOrEqualTo, lessThan } from 'ngrx-forms/validation';
+import { updateGroup, validate } from '@johannes-it-solution/ngrx-forms';
+import { required, greaterThanOrEqualTo, lessThan } from '@johannes-it-solution/ngrx-forms/validation';
 
 export interface NestedValue {
   someNumber: number;
@@ -51,7 +51,7 @@ export interface MyCustomValidationError {
 }
 
 // @ts-ignore
-declare module 'ngrx-forms' {
+declare module '@johannes-it-solution/ngrx-forms' {
   export interface ValidationErrors {
     myCustomError?: MyCustomValidationError;
   }

@@ -1,5 +1,5 @@
 import { Action, combineReducers } from '@ngrx/store';
-import { createFormGroupState, formGroupReducer, FormGroupState, setValue, updateGroup } from 'ngrx-forms';
+import { createFormGroupState, formGroupReducer, FormGroupState, setValue, updateGroup } from '@johannes-it-solution/ngrx-forms';
 
 export class GetManufacturersAction implements Action {
   static readonly TYPE = 'localStateAdvanced/GET_MANUFACTURERS';

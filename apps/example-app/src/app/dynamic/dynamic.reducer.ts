@@ -8,7 +8,7 @@ import {
   RemoveArrayControlAction,
   setValue,
   updateGroup,
-} from 'ngrx-forms';
+} from '@johannes-it-solution/ngrx-forms';
 
 import { State as RootState } from '../app.reducer';
 

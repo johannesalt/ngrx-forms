@@ -1,4 +1,4 @@
-import { Boxed, unbox, ValidationErrors } from 'ngrx-forms';
+import { Boxed, unbox, ValidationErrors } from '@johannes-it-solution/ngrx-forms';
 
 // this regex is taken from the @angular/forms source code
 // tslint:disable-next-line:max-line-length
@@ -11,7 +11,7 @@ export interface EmailValidationError {
 }
 
 // @ts-ignore
-declare module 'ngrx-forms' {
+declare module '@johannes-it-solution/ngrx-forms' {
   export interface ValidationErrors {
     email?: EmailValidationError;
   }

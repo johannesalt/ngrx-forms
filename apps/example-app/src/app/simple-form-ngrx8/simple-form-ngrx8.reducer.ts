@@ -1,5 +1,5 @@
 import { Action, createAction, createReducer, on, props } from '@ngrx/store';
-import { createFormGroupState, FormGroupState, onNgrxForms } from 'ngrx-forms';
+import { createFormGroupState, FormGroupState, onNgrxForms } from '@johannes-it-solution/ngrx-forms';
 import { State as RootState } from '../app.reducer';
 
 export interface FormValue {

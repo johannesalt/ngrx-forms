@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { FormGroupState } from 'ngrx-forms';
+import { FormGroupState } from '@johannes-it-solution/ngrx-forms';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 

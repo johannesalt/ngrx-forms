@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { FormGroupState, NgrxValueConverter, NgrxValueConverters, ResetAction, SetValueAction } from 'ngrx-forms';
+import { FormGroupState, NgrxValueConverter, NgrxValueConverters, ResetAction, SetValueAction } from '@johannes-it-solution/ngrx-forms';
 import { Observable } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 

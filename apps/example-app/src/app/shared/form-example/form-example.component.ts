@@ -3,7 +3,7 @@ import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-typescript';
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FormGroupState } from 'ngrx-forms';
+import { FormGroupState } from '@johannes-it-solution/ngrx-forms';
 
 @Component({
   selector: 'ngf-form-example',

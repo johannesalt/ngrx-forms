@@ -1,4 +1,4 @@
-import { Boxed, unbox, ValidationErrors } from 'ngrx-forms';
+import { Boxed, unbox, ValidationErrors } from '@johannes-it-solution/ngrx-forms';
 
 export interface EqualToValidationError<T> {
   comparand: T;
@@ -6,7 +6,7 @@ export interface EqualToValidationError<T> {
 }
 
 // @ts-ignore
-declare module 'ngrx-forms' {
+declare module '@johannes-it-solution/ngrx-forms' {
   export interface ValidationErrors {
     equalTo?: EqualToValidationError<any>;
   }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Actions } from 'ngrx-forms';
+import { Actions } from '@johannes-it-solution/ngrx-forms';
 
 import { INITIAL_FORM_STATE, reducer } from './local-state-introduction.reducer';
 

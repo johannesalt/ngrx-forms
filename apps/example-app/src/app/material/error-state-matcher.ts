@@ -2,7 +2,7 @@ import { Directive, Host, Input, Optional } from '@angular/core';
 import { MatChipList } from '@angular/material/chips';
 import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
-import { FormControlState } from 'ngrx-forms';
+import { FormControlState } from '@johannes-it-solution/ngrx-forms';
 
 @Directive({
   // tslint:disable-next-line:directive-selector

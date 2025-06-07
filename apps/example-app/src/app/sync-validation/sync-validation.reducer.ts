@@ -1,6 +1,6 @@
 import { Action, combineReducers } from '@ngrx/store';
-import { createFormGroupState, disable, enable, formGroupReducer, FormGroupState, updateGroup, validate, ValidationErrors } from 'ngrx-forms';
-import { minLength, required, requiredTrue } from 'ngrx-forms/validation';
+import { createFormGroupState, disable, enable, formGroupReducer, FormGroupState, updateGroup, validate, ValidationErrors } from '@johannes-it-solution/ngrx-forms';
+import { minLength, required, requiredTrue } from '@johannes-it-solution/ngrx-forms/validation';
 
 import { State as RootState } from '../app.reducer';
 
@@ -48,7 +48,7 @@ export const INITIAL_STATE = createFormGroupState<FormValue>(FORM_ID, {
 });
 
 // @ts-ignore
-declare module 'ngrx-forms' {
+declare module '@johannes-it-solution/ngrx-forms' {
   interface ValidationErrors {
     passwordMatch?: PasswordValue;
   }

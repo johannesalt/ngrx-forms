@@ -1,4 +1,4 @@
-import { setValue, updateGroup } from 'ngrx-forms';
+import { setValue, updateGroup } from '@johannes-it-solution/ngrx-forms';
 
 import { FormValue, INITIAL_STATE, validateAndUpdateForm } from './sync-validation.reducer';
 

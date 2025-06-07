@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
-import { NgrxFormsModule } from 'ngrx-forms';
+import { NgrxFormsModule } from '@johannes-it-solution/ngrx-forms';
 
 import { SharedModule } from '../shared/shared.module';
 import { LocalStateAdvancedComponent } from './local-state-advanced.component';

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Action, ActionsSubject } from '@ngrx/store';
-import { Actions, SetValueAction } from 'ngrx-forms';
+import { Actions, SetValueAction } from '@johannes-it-solution/ngrx-forms';
 import { Subscription } from 'rxjs';
 
 import { GetManufacturersAction, INITIAL_LOCAL_STATE, reducer } from './local-state-advanced.reducer';

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { FormGroupState, unbox } from 'ngrx-forms';
+import { FormGroupState, unbox } from '@johannes-it-solution/ngrx-forms';
 import { Observable } from 'rxjs';
 
 import { FormValue, State } from './value-boxing.reducer';

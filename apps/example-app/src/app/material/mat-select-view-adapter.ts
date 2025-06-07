@@ -1,6 +1,6 @@
 import { AfterViewInit, Directive, forwardRef, OnDestroy } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
-import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from 'ngrx-forms';
+import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '@johannes-it-solution/ngrx-forms';
 import { Subscription } from 'rxjs';
 
 // tslint:disable:directive-selector

@@ -1,6 +1,6 @@
 import { Action, combineReducers } from '@ngrx/store';
-import { createFormGroupState, createFormStateReducerWithUpdate, FormGroupState, updateGroup, validate } from 'ngrx-forms';
-import { greaterThan, required } from 'ngrx-forms/validation';
+import { createFormGroupState, createFormStateReducerWithUpdate, FormGroupState, updateGroup, validate } from '@johannes-it-solution/ngrx-forms';
+import { greaterThan, required } from '@johannes-it-solution/ngrx-forms/validation';
 
 import { State as RootState } from '../app.reducer';
 

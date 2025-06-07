@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { createEffect } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
-import { ClearAsyncErrorAction, SetAsyncErrorAction, StartAsyncValidationAction } from 'ngrx-forms';
+import { ClearAsyncErrorAction, SetAsyncErrorAction, StartAsyncValidationAction } from '@johannes-it-solution/ngrx-forms';
 import { concat, Observable, timer } from 'rxjs';
 import { catchError, distinct, filter, map, mergeMap, switchMap } from 'rxjs/operators';
 

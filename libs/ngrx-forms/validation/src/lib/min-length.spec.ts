@@ -1,4 +1,4 @@
-import { AbstractControlState, box, unbox, validate } from 'ngrx-forms';
+import { AbstractControlState, box, unbox, validate } from '@johannes-it-solution/ngrx-forms';
 import { minLength } from './min-length';
 
 describe(minLength.name, () => {

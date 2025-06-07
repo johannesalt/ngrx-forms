@@ -140,8 +140,8 @@ This version is skipped due to an invalid package having been published.
 
   ```ts
   import { createReducer } from '@ngrx/store';
-  import { onNgrxForms, onNgrxFormsAction, SetValueAction, updateGroup, validate, wrapReducerWithFormStateUpdate } from 'ngrx-forms';
-  import { required } from 'ngrx-forms/validation';
+  import { onNgrxForms, onNgrxFormsAction, SetValueAction, updateGroup, validate, wrapReducerWithFormStateUpdate } from '@johannes-it-solution/ngrx-forms';
+  import { required } from '@johannes-it-solution/ngrx-forms/validation';
 
   export interface LoginFormValue {
     username: string;
@@ -193,8 +193,8 @@ This version is skipped due to an invalid package having been published.
 
   ```ts
   import { createReducer } from '@ngrx/store';
-  import { onNgrxForms, updateGroup, validate, wrapReducerWithFormStateUpdate } from 'ngrx-forms';
-  import { required } from 'ngrx-forms/validation';
+  import { onNgrxForms, updateGroup, validate, wrapReducerWithFormStateUpdate } from '@johannes-it-solution/ngrx-forms';
+  import { required } from '@johannes-it-solution/ngrx-forms/validation';
 
   export interface LoginFormValue {
     username: string;
