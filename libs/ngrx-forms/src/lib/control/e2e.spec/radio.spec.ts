@@ -77,54 +77,58 @@ describe(RadioTestComponent.name, () => {
     expect(element2.checked).toBe(true);
   });
 
-  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, (done) => {
-    actions$.pipe(take(1)).subscribe((a) => {
-      expect(a.type).toBe(SetValueAction.TYPE);
-      expect((a as SetValueAction<string>).value).toBe(RADIO_OPTIONS[0]);
-      done();
-    });
+  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, () =>
+    new Promise<void>((done) => {
+      actions$.pipe(take(1)).subscribe((a) => {
+        expect(a.type).toBe(SetValueAction.TYPE);
+        expect((a as SetValueAction<string>).value).toBe(RADIO_OPTIONS[0]);
+        done();
+      });
 
-    element1.click();
-  });
+      element1.click();
+    }));
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, (done) => {
-    actions$.pipe(skip(1), take(1)).subscribe((a) => {
-      expect(a.type).toBe(MarkAsDirtyAction.TYPE);
-      done();
-    });
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () =>
+    new Promise<void>((done) => {
+      actions$.pipe(skip(1), take(1)).subscribe((a) => {
+        expect(a.type).toBe(MarkAsDirtyAction.TYPE);
+        done();
+      });
 
-    element1.click();
-  });
+      element1.click();
+    }));
 
-  it(`should trigger ${SetValueAction.name}s and ${MarkAsDirtyAction.name}s when switching between options`, (done) => {
-    actions$.pipe(bufferCount(4), take(1)).subscribe(([a1, a2, a3, a4]) => {
-      expect(a1.type).toBe(SetValueAction.TYPE);
-      expect(a2.type).toBe(MarkAsDirtyAction.TYPE);
-      expect(a3.type).toBe(SetValueAction.TYPE);
-      expect(a4.type).toBe(MarkAsDirtyAction.TYPE);
-      expect((a1 as SetValueAction<string>).value).toBe(RADIO_OPTIONS[0]);
-      expect((a3 as SetValueAction<string>).value).toBe(RADIO_OPTIONS[1]);
-      done();
-    });
+  it(`should trigger ${SetValueAction.name}s and ${MarkAsDirtyAction.name}s when switching between options`, () =>
+    new Promise<void>((done) => {
+      actions$.pipe(bufferCount(4), take(1)).subscribe(([a1, a2, a3, a4]) => {
+        expect(a1.type).toBe(SetValueAction.TYPE);
+        expect(a2.type).toBe(MarkAsDirtyAction.TYPE);
+        expect(a3.type).toBe(SetValueAction.TYPE);
+        expect(a4.type).toBe(MarkAsDirtyAction.TYPE);
+        expect((a1 as SetValueAction<string>).value).toBe(RADIO_OPTIONS[0]);
+        expect((a3 as SetValueAction<string>).value).toBe(RADIO_OPTIONS[1]);
+        done();
+      });
 
-    element1.click();
-    component.state = { ...component.state, value: RADIO_OPTIONS[0] };
-    fixture.detectChanges();
-    element2.click();
-  });
+      element1.click();
+      component.state = { ...component.state, value: RADIO_OPTIONS[0] };
+      fixture.detectChanges();
+      element2.click();
+    }));
 
-  it(`should trigger a ${SetValueAction.name} if the value of the selected option changes`, (done) => {
-    const newValue = 'new value';
+  it(`should trigger a ${SetValueAction.name} if the value of the selected option changes`, () =>
+    new Promise<void>((done) => {
+      const newValue = 'new value';
 
-    actions$.pipe(take(1)).subscribe((a) => {
-      expect(a.type).toBe(SetValueAction.TYPE);
-      expect((a as SetValueAction<string>).value).toBe(newValue);
-      done();
-    });
+      actions$.pipe(take(1)).subscribe((a) => {
+        expect(a.type).toBe(SetValueAction.TYPE);
+        expect((a as SetValueAction<string>).value).toBe(newValue);
+        done();
+      });
 
-    component.options = [RADIO_OPTIONS[0], newValue];
-    fixture.detectChanges();
-  });
+      component.options = [RADIO_OPTIONS[0], newValue];
+      fixture.detectChanges();
+    }));
 
   it('should deselect other options when option is selected', () => {
     element1.click();

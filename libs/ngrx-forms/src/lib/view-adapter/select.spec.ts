@@ -117,7 +117,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should not set the ID of the element if the ID of the state does not change', () => {
-      const renderer: Renderer2 = jasmine.createSpyObj('renderer', ['setProperty']);
+      const renderer: Renderer2 = { setProperty: vi.fn() } as any;
       const nativeElement: any = {};
       viewAdapter = new NgrxSelectViewAdapter(renderer, { nativeElement } as any);
       viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
@@ -139,7 +139,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       element.value = '0';
       element.dispatchEvent(new Event('change'));
@@ -147,7 +147,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the input is blurred', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnTouchedCallback(spy);
       element.dispatchEvent(new Event('blur'));
       expect(spy).toHaveBeenCalled();
@@ -209,7 +209,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       element.selectedIndex = 0;
       element.dispatchEvent(new Event('change'));
@@ -217,7 +217,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it("should call the registered function whenever the selected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 'new value';
       component.stringOptions[1] = newValue;
@@ -226,7 +226,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it("should not call the registered function whenever an unselected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 'new value';
       component.stringOptions[0] = newValue;
@@ -235,7 +235,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should create new options dynamically', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 'op3';
       component.stringOptions.push(newValue);
@@ -287,7 +287,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       element.selectedIndex = 0;
       element.dispatchEvent(new Event('change'));
@@ -295,7 +295,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it("should call the registered function whenever the selected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 3;
       component.numberOptions[1] = newValue;
@@ -304,7 +304,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it("should not call the registered function whenever an unselected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 3;
       component.numberOptions[0] = newValue;
@@ -313,7 +313,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should create new options dynamically', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 3;
       component.numberOptions.push(newValue);
@@ -365,7 +365,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       element.selectedIndex = 0;
       element.dispatchEvent(new Event('change'));
@@ -373,7 +373,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it("should call the registered function whenever the selected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = true;
       component.booleanOptions[1] = newValue;
@@ -382,7 +382,7 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should create new options dynamically', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = true;
       component.booleanOptions.push(newValue);
@@ -421,7 +421,7 @@ describe(NgrxSelectOption.name, () => {
 
   beforeEach(() => {
     elementRef = { nativeElement: {} } as any;
-    renderer = jasmine.createSpyObj('renderer2', ['setProperty']);
+    renderer = { setProperty: vi.fn() } as any;
     viewAdapter = new NgrxSelectViewAdapter(renderer, {} as any);
     option = new NgrxSelectOption(elementRef, renderer, viewAdapter);
   });

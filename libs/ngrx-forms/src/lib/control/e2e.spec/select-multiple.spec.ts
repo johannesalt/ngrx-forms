@@ -68,26 +68,28 @@ describe(SelectMultipleComponent.name, () => {
     expect(option2.selected).toBe(true);
   });
 
-  it('should trigger a SetValueAction with the selected value when an option is selected', (done) => {
-    actions$.pipe(first()).subscribe((a) => {
-      expect(a.type).toBe(SetValueAction.TYPE);
-      expect((a as SetValueAction<string>).value).toBe(JSON.stringify(SELECT_OPTIONS));
-      done();
-    });
+  it('should trigger a SetValueAction with the selected value when an option is selected', () =>
+    new Promise<void>((done) => {
+      actions$.pipe(first()).subscribe((a) => {
+        expect(a.type).toBe(SetValueAction.TYPE);
+        expect((a as SetValueAction<string>).value).toBe(JSON.stringify(SELECT_OPTIONS));
+        done();
+      });
 
-    option1.selected = true;
-    element.dispatchEvent(new Event('change'));
-  });
+      option1.selected = true;
+      element.dispatchEvent(new Event('change'));
+    }));
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, (done) => {
-    actions$.pipe(skip(1), first()).subscribe((a) => {
-      expect(a.type).toBe(MarkAsDirtyAction.TYPE);
-      done();
-    });
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () =>
+    new Promise<void>((done) => {
+      actions$.pipe(skip(1), first()).subscribe((a) => {
+        expect(a.type).toBe(MarkAsDirtyAction.TYPE);
+        done();
+      });
 
-    option1.selected = true;
-    element.dispatchEvent(new Event('change'));
-  });
+      option1.selected = true;
+      element.dispatchEvent(new Event('change'));
+    }));
 });
 
 @Component({
@@ -145,24 +147,26 @@ describe(SelectMultipleWithoutConverterComponent.name, () => {
     expect(option2.selected).toBe(true);
   });
 
-  it('should trigger a SetValueAction with the selected value when an option is selected', (done) => {
-    actions$.pipe(first()).subscribe((a) => {
-      expect(a.type).toBe(SetValueAction.TYPE);
-      expect((a as SetValueAction<Boxed<string[]>>).value).toEqual(box(SELECT_OPTIONS));
-      done();
-    });
+  it('should trigger a SetValueAction with the selected value when an option is selected', () =>
+    new Promise<void>((done) => {
+      actions$.pipe(first()).subscribe((a) => {
+        expect(a.type).toBe(SetValueAction.TYPE);
+        expect((a as SetValueAction<Boxed<string[]>>).value).toEqual(box(SELECT_OPTIONS));
+        done();
+      });
 
-    option1.selected = true;
-    element.dispatchEvent(new Event('change'));
-  });
+      option1.selected = true;
+      element.dispatchEvent(new Event('change'));
+    }));
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, (done) => {
-    actions$.pipe(skip(1), first()).subscribe((a) => {
-      expect(a.type).toBe(MarkAsDirtyAction.TYPE);
-      done();
-    });
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () =>
+    new Promise<void>((done) => {
+      actions$.pipe(skip(1), first()).subscribe((a) => {
+        expect(a.type).toBe(MarkAsDirtyAction.TYPE);
+        done();
+      });
 
-    option1.selected = true;
-    element.dispatchEvent(new Event('change'));
-  });
+      option1.selected = true;
+      element.dispatchEvent(new Event('change'));
+    }));
 });

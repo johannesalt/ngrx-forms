@@ -122,7 +122,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should not set the ID of the element if the ID of the state does not change', () => {
-      const renderer: Renderer2 = jasmine.createSpyObj('renderer', ['setProperty']);
+      const renderer: Renderer2 = { setProperty: vi.fn() } as any;
       const nativeElement: any = {};
       viewAdapter = new NgrxSelectMultipleViewAdapter(renderer, { nativeElement } as any);
       viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
@@ -156,7 +156,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       option1.selected = true;
       element.dispatchEvent(new Event('change'));
@@ -167,7 +167,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the input is blurred', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnTouchedCallback(spy);
       element.dispatchEvent(new Event('blur'));
       expect(spy).toHaveBeenCalled();
@@ -239,7 +239,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       option1.selected = true;
       element.dispatchEvent(new Event('change'));
@@ -250,7 +250,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it("should call the registered function whenever a selected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 'new value';
       component.stringOptions[1] = newValue;
@@ -259,7 +259,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should create new options dynamically', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 'op4';
       component.stringOptions.push(newValue);
@@ -307,7 +307,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       option1.selected = true;
       element.dispatchEvent(new Event('change'));
@@ -318,7 +318,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it("should call the registered function whenever a selected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 3;
       component.numberOptions[1] = newValue;
@@ -327,7 +327,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should create new options dynamically', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = 4;
       component.numberOptions.push(newValue);
@@ -375,7 +375,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       option1.selected = true;
       element.dispatchEvent(new Event('change'));
@@ -389,7 +389,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
       component.booleanOptions = [true];
       fixture.detectChanges();
       viewAdapter.setViewValue(component.booleanOptions);
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = false;
       component.booleanOptions[0] = newValue;
@@ -401,7 +401,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
       component.booleanOptions = [true];
       fixture.detectChanges();
       viewAdapter.setViewValue(component.booleanOptions);
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter.setOnChangeCallback(spy);
       const newValue = false;
       component.booleanOptions.push(newValue);
@@ -429,7 +429,7 @@ describe(NgrxSelectMultipleOption.name, () => {
 
   beforeEach(() => {
     elementRef = { nativeElement: {} } as any;
-    renderer = jasmine.createSpyObj('renderer2', ['setProperty']);
+    renderer = { setProperty: vi.fn() } as any;
     viewAdapter = new NgrxSelectMultipleViewAdapter(renderer, {} as any);
     option = new NgrxSelectMultipleOption({} as any, renderer, viewAdapter);
   });

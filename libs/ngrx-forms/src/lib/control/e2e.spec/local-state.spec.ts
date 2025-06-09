@@ -60,16 +60,17 @@ describe(NumberSelectComponentLocalStateComponent.name, () => {
     element = nativeElement.querySelector('select')!;
   });
 
-  it(`should not trigger a ${MarkAsDirtyAction.name} to the global store when an option is selected`, (done) => {
-    actions$.pipe(count()).subscribe((c) => {
-      expect(c).toEqual(0);
-      done();
-    });
+  it(`should not trigger a ${MarkAsDirtyAction.name} to the global store when an option is selected`, () =>
+    new Promise<void>((done) => {
+      actions$.pipe(count()).subscribe((c) => {
+        expect(c).toEqual(0);
+        done();
+      });
 
-    element.selectedIndex = 0;
-    element.dispatchEvent(new Event('change'));
-    actionsSubject.complete();
-  });
+      element.selectedIndex = 0;
+      element.dispatchEvent(new Event('change'));
+      actionsSubject.complete();
+    }));
 
   it(`should trigger a ${MarkAsDirtyAction.name} to the event emitter when an option is selected`, () => {
     element.selectedIndex = 0;

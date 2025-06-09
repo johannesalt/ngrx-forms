@@ -15,7 +15,7 @@ import { NgrxValueConverters } from './value-converter';
 describe(NgrxFormControlDirective.name, () => {
   let directive: NgrxFormControlDirective<string | null, any>;
   let elementRef: ElementRef;
-  let nativeElement: HTMLElement;
+  let nativeElement: Partial<HTMLElement>;
   let document: Document;
   let actionsSubject: ReplaySubject<Action>;
   let actions$: Observable<Action>;
@@ -27,7 +27,7 @@ describe(NgrxFormControlDirective.name, () => {
   const INITIAL_STATE = createFormControlState<string>(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
   beforeEach(() => {
-    nativeElement = jasmine.createSpyObj('nativeElement', ['focus', 'blur']);
+    nativeElement = { blur: vi.fn(), focus: vi.fn() };
     elementRef = { nativeElement } as any as ElementRef;
     document = {} as any as Document;
     actionsSubject = new ReplaySubject<Action>();
@@ -66,13 +66,13 @@ describe(NgrxFormControlDirective.name, () => {
 
     it('should write the value when the state changes', () => {
       const newValue = 'new value';
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = { ...INITIAL_STATE, value: newValue };
       expect(spy).toHaveBeenCalledWith(newValue);
     });
 
     it('should not write the value when the state value does not change', () => {
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = INITIAL_STATE;
       expect(spy).not.toHaveBeenCalled();
     });
@@ -80,13 +80,13 @@ describe(NgrxFormControlDirective.name, () => {
     it('should not write the value when the state value is the same as the view value', () => {
       const newValue = 'new value';
       onChange(newValue);
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = { ...INITIAL_STATE, value: newValue };
       expect(spy).not.toHaveBeenCalled();
     });
 
     it('should write the value when the state value does not change but the id does', () => {
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1` };
       expect(spy).toHaveBeenCalledWith(INITIAL_STATE.value);
     });
@@ -99,7 +99,7 @@ describe(NgrxFormControlDirective.name, () => {
     it('should write the value when the state value does not change but the id does after a new view value was reported', () => {
       const newValue = 'new value';
       onChange(newValue);
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, value: newValue };
       expect(spy).toHaveBeenCalledWith(newValue);
     });
@@ -107,7 +107,7 @@ describe(NgrxFormControlDirective.name, () => {
     it('should write the value when the state value does not change but the id does after an undefined view value was reported', () => {
       const newValue = undefined as any;
       onChange(newValue);
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, value: newValue };
       expect(spy).toHaveBeenCalledWith(newValue);
     });
@@ -115,7 +115,7 @@ describe(NgrxFormControlDirective.name, () => {
     it('should write the value after the view is initialized', () => {
       const newValue = 'new value';
       directive.ngrxFormControlState = { ...INITIAL_STATE, value: newValue };
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngAfterViewInit();
       expect(spy).toHaveBeenCalledWith(newValue);
     });
@@ -126,58 +126,62 @@ describe(NgrxFormControlDirective.name, () => {
       expect(() => directive.ngAfterViewInit()).not.toThrowError();
     });
 
-    it(`should dispatch a ${SetValueAction.name} if the view value changes`, (done) => {
-      const newValue = 'new value';
+    it(`should dispatch a ${SetValueAction.name} if the view value changes`, () =>
+      new Promise<void>((done) => {
+        const newValue = 'new value';
 
-      actions$.pipe(first()).subscribe((a) => {
-        expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
-        done();
-      });
-
-      onChange(newValue);
-    });
-
-    it(`should not dispatch a ${SetValueAction.name} if the view value is the same as the state`, (done) => {
-      actions$.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(0);
-        done();
-      });
-
-      onChange(INITIAL_STATE.value);
-      actionsSubject.complete();
-    });
-
-    it(`should dispatch a ${MarkAsDirtyAction.name} if the view value changes when the state is not marked as dirty`, (done) => {
-      actions$
-        .pipe(skip(1))
-        .pipe(first())
-        .subscribe((a) => {
-          expect(a).toEqual(new MarkAsDirtyAction(INITIAL_STATE.id));
+        actions$.pipe(first()).subscribe((a) => {
+          expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
           done();
         });
 
-      const newValue = 'new value';
-      onChange(newValue);
-    });
+        onChange(newValue);
+      }));
 
-    it(`should not dispatch a ${MarkAsDirtyAction.name} if the view value changes when the state is marked as dirty`, (done) => {
-      actions$.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(1);
-        done();
-      });
+    it(`should not dispatch a ${SetValueAction.name} if the view value is the same as the state`, () =>
+      new Promise<void>((done) => {
+        actions$.pipe(count()).subscribe((c) => {
+          expect(c).toEqual(0);
+          done();
+        });
 
-      directive.ngrxFormControlState = { ...INITIAL_STATE, isDirty: true, isPristine: false };
-      const newValue = 'new value';
-      onChange(newValue);
-      actionsSubject.complete();
-    });
+        onChange(INITIAL_STATE.value);
+        actionsSubject.complete();
+      }));
+
+    it(`should dispatch a ${MarkAsDirtyAction.name} if the view value changes when the state is not marked as dirty`, () =>
+      new Promise<void>((done) => {
+        actions$
+          .pipe(skip(1))
+          .pipe(first())
+          .subscribe((a) => {
+            expect(a).toEqual(new MarkAsDirtyAction(INITIAL_STATE.id));
+            done();
+          });
+
+        const newValue = 'new value';
+        onChange(newValue);
+      }));
+
+    it(`should not dispatch a ${MarkAsDirtyAction.name} if the view value changes when the state is marked as dirty`, () =>
+      new Promise<void>((done) => {
+        actions$.pipe(count()).subscribe((c) => {
+          expect(c).toEqual(1);
+          done();
+        });
+
+        directive.ngrxFormControlState = { ...INITIAL_STATE, isDirty: true, isPristine: false };
+        const newValue = 'new value';
+        onChange(newValue);
+        actionsSubject.complete();
+      }));
 
     it('should write the value when the state changes to the same value that was reported from the view before', () => {
       const newValue = 'new value';
       onChange(newValue);
       directive.ngrxFormControlState = { ...INITIAL_STATE, value: newValue };
       directive.ngrxFormControlState = INITIAL_STATE;
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = { ...INITIAL_STATE, value: newValue };
       expect(spy).toHaveBeenCalledWith(newValue);
     });
@@ -203,26 +207,28 @@ describe(NgrxFormControlDirective.name, () => {
       directive.ngOnInit();
     });
 
-    it(`should dispatch a ${MarkAsTouchedAction.name} if the view adapter notifies and the state is not touched`, (done) => {
-      actions$.pipe(first()).subscribe((a) => {
-        expect(a).toEqual(new MarkAsTouchedAction(INITIAL_STATE.id));
-        done();
-      });
+    it(`should dispatch a ${MarkAsTouchedAction.name} if the view adapter notifies and the state is not touched`, () =>
+      new Promise<void>((done) => {
+        actions$.pipe(first()).subscribe((a) => {
+          expect(a).toEqual(new MarkAsTouchedAction(INITIAL_STATE.id));
+          done();
+        });
 
-      onTouched();
-      actionsSubject.complete();
-    });
+        onTouched();
+        actionsSubject.complete();
+      }));
 
-    it(`should not dispatch a ${MarkAsTouchedAction.name} if the view adapter notifies and the state is touched`, (done) => {
-      actions$.pipe(count()).subscribe((i) => {
-        expect(i).toEqual(0);
-        done();
-      });
+    it(`should not dispatch a ${MarkAsTouchedAction.name} if the view adapter notifies and the state is touched`, () =>
+      new Promise<void>((done) => {
+        actions$.pipe(count()).subscribe((i) => {
+          expect(i).toEqual(0);
+          done();
+        });
 
-      directive.ngrxFormControlState = { ...INITIAL_STATE, isTouched: true, isUntouched: false };
-      onTouched();
-      actionsSubject.complete();
-    });
+        directive.ngrxFormControlState = { ...INITIAL_STATE, isTouched: true, isUntouched: false };
+        onTouched();
+        actionsSubject.complete();
+      }));
   });
 
   describe('ngrxUpdateOn "blur"', () => {
@@ -232,43 +238,46 @@ describe(NgrxFormControlDirective.name, () => {
       directive.ngrxUpdateOn = NGRX_UPDATE_ON_TYPE.BLUR;
     });
 
-    it('should dispatch an action on blur if the view value has changed with ngrxUpdateOn "blur"', (done) => {
-      const newValue = 'new value';
+    it('should dispatch an action on blur if the view value has changed with ngrxUpdateOn "blur"', () =>
+      new Promise<void>((done) => {
+        const newValue = 'new value';
 
-      actions$.pipe(first()).subscribe((a) => {
-        expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
-        done();
-      });
+        actions$.pipe(first()).subscribe((a) => {
+          expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
+          done();
+        });
 
-      onChange(newValue);
-      onTouched();
-    });
+        onChange(newValue);
+        onTouched();
+      }));
 
-    it('should not dispatch an action on blur if the view value has not changed with ngrxUpdateOn "blur"', (done) => {
-      actions$.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(0);
-        done();
-      });
+    it('should not dispatch an action on blur if the view value has not changed with ngrxUpdateOn "blur"', () =>
+      new Promise<void>((done) => {
+        actions$.pipe(count()).subscribe((c) => {
+          expect(c).toEqual(0);
+          done();
+        });
 
-      onTouched();
-      actionsSubject.complete();
-    });
+        onTouched();
+        actionsSubject.complete();
+      }));
 
-    it('should not dispatch an action if the view value changes with ngrxUpdateOn "blur"', (done) => {
-      actions$.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(0);
-        done();
-      });
+    it('should not dispatch an action if the view value changes with ngrxUpdateOn "blur"', () =>
+      new Promise<void>((done) => {
+        actions$.pipe(count()).subscribe((c) => {
+          expect(c).toEqual(0);
+          done();
+        });
 
-      const newValue = 'new value';
-      onChange(newValue);
-      actionsSubject.complete();
-    });
+        const newValue = 'new value';
+        onChange(newValue);
+        actionsSubject.complete();
+      }));
 
     it('should not write the value when the state value does not change', () => {
       const newValue = 'new value';
       onChange(newValue);
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = { ...INITIAL_STATE };
       expect(spy).not.toHaveBeenCalled();
     });
@@ -280,18 +289,19 @@ describe(NgrxFormControlDirective.name, () => {
       directive.ngrxUpdateOn = NGRX_UPDATE_ON_TYPE.NEVER;
     });
 
-    it('should not dispatch any action even if the view value changed', (done) => {
-      const newValue = 'new value';
+    it('should not dispatch any action even if the view value changed', () =>
+      new Promise<void>((done) => {
+        const newValue = 'new value';
 
-      actions$.pipe(count()).subscribe((x) => {
-        expect(x).toEqual(0);
-        done();
-      });
+        actions$.pipe(count()).subscribe((x) => {
+          expect(x).toEqual(0);
+          done();
+        });
 
-      onChange(newValue);
-      onTouched();
-      actionsSubject.complete();
-    });
+        onChange(newValue);
+        onTouched();
+        actionsSubject.complete();
+      }));
   });
 
   describe('enabling/disabling', () => {
@@ -301,40 +311,40 @@ describe(NgrxFormControlDirective.name, () => {
 
     it('should enable the state if disabled', () => {
       directive.ngrxFormControlState = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
-      const spy = spyOn(viewAdapter, 'setIsDisabled');
+      const spy = vi.spyOn(viewAdapter, 'setIsDisabled');
       directive.ngrxFormControlState = { ...INITIAL_STATE };
       expect(spy).toHaveBeenCalledWith(false);
     });
 
     it('should not enable the state if enabled', () => {
-      const spy = spyOn(viewAdapter, 'setIsDisabled');
+      const spy = vi.spyOn(viewAdapter, 'setIsDisabled');
       directive.ngrxFormControlState = { ...INITIAL_STATE };
       expect(spy).not.toHaveBeenCalled();
     });
 
     it('should disable the state if enabled', () => {
-      const spy = spyOn(viewAdapter, 'setIsDisabled');
+      const spy = vi.spyOn(viewAdapter, 'setIsDisabled');
       directive.ngrxFormControlState = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
       expect(spy).toHaveBeenCalledWith(true);
     });
 
     it('should not disable the state if disabled', () => {
       directive.ngrxFormControlState = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
-      const spy = spyOn(viewAdapter, 'setIsDisabled');
+      const spy = vi.spyOn(viewAdapter, 'setIsDisabled');
       directive.ngrxFormControlState = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
       expect(spy).not.toHaveBeenCalled();
     });
 
     it('should enable after the view is initialized', () => {
       directive.ngrxFormControlState = INITIAL_STATE;
-      const spy = spyOn(viewAdapter, 'setIsDisabled');
+      const spy = vi.spyOn(viewAdapter, 'setIsDisabled');
       directive.ngAfterViewInit();
       expect(spy).toHaveBeenCalledWith(false);
     });
 
     it('should disable after the view is initialized', () => {
       directive.ngrxFormControlState = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
-      const spy = spyOn(viewAdapter, 'setIsDisabled');
+      const spy = vi.spyOn(viewAdapter, 'setIsDisabled');
       directive.ngAfterViewInit();
       expect(spy).toHaveBeenCalledWith(true);
     });
@@ -355,37 +365,39 @@ describe(NgrxFormControlDirective.name, () => {
     });
 
     it('should convert the state value when the state changes', () => {
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = { ...INITIAL_STATE, value: STATE_VALUE };
       expect(spy).toHaveBeenCalledWith(VIEW_VALUE);
     });
 
-    it('should convert the view value if it changes', (done) => {
-      actions$.pipe(first()).subscribe((a) => {
-        expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, STATE_VALUE));
-        done();
-      });
+    it('should convert the view value if it changes', () =>
+      new Promise<void>((done) => {
+        actions$.pipe(first()).subscribe((a) => {
+          expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, STATE_VALUE));
+          done();
+        });
 
-      onChange(VIEW_VALUE);
-    });
+        onChange(VIEW_VALUE);
+      }));
 
     it('should not write the value when the state value does not change with conversion', () => {
       directive.ngrxFormControlState = { ...INITIAL_STATE, value: STATE_VALUE };
-      const spy = spyOn(viewAdapter, 'setViewValue');
+      const spy = vi.spyOn(viewAdapter, 'setViewValue');
       directive.ngrxFormControlState = { ...INITIAL_STATE, value: STATE_VALUE };
       expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should not dispatch an action if the view value is the same as the state with conversion', (done) => {
-      actions$.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(0);
-        done();
-      });
+    it('should not dispatch an action if the view value is the same as the state with conversion', () =>
+      new Promise<void>((done) => {
+        actions$.pipe(count()).subscribe((c) => {
+          expect(c).toEqual(0);
+          done();
+        });
 
-      directive.ngrxFormControlState = { ...INITIAL_STATE, value: STATE_VALUE };
-      onChange(VIEW_VALUE);
-      actionsSubject.complete();
-    });
+        directive.ngrxFormControlState = { ...INITIAL_STATE, value: STATE_VALUE };
+        onChange(VIEW_VALUE);
+        actionsSubject.complete();
+      }));
   });
 
   describe('focus tracking', () => {
@@ -428,57 +440,61 @@ describe(NgrxFormControlDirective.name, () => {
         expect(nativeElement.focus).toHaveBeenCalledTimes(1);
       });
 
-      it(`should dispatch a ${FocusAction} when element becomes focused and state is not focused`, (done) => {
-        directive.ngOnInit();
+      it(`should dispatch a ${FocusAction} when element becomes focused and state is not focused`, () =>
+        new Promise<void>((done) => {
+          directive.ngOnInit();
 
-        actions$.pipe(first()).subscribe((a) => {
-          expect(a).toEqual(new FocusAction(INITIAL_STATE.id));
-          done();
-        });
+          actions$.pipe(first()).subscribe((a) => {
+            expect(a).toEqual(new FocusAction(INITIAL_STATE.id));
+            done();
+          });
 
-        (document as any).activeElement = nativeElement;
-        directive.onFocusChange();
-        actionsSubject.complete();
-      });
+          (document as any).activeElement = nativeElement;
+          directive.onFocusChange();
+          actionsSubject.complete();
+        }));
 
-      it('should not dispatch an action when element becomes focused and state is focused', (done) => {
-        directive.ngOnInit();
+      it('should not dispatch an action when element becomes focused and state is focused', () =>
+        new Promise<void>((done) => {
+          directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe((c) => {
-          expect(c).toEqual(0);
-          done();
-        });
+          actions$.pipe(count()).subscribe((c) => {
+            expect(c).toEqual(0);
+            done();
+          });
 
-        directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
-        (document as any).activeElement = nativeElement;
-        directive.onFocusChange();
-        actionsSubject.complete();
-      });
+          directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          (document as any).activeElement = nativeElement;
+          directive.onFocusChange();
+          actionsSubject.complete();
+        }));
 
-      it(`should dispatch an ${UnfocusAction} when element becomes unfocused and state is focused`, (done) => {
-        directive.ngOnInit();
+      it(`should dispatch an ${UnfocusAction} when element becomes unfocused and state is focused`, () =>
+        new Promise<void>((done) => {
+          directive.ngOnInit();
 
-        actions$.pipe(first()).subscribe((a) => {
-          expect(a).toEqual(new UnfocusAction(INITIAL_STATE.id));
-          done();
-        });
+          actions$.pipe(first()).subscribe((a) => {
+            expect(a).toEqual(new UnfocusAction(INITIAL_STATE.id));
+            done();
+          });
 
-        directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
-        directive.onFocusChange();
-        actionsSubject.complete();
-      });
+          directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          directive.onFocusChange();
+          actionsSubject.complete();
+        }));
 
-      it('should not dispatch an action when element becomes unfocused and state is unfocused', (done) => {
-        directive.ngOnInit();
+      it('should not dispatch an action when element becomes unfocused and state is unfocused', () =>
+        new Promise<void>((done) => {
+          directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe((c) => {
-          expect(c).toEqual(0);
-          done();
-        });
+          actions$.pipe(count()).subscribe((c) => {
+            expect(c).toEqual(0);
+            done();
+          });
 
-        directive.onFocusChange();
-        actionsSubject.complete();
-      });
+          directive.onFocusChange();
+          actionsSubject.complete();
+        }));
 
       it('should add the cdk focus attribute if state is focused', () => {
         directive.ngOnInit();
@@ -517,57 +533,61 @@ describe(NgrxFormControlDirective.name, () => {
         expect(nativeElement.blur).not.toHaveBeenCalled();
       });
 
-      it(`should not dispatch an action when element becomes focused and state is not focused`, (done) => {
-        directive.ngOnInit();
+      it(`should not dispatch an action when element becomes focused and state is not focused`, () =>
+        new Promise<void>((done) => {
+          directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe((c) => {
-          expect(c).toEqual(0);
-          done();
-        });
+          actions$.pipe(count()).subscribe((c) => {
+            expect(c).toEqual(0);
+            done();
+          });
 
-        (document as any).activeElement = nativeElement;
-        directive.onFocusChange();
-        actionsSubject.complete();
-      });
+          (document as any).activeElement = nativeElement;
+          directive.onFocusChange();
+          actionsSubject.complete();
+        }));
 
-      it('should not dispatch an action when element becomes focused and state is focused', (done) => {
-        directive.ngOnInit();
+      it('should not dispatch an action when element becomes focused and state is focused', () =>
+        new Promise<void>((done) => {
+          directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe((c) => {
-          expect(c).toEqual(0);
-          done();
-        });
+          actions$.pipe(count()).subscribe((c) => {
+            expect(c).toEqual(0);
+            done();
+          });
 
-        directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
-        (document as any).activeElement = nativeElement;
-        directive.onFocusChange();
-        actionsSubject.complete();
-      });
+          directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          (document as any).activeElement = nativeElement;
+          directive.onFocusChange();
+          actionsSubject.complete();
+        }));
 
-      it(`should not dispatch an action when element becomes unfocused and state is focused`, (done) => {
-        directive.ngOnInit();
+      it(`should not dispatch an action when element becomes unfocused and state is focused`, () =>
+        new Promise<void>((done) => {
+          directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe((c) => {
-          expect(c).toEqual(0);
-          done();
-        });
+          actions$.pipe(count()).subscribe((c) => {
+            expect(c).toEqual(0);
+            done();
+          });
 
-        directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
-        directive.onFocusChange();
-        actionsSubject.complete();
-      });
+          directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          directive.onFocusChange();
+          actionsSubject.complete();
+        }));
 
-      it('should not dispatch an action when element becomes unfocused and state is unfocused', (done) => {
-        directive.ngOnInit();
+      it('should not dispatch an action when element becomes unfocused and state is unfocused', () =>
+        new Promise<void>((done) => {
+          directive.ngOnInit();
 
-        actions$.pipe(count()).subscribe((c) => {
-          expect(c).toEqual(0);
-          done();
-        });
+          actions$.pipe(count()).subscribe((c) => {
+            expect(c).toEqual(0);
+            done();
+          });
 
-        directive.onFocusChange();
-        actionsSubject.complete();
-      });
+          directive.onFocusChange();
+          actionsSubject.complete();
+        }));
     });
   });
 
@@ -584,12 +604,12 @@ describe(NgrxFormControlDirective.name, () => {
 
   describe('ControlValueAccessor integration', () => {
     it('should adapt a control value accessor to a form view adapter if no form view adapter is provided', () => {
-      const controlValueAccessor: ControlValueAccessor = jasmine.createSpyObj('controlValueAccessor', [
-        'writeValue',
-        'registerOnChange',
-        'registerOnTouched',
-        'setDisabledState',
-      ]);
+      const controlValueAccessor: ControlValueAccessor = {
+        registerOnChange: vi.fn(),
+        registerOnTouched: vi.fn(),
+        setDisabledState: vi.fn(),
+        writeValue: vi.fn(),
+      };
 
       directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, null as any, [controlValueAccessor]);
 
@@ -602,7 +622,11 @@ describe(NgrxFormControlDirective.name, () => {
     });
 
     it('should adapt a control value accessor without disabling support', () => {
-      const controlValueAccessor: ControlValueAccessor = jasmine.createSpyObj('controlValueAccessor', ['writeValue', 'registerOnChange', 'registerOnTouched']);
+      const controlValueAccessor: ControlValueAccessor = {
+        registerOnChange: vi.fn(),
+        registerOnTouched: vi.fn(),
+        writeValue: vi.fn(),
+      };
 
       directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, null as any, [controlValueAccessor]);
 

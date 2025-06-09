@@ -13,7 +13,7 @@ import { NgrxLocalFormControlDirective } from './local-state-directive';
 describe(NgrxLocalFormControlDirective.name, () => {
   let directive: NgrxLocalFormControlDirective<string | null, any>;
   let elementRef: ElementRef;
-  let nativeElement: HTMLElement;
+  let nativeElement: Partial<HTMLElement>;
   let document: Document;
   let actionsSubject: ReplaySubject<Action>;
   let actions$: Observable<Action>;
@@ -24,7 +24,7 @@ describe(NgrxLocalFormControlDirective.name, () => {
   const INITIAL_STATE = createFormControlState<string>(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
   beforeEach(() => {
-    nativeElement = jasmine.createSpyObj('nativeElement', ['focus', 'blur']);
+    nativeElement = { blur: vi.fn(), focus: vi.fn() };
     elementRef = { nativeElement } as any as ElementRef;
     document = {} as any as Document;
     actionsSubject = new ReplaySubject<Action>();
@@ -44,47 +44,51 @@ describe(NgrxLocalFormControlDirective.name, () => {
       directive.ngOnInit();
     });
 
-    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value changes`, (done) => {
-      const newValue = 'new value';
+    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value changes`, () =>
+      new Promise<void>((done) => {
+        const newValue = 'new value';
 
-      actions$.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(0);
-        done();
-      });
+        actions$.pipe(count()).subscribe((c) => {
+          expect(c).toEqual(0);
+          done();
+        });
 
-      onChange(newValue);
-      actionsSubject.complete();
-    });
+        onChange(newValue);
+        actionsSubject.complete();
+      }));
 
-    it(`should dispatch a ${SetValueAction.name} to the output event emitter if the view value changes`, (done) => {
-      const newValue = 'new value';
+    it(`should dispatch a ${SetValueAction.name} to the output event emitter if the view value changes`, () =>
+      new Promise<void>((done) => {
+        const newValue = 'new value';
 
-      directive.ngrxFormsAction.pipe(first()).subscribe((a) => {
-        expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
-        done();
-      });
+        directive.ngrxFormsAction.pipe(first()).subscribe((a) => {
+          expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
+          done();
+        });
 
-      onChange(newValue);
-    });
+        onChange(newValue);
+      }));
 
-    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value is the same as the state`, (done) => {
-      actions$.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(0);
-        done();
-      });
+    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value is the same as the state`, () =>
+      new Promise<void>((done) => {
+        actions$.pipe(count()).subscribe((c) => {
+          expect(c).toEqual(0);
+          done();
+        });
 
-      onChange(INITIAL_STATE.value);
-      actionsSubject.complete();
-    });
+        onChange(INITIAL_STATE.value);
+        actionsSubject.complete();
+      }));
 
-    it(`should not dispatch a ${SetValueAction.name} to the output event emitter if the view value is the same as the state`, (done) => {
-      directive.ngrxFormsAction.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(0);
-        done();
-      });
+    it(`should not dispatch a ${SetValueAction.name} to the output event emitter if the view value is the same as the state`, () =>
+      new Promise<void>((done) => {
+        directive.ngrxFormsAction.pipe(count()).subscribe((c) => {
+          expect(c).toEqual(0);
+          done();
+        });
 
-      onChange(INITIAL_STATE.value);
-      directive.ngrxFormsAction.complete();
-    });
+        onChange(INITIAL_STATE.value);
+        directive.ngrxFormsAction.complete();
+      }));
   });
 });

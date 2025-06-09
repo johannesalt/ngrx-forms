@@ -105,7 +105,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should not set the name of the elements if the ID of the state does not change', () => {
-      const renderer: Renderer2 = jasmine.createSpyObj('renderer', ['setProperty']);
+      const renderer: Renderer2 = { setProperty: vi.fn() } as any;
       const nativeElement: any = {};
       const viewAdapter = new NgrxRadioViewAdapter(renderer, { nativeElement } as any);
       viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
@@ -128,7 +128,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       element1.checked = true;
       element1.dispatchEvent(new Event('change'));
@@ -136,7 +136,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the input is blurred', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnTouchedCallback(spy);
       element1.dispatchEvent(new Event('blur'));
       expect(spy).toHaveBeenCalled();
@@ -190,7 +190,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       element1.checked = true;
@@ -199,7 +199,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it("should call the registered function whenever the selected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       const newValue = 'new value';
@@ -209,7 +209,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it("should not call the registered function whenever an unselected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       const newValue = 'new value';
@@ -219,7 +219,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it("should not call the registered function when the option's value does not change", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter1.value = component.stringOptions[0];
       fixture.detectChanges();
@@ -227,7 +227,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should create new options dynamically', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       const newValue = 'op3';
@@ -269,7 +269,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       element1.checked = true;
@@ -278,7 +278,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it("should call the registered function whenever the selected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       const newValue = 3;
@@ -288,7 +288,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it("should not call the registered function whenever an unselected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       const newValue = 3;
@@ -298,7 +298,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should create new options dynamically', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       const newValue = 3;
@@ -340,7 +340,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       element1.checked = true;
@@ -349,7 +349,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it("should call the registered function whenever the selected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       const newValue = true;
@@ -359,7 +359,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it("should not call the registered function whenever an unselected option's value changes", () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       const newValue = true;
@@ -369,7 +369,7 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should create new options dynamically', () => {
-      const spy = jasmine.createSpy('fn');
+      const spy = vi.fn();
       viewAdapter1.setOnChangeCallback(spy);
       viewAdapter2.setOnChangeCallback(spy);
       const newValue = true;

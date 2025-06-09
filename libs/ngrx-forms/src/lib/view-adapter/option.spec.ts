@@ -13,7 +13,7 @@ describe(NgrxFallbackSelectOption.name, () => {
 
   beforeEach(() => {
     elementRef = { nativeElement: {} } as any;
-    renderer = jasmine.createSpyObj('renderer2', ['setProperty']);
+    renderer = { setProperty: vi.fn() } as any;
     viewAdapter = new NgrxSelectViewAdapter(renderer, {} as any);
     multipleViewAdapter = new NgrxSelectMultipleViewAdapter(renderer, {} as any);
   });

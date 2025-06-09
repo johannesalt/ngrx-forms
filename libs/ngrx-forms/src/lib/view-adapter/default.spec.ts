@@ -87,7 +87,7 @@ describe(NgrxDefaultViewAdapter.name, () => {
   });
 
   it('should not set the ID of the element if the ID of the state does not change', () => {
-    const renderer: Renderer2 = jasmine.createSpyObj('renderer', ['setProperty']);
+    const renderer: Renderer2 = { setProperty: vi.fn() } as any;
     const nativeElement: any = {};
     viewAdapter = new NgrxDefaultViewAdapter(renderer, { nativeElement } as any, 'browser');
     viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
@@ -110,7 +110,7 @@ describe(NgrxDefaultViewAdapter.name, () => {
   });
 
   it('should call the registered function whenever the value changes', () => {
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnChangeCallback(spy);
     const newValue = 'new value';
     element.value = newValue;
@@ -119,7 +119,7 @@ describe(NgrxDefaultViewAdapter.name, () => {
   });
 
   it('should not call the registered function when the value changes and is composing', () => {
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnChangeCallback(spy);
     const newValue = 'new value';
     element.value = newValue;
@@ -129,11 +129,11 @@ describe(NgrxDefaultViewAdapter.name, () => {
   });
 
   it('should call the registered function when the value changes and is composing but composition is not supported', () => {
-    const renderer: Renderer2 = jasmine.createSpyObj('renderer', ['setProperty']);
+    const renderer: Renderer2 = { setProperty: vi.fn() } as any;
     const nativeElement: any = {};
     viewAdapter = new NgrxDefaultViewAdapter(renderer, { nativeElement } as any, 'browser', androidNavigator);
     viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnChangeCallback(spy);
     const newValue = 'new value';
     element.value = newValue;
@@ -143,7 +143,7 @@ describe(NgrxDefaultViewAdapter.name, () => {
   });
 
   it('should call the registered function on composition end', () => {
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnChangeCallback(spy);
     const newValue = 'new value';
     element.value = newValue;
@@ -155,11 +155,11 @@ describe(NgrxDefaultViewAdapter.name, () => {
   });
 
   it('should not call the registered function on composition end if composition is not supported', () => {
-    const renderer: Renderer2 = jasmine.createSpyObj('renderer', ['setProperty']);
+    const renderer: Renderer2 = { setProperty: vi.fn() } as any;
     const nativeElement: any = {};
     viewAdapter = new NgrxDefaultViewAdapter(renderer, { nativeElement } as any, 'browser', androidNavigator);
     viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnChangeCallback(spy);
     const newValue = 'new value';
     element.value = newValue;
@@ -171,7 +171,7 @@ describe(NgrxDefaultViewAdapter.name, () => {
   });
 
   it('should call the registered function whenever the input is blurred', () => {
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnTouchedCallback(spy);
     element.dispatchEvent(new Event('blur'));
     expect(spy).toHaveBeenCalled();

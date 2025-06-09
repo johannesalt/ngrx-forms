@@ -34,23 +34,25 @@ describe(NgrxFormDirective.name, () => {
     expect(() => directive.onSubmit({ preventDefault: () => void 0 } as any)).toThrowError();
   });
 
-  it(`should dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is unsubmitted`, (done) => {
-    actions$.pipe(take(1)).subscribe((a) => {
-      expect(a).toEqual(new MarkAsSubmittedAction(INITIAL_STATE.id));
-      done();
-    });
+  it(`should dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is unsubmitted`, () =>
+    new Promise<void>((done) => {
+      actions$.pipe(take(1)).subscribe((a) => {
+        expect(a).toEqual(new MarkAsSubmittedAction(INITIAL_STATE.id));
+        done();
+      });
 
-    directive.onSubmit({ preventDefault: () => void 0 } as any);
-  });
+      directive.onSubmit({ preventDefault: () => void 0 } as any);
+    }));
 
-  it(`should not dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is submitted`, (done) => {
-    actions$.pipe(count()).subscribe((c) => {
-      expect(c).toEqual(0);
-      done();
-    });
+  it(`should not dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is submitted`, () =>
+    new Promise<void>((done) => {
+      actions$.pipe(count()).subscribe((c) => {
+        expect(c).toEqual(0);
+        done();
+      });
 
-    directive.state = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
-    directive.onSubmit({ preventDefault: () => void 0 } as any);
-    actionsSubject.complete();
-  });
+      directive.state = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
+      directive.onSubmit({ preventDefault: () => void 0 } as any);
+      actionsSubject.complete();
+    }));
 });

@@ -82,7 +82,7 @@ describe(NgrxRangeViewAdapter.name, () => {
   });
 
   it('should not set the ID of the element if the ID of the state does not change', () => {
-    const renderer: Renderer2 = jasmine.createSpyObj('renderer', ['setProperty']);
+    const renderer: Renderer2 = { setProperty: vi.fn() } as any;
     const nativeElement: any = {};
     viewAdapter = new NgrxRangeViewAdapter(renderer, { nativeElement } as any);
     viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
@@ -100,7 +100,7 @@ describe(NgrxRangeViewAdapter.name, () => {
   });
 
   it('should call the registered function whenever the value changes with a change event', () => {
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnChangeCallback(spy);
     const newValue = 100;
     element.value = newValue.toString();
@@ -109,7 +109,7 @@ describe(NgrxRangeViewAdapter.name, () => {
   });
 
   it('should call the registered function whenever the value changes with an input event', () => {
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnChangeCallback(spy);
     const newValue = 100;
     element.value = newValue.toString();
@@ -118,14 +118,14 @@ describe(NgrxRangeViewAdapter.name, () => {
   });
 
   it('should call the registered function with null if value is empty string', () => {
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnChangeCallback(spy);
     viewAdapter.handleInput({ target: { value: '' } } as any);
     expect(spy).toHaveBeenCalledWith(null);
   });
 
   it('should call the registered function whenever the input is blurred', () => {
-    const spy = jasmine.createSpy('fn');
+    const spy = vi.fn();
     viewAdapter.setOnTouchedCallback(spy);
     element.dispatchEvent(new Event('blur'));
     expect(spy).toHaveBeenCalled();
