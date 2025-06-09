@@ -25,7 +25,6 @@ export function setValueReducer<TValue extends KeyValue>(state: FormGroupState<T
   const controls = Object.keys(value).reduce((c, key) => {
     const control = state.controls[key] as AbstractControlState<unknown> | undefined;
 
-    // tslint:disable-next-line:prefer-conditional-expression
     if (!control) {
       Object.assign(c, { [key]: createChildState<TValue[string]>(`${state.id}.${key}`, value[key]) });
     } else {

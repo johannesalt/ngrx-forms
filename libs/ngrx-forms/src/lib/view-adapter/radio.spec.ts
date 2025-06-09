@@ -9,7 +9,6 @@ const OPTION1_VALUE = 'op1';
 const OPTION2_VALUE = 'op2';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'radio-test',
   template: `
     <input type="radio" value="op1" [ngrxFormControlState]="state" />

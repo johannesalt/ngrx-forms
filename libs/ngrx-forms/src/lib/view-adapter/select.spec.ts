@@ -8,7 +8,6 @@ const TEST_ID = 'test ID';
 const OPTION1_VALUE = 'op1';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'select-test',
   template: `
     <select [ngrxFormControlState]="state">

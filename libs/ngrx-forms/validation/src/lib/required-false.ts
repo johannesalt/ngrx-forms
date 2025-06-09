@@ -30,7 +30,6 @@ updateGroup<MyFormValue>({
 export function requiredFalse<T extends boolean | Boxed<boolean> | null | undefined>(value: T): ValidationErrors {
   value = unbox(value) as boolean | null | undefined as T;
 
-  // tslint:disable-next-line:strict-type-predicates
   if (value === null || value === undefined) {
     return {};
   }

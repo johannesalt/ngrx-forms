@@ -5,7 +5,6 @@ export interface NgrxValueConverter<TView, TState> {
   convertStateToViewValue(value: TState): TView;
 }
 
-// tslint:disable-next-line:variable-name
 export const NgrxValueConverters = {
   default<T>() {
     return {

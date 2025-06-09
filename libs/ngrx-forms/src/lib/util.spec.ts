@@ -5,14 +5,12 @@ describe(deepEquals.name, () => {
     expect(deepEquals(NaN, NaN)).toBe(true);
     expect(deepEquals(1, 1)).toBe(true);
     expect(deepEquals(1, 2)).toBe(false);
-    // tslint:disable-next-line:no-construct
     expect(deepEquals(new Number(1), new Number(1))).toBe(true);
   });
 
   it('should compare strings', () => {
     expect(deepEquals('a', 'a')).toBe(true);
     expect(deepEquals('a', 'b')).toBe(false);
-    // tslint:disable-next-line:no-construct
     expect(deepEquals(new String('a'), new String('a'))).toBe(true);
   });
 
@@ -38,7 +36,6 @@ describe(deepEquals.name, () => {
   });
 
   it('should compare prototypes and constructors', () => {
-    // tslint:disable
     class A {}
     class B extends A {}
     class C extends B {}
@@ -51,7 +48,6 @@ describe(deepEquals.name, () => {
     expect(deepEquals(A, A)).toBe(true);
     expect(deepEquals(b1, c)).toBe(false);
     expect(deepEquals(b1, b2)).toBe(true);
-    // tslint:enable
   });
 
   it('should compare plain objects', () => {

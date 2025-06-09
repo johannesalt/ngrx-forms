@@ -3,8 +3,6 @@ import { MatSelect } from '@angular/material/select';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '@johannes-it-solution/ngrx-forms';
 import { Subscription } from 'rxjs';
 
-// tslint:disable:directive-selector
-// tslint:disable:directive-class-suffix
 // necessary since material 2 does not properly export the mat-select as a NG_VALUE_ACCESSOR
 @Directive({
   selector: 'mat-select[ngrxFormControlState]',

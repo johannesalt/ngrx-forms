@@ -8,8 +8,6 @@ import { createFormControlState } from '../state';
 import { FormViewAdapter } from '../view-adapter/view-adapter';
 import { NgrxLocalFormControlDirective } from './local-state-directive';
 
-// tslint:disable:no-unbound-method
-
 describe(NgrxLocalFormControlDirective.name, () => {
   let directive: NgrxLocalFormControlDirective<string | null, any>;
   let elementRef: ElementRef;

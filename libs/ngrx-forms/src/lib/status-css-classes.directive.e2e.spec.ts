@@ -5,7 +5,6 @@ import { createFormGroupState, FormGroupState } from './state';
 import { NGRX_STATUS_CLASS_NAMES, NgrxStatusCssClassesDirective } from './status-css-classes.directive';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'classes-test',
   template: `
     <form [ngrxFormState]="state">

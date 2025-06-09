@@ -5,7 +5,6 @@ import { KeyValue } from '../state';
 import { NgrxFormDirective } from './directive';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: 'form[ngrxFormState][ngrxFormsAction]',
   standalone: false,
 })

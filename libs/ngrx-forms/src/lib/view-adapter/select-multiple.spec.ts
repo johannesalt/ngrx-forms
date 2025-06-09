@@ -10,7 +10,6 @@ const OPTION2_VALUE = 'op2';
 const OPTION3_VALUE = 'op3';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'select-test',
   template: `
     <select multiple [ngrxFormControlState]="state">

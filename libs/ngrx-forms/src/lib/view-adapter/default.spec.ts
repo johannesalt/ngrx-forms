@@ -6,7 +6,6 @@ import { NgrxDefaultViewAdapter } from './default';
 const TEST_ID = 'test ID';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'default-test',
   template: `
     <input type="text" [ngrxFormControlState]="state" />
@@ -26,7 +25,6 @@ describe(NgrxDefaultViewAdapter.name, () => {
   let viewAdapter: NgrxDefaultViewAdapter;
   let element: HTMLInputElement;
 
-  // tslint:disable-next-line:max-line-length
   const androidUserAgent =
     'Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36';
   const androidNavigator: Navigator = { userAgent: androidUserAgent } as any;

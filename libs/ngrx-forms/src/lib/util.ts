@@ -76,7 +76,6 @@ export function deepEquals<T>(_1: T, _2: T, options: DeepEqualsOptions = {}) {
       }
     }
 
-    // tslint:disable:forin
     for (p in x) {
       if (y.hasOwnProperty(p) !== x.hasOwnProperty(p)) {
         if (!treatUndefinedAndMissingKeyAsSame || !x.hasOwnProperty(p) || y.hasOwnProperty(p) || x[p] !== undefined) {

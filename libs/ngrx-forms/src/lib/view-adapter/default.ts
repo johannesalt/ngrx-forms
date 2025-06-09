@@ -16,9 +16,6 @@ function isAndroid(navigator: Navigator): boolean {
   return /android (\d+)/.test(navigator.userAgent.toLowerCase());
 }
 
-// tslint:disable:directive-class-suffix
-// tslint:disable:directive-selector
-
 // TODO: since this directive has a side-effect (setting the element's id attribute)
 // it should not blacklist other types of inputs but instead it should somehow figure
 // out whether it is the "active" view adapter and only perform its side effects if it

@@ -3,10 +3,7 @@ import { AfterViewInit, Directive, ElementRef, forwardRef, Host, HostListener, I
 import { FormControlState } from '../state';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
-// tslint:disable:directive-class-suffix
-
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: 'select:not([multiple])[ngrxFormControlState]',
   providers: [
     {
@@ -126,7 +123,6 @@ const NULL_RENDERER: Renderer2 = {
 } as any;
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: 'option',
   standalone: false,
 })

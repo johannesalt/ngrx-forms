@@ -13,7 +13,6 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'select-multiple-test',
   template: `
     <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
@@ -93,7 +92,6 @@ describe(SelectMultipleComponent.name, () => {
 });
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'select-multiple-test',
   template: `
     <select multiple [ngrxFormControlState]="state">

@@ -5,7 +5,6 @@ import { MatSelect } from '@angular/material/select';
 import { FormControlState } from '@johannes-it-solution/ngrx-forms';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[ngrxFormControlState]',
   standalone: false,
 })

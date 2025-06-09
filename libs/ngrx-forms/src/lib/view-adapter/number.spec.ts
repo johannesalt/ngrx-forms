@@ -6,7 +6,6 @@ import { NgrxNumberViewAdapter } from './number';
 const TEST_ID = 'test ID';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'number-test',
   template: `
     <input type="number" [ngrxFormControlState]="state" />

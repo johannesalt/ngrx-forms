@@ -10,8 +10,6 @@ import { FormViewAdapter } from '../view-adapter/view-adapter';
 import { NGRX_UPDATE_ON_TYPE, NgrxFormControlDirective } from './directive';
 import { NgrxValueConverters } from './value-converter';
 
-// tslint:disable:no-unbound-method
-
 describe(NgrxFormControlDirective.name, () => {
   let directive: NgrxFormControlDirective<string | null, any>;
   let elementRef: ElementRef;

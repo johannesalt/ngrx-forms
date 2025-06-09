@@ -6,7 +6,6 @@ import { NgrxCheckboxViewAdapter } from './checkbox';
 const TEST_ID = 'test ID';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'checkbox-test',
   template: `
     <input type="checkbox" [ngrxFormControlState]="state" />

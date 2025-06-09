@@ -3,8 +3,6 @@ import { Directive, ElementRef, Host, Input, Optional, Renderer2 } from '@angula
 import { NgrxSelectViewAdapter } from './select';
 import { NgrxSelectMultipleViewAdapter } from './select-multiple';
 
-// tslint:disable:directive-class-suffix
-
 const NULL_RENDERER: Renderer2 = {
   setProperty: () => void 0,
 } as any;
@@ -21,7 +19,6 @@ const NULL_RENDERER: Renderer2 = {
  * directives that try to set the `[value]` but that is very unlikely.
  */
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: 'option',
   standalone: false,
 })

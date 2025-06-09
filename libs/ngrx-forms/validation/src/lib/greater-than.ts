@@ -41,7 +41,6 @@ updateGroup<MyFormValue>({
  * of the `validate` function for both optional and non-optional controls.
  */
 export function greaterThan(comparand: number) {
-  // tslint:disable-next-line:strict-type-predicates (guard for users without strict type checking)
   if (comparand === null || comparand === undefined) {
     throw new Error(`The greaterThan Validation function requires the comparand parameter to be a non-null number, got ${comparand}!`);
   }

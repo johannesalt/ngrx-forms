@@ -6,7 +6,6 @@ import { NgrxRangeViewAdapter } from './range';
 const TEST_ID = 'test ID';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'range-test',
   template: `
     <input type="range" [ngrxFormControlState]="state" />

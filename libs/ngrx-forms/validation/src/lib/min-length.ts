@@ -43,7 +43,6 @@ updateGroup<MyFormValue>({
  * of the `validate` function for both optional and non-optional controls.
  */
 export function minLength(minLengthParam: number) {
-  // tslint:disable-next-line:strict-type-predicates (guard for users without strict type checking)
   if (minLengthParam === null || minLengthParam === undefined) {
     throw new Error(`The minLength Validation function requires the minLength parameter to be a non-null number, got ${minLengthParam}!`);
   }
