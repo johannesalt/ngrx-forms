@@ -58,13 +58,13 @@
   </form>
 
   <ul *ngIf="formState.isInvalid" class="error-messages">
-    <li *ngIf="formState.errors._userName?.required">A user name is required</li>
-    <li *ngIf="formState.errors._password?._password?.required">A password is required</li>
-    <li *ngIf="formState.errors._password?._password?.minLength">
-      The password must be at least {{ formState.errors._password._password.minLength.minLength }} characters long.
+    <li *ngIf="formState.errors['_userName']?.required">A user name is required</li>
+    <li *ngIf="formState.errors['_password']?._password?.required">A password is required</li>
+    <li *ngIf="formState.errors['_password']?._password?.minLength">
+      The password must be at least {{ formState.errors['_password']._password.minLength.minLength }} characters long.
     </li>
-    <li *ngIf="formState.errors._password?.passwordMatch">The passwords do not match</li>
-    <li *ngIf="formState.errors._agreeToTermsOfUse?.required">You must agree to the terms of use</li>
+    <li *ngIf="formState.errors['_password']?.passwordMatch">The passwords do not match</li>
+    <li *ngIf="formState.errors['_agreeToTermsOfUse']?.required">You must agree to the terms of use</li>
   </ul>
   <br />
   <div *ngIf="formState.isSubmitted">

@@ -68,7 +68,7 @@ export function formStateReducer(state = INITIAL_STATE, a: BlockUIAction | Unblo
 
     case UnblockUIAction.TYPE: {
       state = enable(state);
-      return updateRecursive(state, (s) => (s.userDefinedProperties.wasDisabled ? disable(s) : s));
+      return updateRecursive(state, (s) => (s.userDefinedProperties['wasDisabled'] ? disable(s) : s));
     }
 
     default: {

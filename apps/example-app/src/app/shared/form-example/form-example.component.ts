@@ -18,7 +18,7 @@ export class FormExampleComponent {
 
   @Input() set formState(value: FormGroupState<any>) {
     const formStateJson = JSON.stringify(value, null, 2);
-    this.formattedFormState = Prism.highlight(formStateJson, Prism.languages.json, 'en');
+    this.formattedFormState = Prism.highlight(formStateJson, Prism.languages['json'], 'en');
   }
 
   formattedFormState = '';

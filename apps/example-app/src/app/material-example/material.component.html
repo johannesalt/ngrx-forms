@@ -6,7 +6,7 @@
     <div>
       <mat-form-field>
         <input matInput placeholder="User Name" [ngrxFormControlState]="formState.controls.userName" />
-        <mat-error *ngIf="formState.errors._userName?.required"> A user name is required </mat-error>
+        <mat-error *ngIf="formState.errors['_userName']?.required"> A user name is required </mat-error>
       </mat-form-field>
     </div>
     <div>
@@ -20,9 +20,9 @@
           placeholder="Password {{ formState.controls.password.isDisabled ? '(disabled)' : '' }}"
           [ngrxFormControlState]="formState.controls.password.controls.password"
         />
-        <mat-error *ngIf="formState.errors._password?._password?.required"> A password is required </mat-error>
-        <mat-error *ngIf="!formState.errors._password?._password?.required && formState.errors._password?._password?.minLength">
-          Must be at least {{ formState.errors._password._password.minLength.minLength }} characters long
+        <mat-error *ngIf="formState.errors['_password']?._password?.required"> A password is required </mat-error>
+        <mat-error *ngIf="!formState.errors['_password']?._password?.required && formState.errors['_password']?._password?.minLength">
+          Must be at least {{ formState.errors['_password']._password.minLength.minLength }} characters long
         </mat-error>
       </mat-form-field>
     </div>
@@ -34,7 +34,7 @@
           placeholder="Confirm Password {{ formState.controls.password.isDisabled ? '(disabled)' : '' }}"
           [ngrxFormControlState]="formState.controls.password.controls.confirmPassword"
         />
-        <mat-error *ngIf="formState.errors._password?._confirmPassword?.equalTo"> The passwords do not match </mat-error>
+        <mat-error *ngIf="formState.errors['_password']?._confirmPassword?.equalTo"> The passwords do not match </mat-error>
       </mat-form-field>
     </div>
     <div>
@@ -78,7 +78,7 @@
       <mat-checkbox [ngrxFormControlState]="formState.controls.agreeToTermsOfUse">Agree to terms of use </mat-checkbox>
       <mat-error
         *ngIf="
-          formState.errors._agreeToTermsOfUse?.required && (formState.controls.agreeToTermsOfUse.isTouched || formState.controls.agreeToTermsOfUse.isSubmitted)
+          formState.errors['_agreeToTermsOfUse']?.required && (formState.controls.agreeToTermsOfUse.isTouched || formState.controls.agreeToTermsOfUse.isSubmitted)
         "
         class="terms-of-use-error"
       >

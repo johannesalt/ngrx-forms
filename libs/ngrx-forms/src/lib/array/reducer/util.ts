@@ -42,7 +42,7 @@ export function childReducer<TValue>(state: FormArrayState<TValue>, action: Acti
   });
 }
 
-export function updateIdRecursiveForGroup<TValue>(state: FormGroupState<TValue>, newId: string): FormGroupState<TValue> {
+export function updateIdRecursiveForGroup<TValue extends KeyValue = any>(state: FormGroupState<TValue>, newId: string): FormGroupState<TValue> {
   const controls: FormGroupControls<TValue> = Object.keys(state.controls).reduce(
     (agg, key) =>
       Object.assign(agg, {

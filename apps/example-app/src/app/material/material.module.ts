@@ -14,7 +14,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { CustomErrorStateMatcherDirective } from './error-state-matcher';
-import { MatListOptionFixDirective } from './mat-list-option-fix';
 import { NgrxMatSelectViewAdapter } from './mat-select-view-adapter';
 
 @NgModule({
@@ -32,7 +31,7 @@ import { NgrxMatSelectViewAdapter } from './mat-select-view-adapter';
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  declarations: [NgrxMatSelectViewAdapter, CustomErrorStateMatcherDirective, MatListOptionFixDirective],
+  declarations: [NgrxMatSelectViewAdapter, CustomErrorStateMatcherDirective],
   exports: [
     MatInputModule,
     MatCheckboxModule,
@@ -48,7 +47,6 @@ import { NgrxMatSelectViewAdapter } from './mat-select-view-adapter';
     MatNativeDateModule,
     NgrxMatSelectViewAdapter,
     CustomErrorStateMatcherDirective,
-    MatListOptionFixDirective,
   ],
   providers: [{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { float: 'always' } }],
 })
