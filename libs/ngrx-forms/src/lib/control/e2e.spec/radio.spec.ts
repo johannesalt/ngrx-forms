@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
@@ -11,9 +10,9 @@ import { createFormControlState, FormControlState } from '../../state';
 const RADIO_OPTIONS = ['op1', 'op2'] as readonly string[];
 
 @Component({
-  imports: [NgrxFormsModule, NgFor],
+  imports: [NgrxFormsModule],
   selector: 'radio-test',
-  template: '<input *ngFor="let o of options; trackBy: trackByIndex" type="radio" [value]="o" [ngrxFormControlState]="state" />',
+  template: '@for (o of options; track trackByIndex($index, o)) {<input type="radio" [value]="o" [ngrxFormControlState]="state" />}',
 })
 export class RadioTestComponent {
   @Input() state: FormControlState<string>;

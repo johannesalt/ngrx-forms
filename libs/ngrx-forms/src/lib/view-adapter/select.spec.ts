@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, ElementRef, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgrxSelectOption, NgrxSelectViewAdapter } from './select';
@@ -8,7 +7,7 @@ const TEST_ID = 'test ID';
 const OPTION1_VALUE = 'op1';
 
 @Component({
-  imports: [NgrxSelectViewAdapter, NgrxSelectOption, NgFor],
+  imports: [NgrxSelectViewAdapter, NgrxSelectOption],
   selector: 'select-test',
   template: `
     <select [ngrxFormControlState]="state">
@@ -27,15 +26,21 @@ const OPTION1_VALUE = 'op1';
     </select>
 
     <select [ngrxFormControlState]="state">
-      <option *ngFor="let o of stringOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
+      @for (o of stringOptions; track trackByIndex($index, o)) {
+      <option [value]="o">{{ o }}</option>
+      }
     </select>
 
     <select [ngrxFormControlState]="state">
-      <option *ngFor="let o of numberOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
+      @for (o of numberOptions; track trackByIndex($index, o)) {
+      <option [value]="o">{{ o }}</option>
+      }
     </select>
 
     <select [ngrxFormControlState]="state">
-      <option *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
+      @for (o of booleanOptions; track trackByIndex($index, o)) {
+      <option [value]="o">{{ o }}</option>
+      }
     </select>
   `,
 })

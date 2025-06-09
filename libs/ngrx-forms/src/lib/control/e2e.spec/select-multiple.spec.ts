@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
@@ -13,11 +12,13 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
-  imports: [NgrxFormsModule, NgFor],
+  imports: [NgrxFormsModule],
   selector: 'select-multiple-test',
   template: `
     <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
-      <option *ngFor="let o of options" [value]="o">{{ o }}</option>
+      @for (o of options; track o) {
+      <option [value]="o">{{ o }}</option>
+      }
     </select>
   `,
 })
@@ -91,11 +92,13 @@ describe(SelectMultipleComponent.name, () => {
 });
 
 @Component({
-  imports: [NgrxFormsModule, NgFor],
+  imports: [NgrxFormsModule],
   selector: 'select-multiple-test',
   template: `
     <select multiple [ngrxFormControlState]="state">
-      <option *ngFor="let o of options" [value]="o">{{ o }}</option>
+      @for (o of options; track o) {
+      <option [value]="o">{{ o }}</option>
+      }
     </select>
   `,
 })

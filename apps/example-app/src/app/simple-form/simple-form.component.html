@@ -1,4 +1,5 @@
-<ngf-form-example exampleName="Simple Form" *ngIf="formState$ | async as formState" [formState]="formState">
+@if (formState$ | async; as formState) {
+<ngf-form-example exampleName="Simple Form" [formState]="formState">
   This example shows a basic form without any extras.
   <br />
   <br />
@@ -60,9 +61,12 @@
     </div>
   </form>
   <br />
-  <div *ngIf="formState.isSubmitted">
+  @if (formState.isSubmitted) {
+  <div>
     The form was submitted with the following value:
     <br />
     <pre>{{ submittedValue$ | async | json }}</pre>
   </div>
+  }
 </ngf-form-example>
+}

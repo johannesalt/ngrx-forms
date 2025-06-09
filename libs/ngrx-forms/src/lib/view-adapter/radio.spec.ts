@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgrxRadioViewAdapter } from './radio';
@@ -9,7 +8,7 @@ const OPTION1_VALUE = 'op1';
 const OPTION2_VALUE = 'op2';
 
 @Component({
-  imports: [NgrxRadioViewAdapter, NgFor],
+  imports: [NgrxRadioViewAdapter],
   selector: 'radio-test',
   template: `
     <input type="radio" value="op1" [ngrxFormControlState]="state" />
@@ -18,11 +17,13 @@ const OPTION2_VALUE = 'op2';
     <input type="radio" value="op1" [ngrxFormControlState]="state" name="customName" />
     <input type="radio" value="op1" [ngrxFormControlState]="state" [name]="boundName" />
 
-    <input type="radio" *ngFor="let o of stringOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
-
-    <input type="radio" *ngFor="let o of numberOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
-
-    <input type="radio" *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
+    @for (o of stringOptions; track trackByIndex($index, o)) {
+    <input type="radio" [value]="o" [ngrxFormControlState]="state" />
+    } @for (o of numberOptions; track trackByIndex($index, o)) {
+    <input type="radio" [value]="o" [ngrxFormControlState]="state" />
+    } @for (o of booleanOptions; track trackByIndex($index, o)) {
+    <input type="radio" [value]="o" [ngrxFormControlState]="state" />
+    }
   `,
 })
 export class RadioTestComponent {

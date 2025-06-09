@@ -1,4 +1,5 @@
-<ngf-form-example exampleName="Value Boxing" *ngIf="formState$ | async as formState" [formState]="formState">
+@if (formState$ | async; as formState) {
+<ngf-form-example exampleName="Value Boxing" [formState]="formState">
   This example shows how to use value boxing to use form elements which require non-primitive values. The following example contains a select that allows to
   select multiple elements. The value of such a form element is an array of the selected options.
   <br />
@@ -8,7 +9,9 @@
       <label>Options</label>
       <div>
         <select multiple size="5" [ngrxFormControlState]="formState.controls.selection">
-          <option *ngFor="let o of [1, 2, 3, 4, 5]" [value]="o">Option {{ o }}</option>
+          @for (o of [1, 2, 3, 4, 5]; track o) {
+          <option [value]="o">Option {{ o }}</option>
+          }
         </select>
       </div>
     </div>
@@ -20,3 +23,4 @@
     <pre>{{ unbox(formState.value) | json }}</pre>
   </div>
 </ngf-form-example>
+}

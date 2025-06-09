@@ -1,4 +1,5 @@
-<ngf-form-example exampleName="Asynchronous Validation" githubLinkOverride="async-validation" *ngIf="formState$ | async as formState" [formState]="formState">
+@if (formState$ | async; as formState) {
+<ngf-form-example exampleName="Asynchronous Validation" githubLinkOverride="async-validation" [formState]="formState">
   This example shows how to perform asynchronous validation. The entered text will be used to search Google books and will return up to the entered number of
   results. Please note that this example uses the Google books API anonymously and is therefore rate limited. This means sometimes the search will not return a
   result even if the search term is valid.
@@ -8,7 +9,9 @@
     <label>Search Term</label>
     <div>
       <input type="text" [ngrxFormControlState]="formState.controls.searchTerm" />
-      <span *ngIf="formState.isValidationPending">Searching...</span>
+      @if (formState.isValidationPending) {
+      <span>Searching...</span>
+      }
     </div>
   </div>
   <div class="control">
@@ -17,18 +20,24 @@
       <input type="number" [ngrxFormControlState]="formState.controls.numberOfResultsToShow" />
     </div>
   </div>
-
-  <ul *ngIf="formState.isInvalid" class="error-messages">
-    <li *ngIf="formState.errors['_searchTerm']?.$exists">The search returned no results</li>
-    <li *ngIf="formState.errors['_numberOfResultsToShow']?.required">The number of results must be specified</li>
-    <li *ngIf="formState.errors['_numberOfResultsToShow']?.greaterThan">The number of results must be at least 1</li>
+  @if (formState.isInvalid) {
+  <ul class="error-messages">
+    @if (formState.errors['_searchTerm']?.$exists) {
+    <li>The search returned no results</li>
+    } @if (formState.errors['_numberOfResultsToShow']?.required) {
+    <li>The number of results must be specified</li>
+    } @if (formState.errors['_numberOfResultsToShow']?.greaterThan) {
+    <li>The number of results must be at least 1</li>
+    }
   </ul>
-
-  <ng-container *ngIf="searchResults$ | async as searchResults">
-    <ul *ngIf="searchResults.length > 0">
-      <li *ngFor="let r of searchResults">
-        {{ r }}
-      </li>
-    </ul>
-  </ng-container>
+  } @if (searchResults$ | async; as searchResults) { @if (searchResults.length > 0) {
+  <ul>
+    @for (r of searchResults; track r) {
+    <li>
+      {{ r }}
+    </li>
+    }
+  </ul>
+  } }
 </ngf-form-example>
+}

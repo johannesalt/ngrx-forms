@@ -1,4 +1,5 @@
-<ngf-form-example exampleName="Synchronous Validation" githubLinkOverride="sync-validation" *ngIf="formState$ | async as formState" [formState]="formState">
+@if (formState$ | async; as formState) {
+<ngf-form-example exampleName="Synchronous Validation" githubLinkOverride="sync-validation" [formState]="formState">
   This example shows how to use update functions to validate a form state. In addition it shows how to apply other updates like enabling and disabling form
   elements dynamically.
   <br />
@@ -32,13 +33,19 @@
       <label>Date of Birth</label>
       <div>
         <select [ngrxFormControlState]="formState.controls.dayOfBirth">
-          <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+          @for (day of days; track day) {
+          <option [value]="day">{{ day }}</option>
+          }
         </select>
         <select [ngrxFormControlState]="formState.controls.monthOfBirth">
-          <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+          @for (month of months; track month) {
+          <option [value]="month">{{ month }}</option>
+          }
         </select>
         <select [ngrxFormControlState]="formState.controls.yearOfBirth">
-          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+          @for (year of years; track year) {
+          <option [value]="year">{{ year }}</option>
+          }
         </select>
       </div>
     </div>
@@ -56,20 +63,28 @@
       </div>
     </div>
   </form>
-
-  <ul *ngIf="formState.isInvalid" class="error-messages">
-    <li *ngIf="formState.errors['_userName']?.required">A user name is required</li>
-    <li *ngIf="formState.errors['_password']?._password?.required">A password is required</li>
-    <li *ngIf="formState.errors['_password']?._password?.minLength">
-      The password must be at least {{ formState.errors['_password']._password.minLength.minLength }} characters long.
-    </li>
-    <li *ngIf="formState.errors['_password']?.passwordMatch">The passwords do not match</li>
-    <li *ngIf="formState.errors['_agreeToTermsOfUse']?.required">You must agree to the terms of use</li>
+  @if (formState.isInvalid) {
+  <ul class="error-messages">
+    @if (formState.errors['_userName']?.required) {
+    <li>A user name is required</li>
+    } @if (formState.errors['_password']?._password?.required) {
+    <li>A password is required</li>
+    } @if (formState.errors['_password']?._password?.minLength) {
+    <li>The password must be at least {{ formState.errors['_password']._password.minLength.minLength }} characters long.</li>
+    } @if (formState.errors['_password']?.passwordMatch) {
+    <li>The passwords do not match</li>
+    } @if (formState.errors['_agreeToTermsOfUse']?.required) {
+    <li>You must agree to the terms of use</li>
+    }
   </ul>
+  }
   <br />
-  <div *ngIf="formState.isSubmitted">
+  @if (formState.isSubmitted) {
+  <div>
     The form was submitted with the following value:
     <br />
     <pre>{{ submittedValue$ | async | json }}</pre>
   </div>
+  }
 </ngf-form-example>
+}

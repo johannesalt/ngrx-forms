@@ -93,7 +93,7 @@ const reducers = combineReducers<State['dynamic'], any>({
       case AddArrayControlAction.TYPE: {
         const maxIndex = s.maxIndex + 1;
         const options = [...s.options];
-        
+
         options.splice(a.index!, 0, maxIndex);
         return {
           maxIndex,
@@ -103,7 +103,7 @@ const reducers = combineReducers<State['dynamic'], any>({
 
       case RemoveArrayControlAction.TYPE: {
         const options = [...s.options];
-        
+
         options.splice(a.index!, 1);
         return {
           ...s,

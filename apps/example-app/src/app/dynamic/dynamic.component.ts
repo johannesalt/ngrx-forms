@@ -53,10 +53,6 @@ export class DynamicPageComponent {
       .subscribe(this.store);
   }
 
-  trackByIndex(index: number) {
-    return index;
-  }
-
   trackById(_: number, id: string) {
     return id;
   }

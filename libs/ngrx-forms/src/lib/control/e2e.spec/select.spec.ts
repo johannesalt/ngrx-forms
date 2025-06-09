@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
@@ -11,9 +10,9 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
-  imports: [NgrxFormsModule, NgFor],
+  imports: [NgrxFormsModule],
   selector: 'select-test',
-  template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
+  template: '<select [ngrxFormControlState]="state">@for (o of options; track o) {<option [value]="o">{{ o }}</option>}</select>',
 })
 export class SelectComponent {
   @Input() state: FormControlState<string>;
@@ -21,9 +20,9 @@ export class SelectComponent {
 }
 
 @Component({
-  imports: [NgrxFormsModule, NgFor],
+  imports: [NgrxFormsModule],
   selector: 'select-test-fallback',
-  template: '<select><option *ngFor="let o of options" [value]="o">{{ o }} Label</option></select>',
+  template: '<select>@for (o of options; track o) {<option [value]="o">{{ o }} Label</option>}</select>',
 })
 export class SelectFallbackComponent {
   options = SELECT_OPTIONS;
@@ -105,9 +104,9 @@ describe(SelectComponent.name, () => {
 const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
-  imports: [NgrxFormsModule, NgFor],
+  imports: [NgrxFormsModule],
   selector: 'select-test',
-  template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
+  template: '<select [ngrxFormControlState]="state">@for (o of options; track o) {<option [value]="o">{{ o }}</option>}</select>',
 })
 export class NumberSelectComponent {
   @Input() state: FormControlState<number>;

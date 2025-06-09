@@ -18,8 +18,4 @@ export class ArrayPageComponent {
   constructor(store: Store<State>) {
     this.formState$ = store.pipe(select((s) => s.array.formState));
   }
-
-  trackByIndex(index: number) {
-    return index;
-  }
 }
