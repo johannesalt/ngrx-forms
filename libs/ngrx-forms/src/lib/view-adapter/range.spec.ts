@@ -1,18 +1,17 @@
 import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { NgrxRangeViewAdapter } from './range';
 
 const TEST_ID = 'test ID';
 
 @Component({
+  imports: [NgrxRangeViewAdapter],
   selector: 'range-test',
   template: `
     <input type="range" [ngrxFormControlState]="state" />
     <input type="range" [ngrxFormControlState]="state" id="customId" />
     <input type="range" [ngrxFormControlState]="state" [id]="boundId" />
   `,
-  standalone: false,
 })
 export class RangeTestComponent {
   boundId = 'boundId';
@@ -27,7 +26,7 @@ describe(NgrxRangeViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NgrxRangeViewAdapter, RangeTestComponent],
+      imports: [RangeTestComponent],
     }).compileComponents();
   }));
 

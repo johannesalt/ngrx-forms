@@ -12,7 +12,6 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
       multi: true,
     },
   ],
-  standalone: false,
 })
 export class NgrxRadioViewAdapter implements FormViewAdapter, OnInit, AfterViewInit {
   private state: FormControlState<any>;

@@ -6,7 +6,6 @@ import { NgrxFormDirective } from './directive';
 
 @Directive({
   selector: 'form[ngrxFormState][ngrxFormsAction]',
-  standalone: false,
 })
 export class NgrxLocalFormDirective<TStateValue extends KeyValue> extends NgrxFormDirective<TStateValue> {
   @Output() ngrxFormsAction = new EventEmitter<Actions<TStateValue>>();

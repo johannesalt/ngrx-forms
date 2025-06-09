@@ -20,7 +20,6 @@ const NULL_RENDERER: Renderer2 = {
  */
 @Directive({
   selector: 'option',
-  standalone: false,
 })
 export class NgrxFallbackSelectOption {
   constructor(

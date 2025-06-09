@@ -19,7 +19,6 @@ export const NGRX_STATUS_CLASS_NAMES = {
 
 @Directive({
   selector: 'form[ngrxFormState],[ngrxFormControlState]',
-  standalone: false,
 })
 export class NgrxStatusCssClassesDirective {
   private state: AbstractControlState<any>;

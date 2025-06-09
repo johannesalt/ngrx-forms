@@ -5,6 +5,7 @@ import { createFormGroupState, FormGroupState } from './state';
 import { NGRX_STATUS_CLASS_NAMES, NgrxStatusCssClassesDirective } from './status-css-classes.directive';
 
 @Component({
+  imports: [NgrxStatusCssClassesDirective],
   selector: 'classes-test',
   template: `
     <form [ngrxFormState]="state">
@@ -14,7 +15,6 @@ import { NGRX_STATUS_CLASS_NAMES, NgrxStatusCssClassesDirective } from './status
       </select>
     </form>
   `,
-  standalone: false,
 })
 export class TestComponent {
   @Input() state: FormGroupState<{ inner: string }>;
@@ -31,7 +31,7 @@ describe(NgrxStatusCssClassesDirective.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NgrxStatusCssClassesDirective, TestComponent],
+      imports: [TestComponent],
     }).compileComponents();
   }));
 

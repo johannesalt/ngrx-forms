@@ -1,9 +1,9 @@
+import { NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { bufferCount, skip, take } from 'rxjs/operators';
-
 import { MarkAsDirtyAction, SetValueAction } from '../../actions';
 import { NgrxFormsModule } from '../../module';
 import { createFormControlState, FormControlState } from '../../state';
@@ -11,9 +11,9 @@ import { createFormControlState, FormControlState } from '../../state';
 const RADIO_OPTIONS = ['op1', 'op2'] as readonly string[];
 
 @Component({
+  imports: [NgrxFormsModule, NgFor],
   selector: 'radio-test',
   template: '<input *ngFor="let o of options; trackBy: trackByIndex" type="radio" [value]="o" [ngrxFormControlState]="state" />',
-  standalone: false,
 })
 export class RadioTestComponent {
   @Input() state: FormControlState<string>;
@@ -39,8 +39,7 @@ describe(RadioTestComponent.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [NgrxFormsModule],
-      declarations: [RadioTestComponent],
+      imports: [RadioTestComponent],
       providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
     }).compileComponents();
   }));

@@ -1,9 +1,9 @@
+import { NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { first, skip } from 'rxjs/operators';
-
 import { MarkAsDirtyAction, SetValueAction } from '../../actions';
 import { box, Boxed } from '../../boxing';
 import { NgrxValueConverters } from '../../control/value-converter';
@@ -13,13 +13,13 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
+  imports: [NgrxFormsModule, NgFor],
   selector: 'select-multiple-test',
   template: `
     <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
       <option *ngFor="let o of options" [value]="o">{{ o }}</option>
     </select>
   `,
-  standalone: false,
 })
 export class SelectMultipleComponent {
   @Input() state: FormControlState<string>;
@@ -46,8 +46,7 @@ describe(SelectMultipleComponent.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [NgrxFormsModule],
-      declarations: [SelectMultipleComponent],
+      imports: [SelectMultipleComponent],
       providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
     }).compileComponents();
   }));
@@ -92,13 +91,13 @@ describe(SelectMultipleComponent.name, () => {
 });
 
 @Component({
+  imports: [NgrxFormsModule, NgFor],
   selector: 'select-multiple-test',
   template: `
     <select multiple [ngrxFormControlState]="state">
       <option *ngFor="let o of options" [value]="o">{{ o }}</option>
     </select>
   `,
-  standalone: false,
 })
 export class SelectMultipleWithoutConverterComponent {
   @Input() state: FormControlState<Boxed<string[]>>;
@@ -124,8 +123,7 @@ describe(SelectMultipleWithoutConverterComponent.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [NgrxFormsModule],
-      declarations: [SelectMultipleWithoutConverterComponent],
+      imports: [SelectMultipleWithoutConverterComponent],
       providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
     }).compileComponents();
   }));

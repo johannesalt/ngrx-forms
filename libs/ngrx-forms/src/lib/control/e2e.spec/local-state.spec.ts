@@ -1,9 +1,9 @@
+import { NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { count } from 'rxjs/operators';
-
 import { MarkAsDirtyAction } from '../../actions';
 import { NgrxFormsModule } from '../../module';
 import { createFormControlState, FormControlState } from '../../state';
@@ -11,11 +11,11 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
+  imports: [NgrxFormsModule, NgFor],
   selector: 'select-test',
   template: ` <select [ngrxFormControlState]="state" (ngrxFormsAction)="handleAction($event)">
     <option *ngFor="let o of options" [value]="o">{{ o }}</option>
   </select>`,
-  standalone: false,
 })
 export class NumberSelectComponentLocalStateComponent {
   @Input() state: FormControlState<number>;
@@ -44,8 +44,7 @@ describe(NumberSelectComponentLocalStateComponent.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [NgrxFormsModule],
-      declarations: [NumberSelectComponentLocalStateComponent],
+      imports: [NumberSelectComponentLocalStateComponent],
       providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
     }).compileComponents();
   }));

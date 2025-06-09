@@ -1,18 +1,17 @@
 import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { NgrxCheckboxViewAdapter } from './checkbox';
 
 const TEST_ID = 'test ID';
 
 @Component({
+  imports: [NgrxCheckboxViewAdapter],
   selector: 'checkbox-test',
   template: `
     <input type="checkbox" [ngrxFormControlState]="state" />
     <input type="checkbox" [ngrxFormControlState]="state" id="customId" />
     <input type="checkbox" [ngrxFormControlState]="state" [id]="boundId" />
   `,
-  standalone: false,
 })
 export class CheckboxTestComponent {
   boundId = 'boundId';
@@ -27,7 +26,7 @@ describe(NgrxCheckboxViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NgrxCheckboxViewAdapter, CheckboxTestComponent],
+      imports: [CheckboxTestComponent],
     }).compileComponents();
   }));
 

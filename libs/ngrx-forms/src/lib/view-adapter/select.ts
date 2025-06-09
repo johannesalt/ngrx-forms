@@ -12,7 +12,6 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
       multi: true,
     },
   ],
-  standalone: false,
 })
 export class NgrxSelectViewAdapter implements FormViewAdapter, AfterViewInit {
   private state: FormControlState<any>;
@@ -124,7 +123,6 @@ const NULL_RENDERER: Renderer2 = {
 
 @Directive({
   selector: 'option',
-  standalone: false,
 })
 export class NgrxSelectOption implements OnDestroy {
   private isInitialized = false;

@@ -1,9 +1,9 @@
+import { NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { first, skip } from 'rxjs/operators';
-
 import { MarkAsDirtyAction, SetValueAction } from '../../actions';
 import { NgrxFormsModule } from '../../module';
 import { createFormControlState, FormControlState } from '../../state';
@@ -11,9 +11,9 @@ import { createFormControlState, FormControlState } from '../../state';
 const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
+  imports: [NgrxFormsModule, NgFor],
   selector: 'select-test',
   template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
-  standalone: false,
 })
 export class SelectComponent {
   @Input() state: FormControlState<string>;
@@ -21,9 +21,9 @@ export class SelectComponent {
 }
 
 @Component({
+  imports: [NgrxFormsModule, NgFor],
   selector: 'select-test-fallback',
   template: '<select><option *ngFor="let o of options" [value]="o">{{ o }} Label</option></select>',
-  standalone: false,
 })
 export class SelectFallbackComponent {
   options = SELECT_OPTIONS;
@@ -48,8 +48,7 @@ describe(SelectComponent.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [NgrxFormsModule],
-      declarations: [SelectComponent, SelectFallbackComponent],
+      imports: [SelectComponent, SelectFallbackComponent],
       providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
     }).compileComponents();
   }));
@@ -106,9 +105,9 @@ describe(SelectComponent.name, () => {
 const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
+  imports: [NgrxFormsModule, NgFor],
   selector: 'select-test',
   template: '<select [ngrxFormControlState]="state"><option *ngFor="let o of options" [value]="o">{{ o }}</option></select>',
-  standalone: false,
 })
 export class NumberSelectComponent {
   @Input() state: FormControlState<number>;
@@ -133,8 +132,7 @@ describe(NumberSelectComponent.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [NgrxFormsModule],
-      declarations: [NumberSelectComponent],
+      imports: [NumberSelectComponent],
       providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
     }).compileComponents();
   }));

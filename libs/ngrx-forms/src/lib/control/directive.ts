@@ -44,7 +44,6 @@ export type NgrxFormControlValueType<TStateValue> = TStateValue extends FormCont
 
 @Directive({
   selector: ':not([ngrxFormsAction])[ngrxFormControlState]',
-  standalone: false,
 })
 export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> implements AfterViewInit, OnInit {
   private isInitialized = false;

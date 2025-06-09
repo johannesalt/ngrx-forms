@@ -1,6 +1,6 @@
+import { NgFor } from '@angular/common';
 import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { NgrxRadioViewAdapter } from './radio';
 
 const TEST_ID = 'test ID';
@@ -9,6 +9,7 @@ const OPTION1_VALUE = 'op1';
 const OPTION2_VALUE = 'op2';
 
 @Component({
+  imports: [NgrxRadioViewAdapter, NgFor],
   selector: 'radio-test',
   template: `
     <input type="radio" value="op1" [ngrxFormControlState]="state" />
@@ -23,7 +24,6 @@ const OPTION2_VALUE = 'op2';
 
     <input type="radio" *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o" [ngrxFormControlState]="state" />
   `,
-  standalone: false,
 })
 export class RadioTestComponent {
   boundName = 'boundName';
@@ -44,7 +44,7 @@ describe(NgrxRadioViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NgrxRadioViewAdapter, RadioTestComponent],
+      imports: [RadioTestComponent],
     }).compileComponents();
   }));
 

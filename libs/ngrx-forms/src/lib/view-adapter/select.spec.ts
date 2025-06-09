@@ -1,6 +1,6 @@
+import { NgFor } from '@angular/common';
 import { Component, ElementRef, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { NgrxSelectOption, NgrxSelectViewAdapter } from './select';
 
 const TEST_ID = 'test ID';
@@ -8,6 +8,7 @@ const TEST_ID = 'test ID';
 const OPTION1_VALUE = 'op1';
 
 @Component({
+  imports: [NgrxSelectViewAdapter, NgrxSelectOption, NgFor],
   selector: 'select-test',
   template: `
     <select [ngrxFormControlState]="state">
@@ -37,7 +38,6 @@ const OPTION1_VALUE = 'op1';
       <option *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
     </select>
   `,
-  standalone: false,
 })
 export class SelectTestComponent {
   boundId = 'boundId';
@@ -58,7 +58,7 @@ describe(NgrxSelectViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NgrxSelectViewAdapter, NgrxSelectOption, SelectTestComponent],
+      imports: [SelectTestComponent],
     }).compileComponents();
   }));
 

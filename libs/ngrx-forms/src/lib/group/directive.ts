@@ -11,7 +11,6 @@ interface CustomEvent extends Event {}
 
 @Directive({
   selector: 'form:not([ngrxFormsAction])[ngrxFormState]',
-  standalone: false,
 })
 export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
   @Input('ngrxFormState') state: FormGroupState<TStateValue>;

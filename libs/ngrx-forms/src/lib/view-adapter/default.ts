@@ -29,7 +29,6 @@ function isAndroid(navigator: Navigator): boolean {
       multi: true,
     },
   ],
-  standalone: false,
 })
 export class NgrxDefaultViewAdapter implements FormViewAdapter, AfterViewInit {
   private state: FormControlState<any>;

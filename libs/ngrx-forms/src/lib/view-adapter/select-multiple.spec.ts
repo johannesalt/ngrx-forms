@@ -1,6 +1,6 @@
+import { NgFor } from '@angular/common';
 import { Component, ElementRef, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { NgrxSelectMultipleOption, NgrxSelectMultipleViewAdapter } from './select-multiple';
 
 const TEST_ID = 'test ID';
@@ -10,6 +10,7 @@ const OPTION2_VALUE = 'op2';
 const OPTION3_VALUE = 'op3';
 
 @Component({
+  imports: [NgrxSelectMultipleViewAdapter, NgrxSelectMultipleOption, NgFor],
   selector: 'select-test',
   template: `
     <select multiple [ngrxFormControlState]="state">
@@ -42,7 +43,6 @@ const OPTION3_VALUE = 'op3';
       <option *ngFor="let o of booleanOptions; trackBy: trackByIndex" [value]="o">{{ o }}</option>
     </select>
   `,
-  standalone: false,
 })
 export class SelectTestComponent {
   boundId = 'boundId';
@@ -63,7 +63,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NgrxSelectMultipleViewAdapter, NgrxSelectMultipleOption, SelectTestComponent],
+      imports: [SelectTestComponent],
     }).compileComponents();
   }));
 

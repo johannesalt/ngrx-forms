@@ -1,18 +1,17 @@
 import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { NgrxDefaultViewAdapter } from './default';
 
 const TEST_ID = 'test ID';
 
 @Component({
+  imports: [NgrxDefaultViewAdapter],
   selector: 'default-test',
   template: `
     <input type="text" [ngrxFormControlState]="state" />
     <input type="text" [ngrxFormControlState]="state" id="customId" />
     <input type="text" [ngrxFormControlState]="state" [id]="boundId" />
   `,
-  standalone: false,
 })
 export class DefaultInputTestComponent {
   boundId = 'boundId';
@@ -31,7 +30,7 @@ describe(NgrxDefaultViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NgrxDefaultViewAdapter, DefaultInputTestComponent],
+      imports: [DefaultInputTestComponent],
     }).compileComponents();
   }));
 

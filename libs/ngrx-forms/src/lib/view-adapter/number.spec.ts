@@ -1,18 +1,17 @@
 import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { NgrxNumberViewAdapter } from './number';
 
 const TEST_ID = 'test ID';
 
 @Component({
+  imports: [NgrxNumberViewAdapter],
   selector: 'number-test',
   template: `
     <input type="number" [ngrxFormControlState]="state" />
     <input type="number" [ngrxFormControlState]="state" id="customId" />
     <input type="number" [ngrxFormControlState]="state" [id]="boundId" />
   `,
-  standalone: false,
 })
 export class NumberTestComponent {
   boundId = 'boundId';
@@ -27,7 +26,7 @@ describe(NgrxNumberViewAdapter.name, () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NgrxNumberViewAdapter, NumberTestComponent],
+      imports: [NumberTestComponent],
     }).compileComponents();
   }));
 

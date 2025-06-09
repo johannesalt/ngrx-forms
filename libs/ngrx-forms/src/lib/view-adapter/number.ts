@@ -12,7 +12,6 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
       multi: true,
     },
   ],
-  standalone: false,
 })
 export class NgrxNumberViewAdapter implements FormViewAdapter, AfterViewInit {
   private state: FormControlState<any>;
