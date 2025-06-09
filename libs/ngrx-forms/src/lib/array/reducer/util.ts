@@ -43,9 +43,9 @@ export function childReducer<TValue>(state: FormArrayState<TValue>, action: Acti
 }
 
 export function updateIdRecursiveForGroup<TValue>(state: FormGroupState<TValue>, newId: string): FormGroupState<TValue> {
-  const controls: FormGroupControls<TValue> =
-    Object.keys(state.controls)
-      .reduce((agg, key) => Object.assign(agg, {
+  const controls: FormGroupControls<TValue> = Object.keys(state.controls).reduce(
+    (agg, key) =>
+      Object.assign(agg, {
         [key]: updateIdRecursive<TValue[keyof TValue]>(state.controls[key as keyof TValue], `${newId}.${key}`),
       }),
     {} as FormGroupControls<TValue>
