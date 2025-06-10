@@ -59,7 +59,7 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
 
     if (this.isInitialized) {
       this.updateViewIfControlIdChanged(newState, oldState);
-      this.updateViewIfValueChanged(newState, oldState);
+      this.updateViewIfValueChanged(newState);
       this.updateViewIfIsDisabledChanged(newState, oldState);
       this.updateViewIfIsFocusedChanged(newState, oldState);
     }
@@ -192,7 +192,7 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
     this.isInitialized = true;
 
     this.updateViewIfControlIdChanged(this.state, undefined);
-    this.updateViewIfValueChanged(this.state, undefined);
+    this.updateViewIfValueChanged(this.state);
     this.updateViewIfIsDisabledChanged(this.state, undefined);
     this.updateViewIfIsFocusedChanged(this.state, undefined);
 

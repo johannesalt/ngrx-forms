@@ -3,7 +3,6 @@ import { AfterViewInit, Directive, ElementRef, forwardRef, HostListener, Input, 
 import { FormControlState } from '../state';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
-
 @Directive({
   selector: 'input[type=checkbox][ngrxFormControlState]',
   providers: [
