@@ -1,0 +1,90 @@
+@if (formState$ | async; as formState) {
+<ngf-form-example exampleName="Synchronous Validation" githubLinkOverride="sync-validation" [formState]="formState">
+  This example shows how to use update functions to validate a form state. In addition it shows how to apply other updates like enabling and disabling form
+  elements dynamically.
+  <br />
+  <br />
+  <form [ngrxFormState]="formState" (submit)="submit()">
+    <div>
+      <label>User Name</label>
+      <div>
+        <input type="text" [ngrxFormControlState]="formState.controls.userName" />
+      </div>
+    </div>
+    <div>
+      <label>Create Account?</label>
+      <div>
+        <input type="checkbox" [ngrxFormControlState]="formState.controls.createAccount" />
+      </div>
+    </div>
+    <div>
+      <label>Password</label>
+      <div>
+        <input type="password" [ngrxFormControlState]="formState.controls.password.controls.password" />
+      </div>
+    </div>
+    <div>
+      <label>Confirm Password</label>
+      <div>
+        <input type="password" [ngrxFormControlState]="formState.controls.password.controls.confirmPassword" />
+      </div>
+    </div>
+    <div>
+      <label>Date of Birth</label>
+      <div>
+        <select [ngrxFormControlState]="formState.controls.dayOfBirth">
+          @for (day of days; track day) {
+          <option [value]="day">{{ day }}</option>
+          }
+        </select>
+        <select [ngrxFormControlState]="formState.controls.monthOfBirth">
+          @for (month of months; track month) {
+          <option [value]="month">{{ month }}</option>
+          }
+        </select>
+        <select [ngrxFormControlState]="formState.controls.yearOfBirth">
+          @for (year of years; track year) {
+          <option [value]="year">{{ year }}</option>
+          }
+        </select>
+      </div>
+    </div>
+    <div>
+      <label>Agree to terms of use</label>
+      <div>
+        <input type="checkbox" [ngrxFormControlState]="formState.controls.agreeToTermsOfUse" />
+      </div>
+    </div>
+    <div class="buttons">
+      <div></div>
+      <div>
+        <button type="submit" [disabled]="formState.isInvalid">Register</button>
+        <button type="button" [disabled]="formState.isPristine && formState.isUntouched && formState.isUnsubmitted" (click)="reset()">Reset</button>
+      </div>
+    </div>
+  </form>
+  @if (formState.isInvalid) {
+  <ul class="error-messages">
+    @if (formState.errors['_userName']?.required) {
+    <li>A user name is required</li>
+    } @if (formState.errors['_password']?._password?.required) {
+    <li>A password is required</li>
+    } @if (formState.errors['_password']?._password?.minLength) {
+    <li>The password must be at least {{ formState.errors['_password']._password.minLength.minLength }} characters long.</li>
+    } @if (formState.errors['_password']?.passwordMatch) {
+    <li>The passwords do not match</li>
+    } @if (formState.errors['_agreeToTermsOfUse']?.required) {
+    <li>You must agree to the terms of use</li>
+    }
+  </ul>
+  }
+  <br />
+  @if (formState.isSubmitted) {
+  <div>
+    The form was submitted with the following value:
+    <br />
+    <pre>{{ submittedValue$ | async | json }}</pre>
+  </div>
+  }
+</ngf-form-example>
+}

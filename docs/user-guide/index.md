@@ -8,29 +8,24 @@ Import the module:
 
 ```typescript
 import { StoreModule } from '@ngrx/store';
-import { NgrxFormsModule } from 'ngrx-forms';
+import { NgrxFormsModule } from 'ngrx-form-state';
 
 import { reducers } from './reducer';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    NgrxFormsModule,
-    StoreModule.forRoot(reducers),
-  ],
+  declarations: [AppComponent],
+  imports: [NgrxFormsModule, StoreModule.forRoot(reducers)],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
 ```
 
 Add a group state somewhere in your state tree via `createFormGroupState` and call the `formGroupReducer` inside your reducer:
 
 ```typescript
 import { Action } from '@ngrx/store';
-import { FormGroupState, createFormGroupState, formGroupReducer } from 'ngrx-forms';
+import { FormGroupState, createFormGroupState, formGroupReducer } from 'ngrx-form-state';
 
 export interface MyFormValue {
   someTextInput: string;
@@ -82,11 +77,11 @@ If you are using ngrx version 8 or above you can alternatively use `onNgrxForms`
 
 ```ts
 import { createReducer } from '@ngrx/store';
-import { onNgrxForms } from 'ngrx-forms';
+import { onNgrxForms } from 'ngrx-form-state';
 
 export const appReducer = createReducer(
   initialState,
-  onNgrxForms(),
+  onNgrxForms()
   // your other reducers...
 );
 ```
@@ -96,7 +91,7 @@ Expose the form state inside your component:
 ```typescript
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { FormGroupState } from 'ngrx-forms';
+import { FormGroupState } from 'ngrx-form-state';
 import { Observable } from 'rxjs/Observable';
 
 import { MyFormValue } from './reducer';
@@ -109,23 +104,21 @@ export class MyComponent {
   formState$: Observable<FormGroupState<MyFormValue>>;
 
   constructor(private store: Store<AppState>) {
-    this.formState$ = store.select(s => s.myForm);
+    this.formState$ = store.select((s) => s.myForm);
   }
 }
 ```
 
 Set the control states in your template:
+
 ```html
 <ng-container *ngIf="formState$ | async as formState">
   <form novalidate [ngrxFormState]="formState">
-    <input type="text"
-           [ngrxFormControlState]="formState.controls.someTextInput">
+    <input type="text" [ngrxFormControlState]="formState.controls.someTextInput" />
 
-    <input type="checkbox"
-           [ngrxFormControlState]="formState.controls.someCheckbox">
+    <input type="checkbox" [ngrxFormControlState]="formState.controls.someCheckbox" />
 
-    <input type="number"
-           [ngrxFormControlState]="formState.controls.nested.controls.someNumber">
+    <input type="number" [ngrxFormControlState]="formState.controls.nested.controls.someNumber" />
   </form>
 </ng-container>
 ```

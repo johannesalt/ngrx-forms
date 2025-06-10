@@ -1,9 +1,9 @@
 ---
 name: Bug report
 about: Please provide us with a detailed description of your issue so we can help you
-title: ""
-labels: "bug"
-assignees: ""
+title: ''
+labels: 'bug'
+assignees: ''
 ---
 
 **Describe the bug**

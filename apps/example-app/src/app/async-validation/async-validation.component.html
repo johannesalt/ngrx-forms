@@ -1,0 +1,43 @@
+@if (formState$ | async; as formState) {
+<ngf-form-example exampleName="Asynchronous Validation" githubLinkOverride="async-validation" [formState]="formState">
+  This example shows how to perform asynchronous validation. The entered text will be used to search Google books and will return up to the entered number of
+  results. Please note that this example uses the Google books API anonymously and is therefore rate limited. This means sometimes the search will not return a
+  result even if the search term is valid.
+  <br />
+  <br />
+  <div class="control">
+    <label>Search Term</label>
+    <div>
+      <input type="text" [ngrxFormControlState]="formState.controls.searchTerm" />
+      @if (formState.isValidationPending) {
+      <span>Searching...</span>
+      }
+    </div>
+  </div>
+  <div class="control">
+    <label>Nr of results</label>
+    <div>
+      <input type="number" [ngrxFormControlState]="formState.controls.numberOfResultsToShow" />
+    </div>
+  </div>
+  @if (formState.isInvalid) {
+  <ul class="error-messages">
+    @if (formState.errors['_searchTerm']?.$exists) {
+    <li>The search returned no results</li>
+    } @if (formState.errors['_numberOfResultsToShow']?.required) {
+    <li>The number of results must be specified</li>
+    } @if (formState.errors['_numberOfResultsToShow']?.greaterThan) {
+    <li>The number of results must be at least 1</li>
+    }
+  </ul>
+  } @if (searchResults$ | async; as searchResults) { @if (searchResults.length > 0) {
+  <ul>
+    @for (r of searchResults; track r) {
+    <li>
+      {{ r }}
+    </li>
+    }
+  </ul>
+  } }
+</ngf-form-example>
+}

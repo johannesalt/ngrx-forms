@@ -1,0 +1,39 @@
+@use '../../styles/shared';
+
+:host {
+  @extend .page;
+}
+
+form {
+  max-width: 250px;
+
+  > div {
+    margin-bottom: 5px;
+  }
+}
+
+.buttons {
+  margin-top: 20px;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-radio-group {
+  display: block;
+  margin-bottom: 20px;
+
+  .mat-mdc-radio-button + .mat-radio-button {
+    margin-left: 10px;
+  }
+}
+
+.terms-of-use-error {
+  font-size: 75%;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
+mat-selection-list {
+  margin-bottom: 20px;
+}

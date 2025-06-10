@@ -2,28 +2,28 @@ As mentioned in the section about [updating the state](updating-the-state.md) th
 
 The following table lists all validation functions provided by **ngrx-forms**.
 
-|Function|Description|
-|-|-|
-|`required`|Requires the value to be non-empty (i.e. non-`null`, non-empty `string`, non-empty `array` etc.)|
-|`requiredTrue`|Requires the `boolean` value to be `true`|
-|`requiredFalse`|Requires the `boolean` value to be `false`|
-|`equalTo`|Requires the value to be equal to another value|
-|`notEqualTo`|Requires the value to be not equal to another value|
-|`lessThan`|Requires the `number` value to be less than another number|
-|`lessThanOrEqualTo`|Requires the `number` value to be less than or equal to another number|
-|`greaterThan`|Requires the `number` value to be greater than another number|
-|`greaterThanOrEqualTo`|Requires the `number` value to be greater than or equal to another number|
-|`minLength`|Requires a `string` or `array` value to have a minimum length. Empty strings and arrays are always valid to allow for optional form controls. Use this function together with `required` if those values should not be valid|
-|`maxLength`|Requires a `string` or `array` value to have a maximum length|
-|`email`|Requires a `string` value to be a valid e-mail address. Empty strings are always valid to allow for optional form controls. Use this function together with `required` if empty strings should not be valid|
-|`number`|Requires the value to be a `number`|
-|`pattern`|Requires a `string` value to match a regular expression. Empty strings are always valid to allow for optional form controls. Use this function together with `required` if empty strings should not be valid|
+| Function               | Description                                                                                                                                                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `required`             | Requires the value to be non-empty (i.e. non-`null`, non-empty `string`, non-empty `array` etc.)                                                                                                                             |
+| `requiredTrue`         | Requires the `boolean` value to be `true`                                                                                                                                                                                    |
+| `requiredFalse`        | Requires the `boolean` value to be `false`                                                                                                                                                                                   |
+| `equalTo`              | Requires the value to be equal to another value                                                                                                                                                                              |
+| `notEqualTo`           | Requires the value to be not equal to another value                                                                                                                                                                          |
+| `lessThan`             | Requires the `number` value to be less than another number                                                                                                                                                                   |
+| `lessThanOrEqualTo`    | Requires the `number` value to be less than or equal to another number                                                                                                                                                       |
+| `greaterThan`          | Requires the `number` value to be greater than another number                                                                                                                                                                |
+| `greaterThanOrEqualTo` | Requires the `number` value to be greater than or equal to another number                                                                                                                                                    |
+| `minLength`            | Requires a `string` or `array` value to have a minimum length. Empty strings and arrays are always valid to allow for optional form controls. Use this function together with `required` if those values should not be valid |
+| `maxLength`            | Requires a `string` or `array` value to have a maximum length                                                                                                                                                                |
+| `email`                | Requires a `string` value to be a valid e-mail address. Empty strings are always valid to allow for optional form controls. Use this function together with `required` if empty strings should not be valid                  |
+| `number`               | Requires the value to be a `number`                                                                                                                                                                                          |
+| `pattern`              | Requires a `string` value to match a regular expression. Empty strings are always valid to allow for optional form controls. Use this function together with `required` if empty strings should not be valid                 |
 
 Below you can see an example of how these functions can be used:
 
 ```typescript
-import { updateGroup, validate } from 'ngrx-forms';
-import { required, greaterThanOrEqualTo, lessThan } from 'ngrx-forms/validation';
+import { updateGroup, validate } from 'ngrx-form-state';
+import { required, greaterThanOrEqualTo, lessThan } from 'ngrx-form-state/validation';
 
 export interface NestedValue {
   someNumber: number;
@@ -51,7 +51,7 @@ export interface MyCustomValidationError {
 }
 
 // @ts-ignore
-declare module 'ngrx-forms' {
+declare module 'ngrx-form-state' {
   export interface ValidationErrors {
     myCustomError?: MyCustomValidationError;
   }
@@ -104,7 +104,7 @@ The search returns that the book does not exist, i.e. your code dispatches a `Se
   "isValid": false,
   "isInvalid": true,
   "errors": {
-    "$exists": true,
+    "$exists": true
   },
   "pendingValidations": [],
   "isValidationPending": false
@@ -119,7 +119,7 @@ The user types another search and your code dispatches another `StartAsyncValida
   "isValid": false,
   "isInvalid": true,
   "errors": {
-    "$exists": true,
+    "$exists": true
   },
   "pendingValidations": ["exists"],
   "isValidationPending": true

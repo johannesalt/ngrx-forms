@@ -1,10 +1,10 @@
-All form states are internally updated by **ngrx-forms** through dispatching actions from the directives. While this is of course also possible for you there exist a set of update functions that can be used to update form states. This is mainly useful to change the state as a result of a different action in your reducer. Note that **ngrx-forms** is coded in such a way that no state references will change if nothing inside the state changes. It is therefore perfectly safe to repeatedly call any of the functions below and the state will be updated exactly once or not at all if nothing changed. Each function can be imported from `'ngrx-forms'` (e.g. `import { setValue } from 'ngrx-forms';`).
+All form states are internally updated by **ngrx-forms** through dispatching actions from the directives. While this is of course also possible for you there exist a set of update functions that can be used to update form states. This is mainly useful to change the state as a result of a different action in your reducer. Note that **ngrx-forms** is coded in such a way that no state references will change if nothing inside the state changes. It is therefore perfectly safe to repeatedly call any of the functions below and the state will be updated exactly once or not at all if nothing changed. Each function can be imported from `'ngrx-form-state'` (e.g. `import { setValue } from 'ngrx-form-state';`).
 
 Usually you will update your form states in your reducers. The following example shows how this can be done.
 
 ```ts
 import { Action } from '@ngrx/store';
-import { createFormGroupState, updateGroup, validate } from 'ngrx-forms';
+import { createFormGroupState, updateGroup, validate } from 'ngrx-form-state';
 
 export interface LoginFormValue {
   username: string;
@@ -22,7 +22,7 @@ export const initialLoginFormValue: LoginFormValue = {
 // update functions (see the sections below for more details on
 // all available update functions as well as on updating groups)
 export const validateLoginForm = updateGroup<LoginFormValue>({
-  username: validate(value => !value ? { missing: true } : {}),
+  username: validate((value) => (!value ? { missing: true } : {})),
   // other updates...
 });
 
@@ -53,7 +53,7 @@ If you are using ngrx version 8 or above you can alternatively use `onNgrxForms`
 
 ```ts
 import { createReducer } from '@ngrx/store';
-import { onNgrxForms, onNgrxFormsAction, wrapReducerWithFormStateUpdate } from 'ngrx-forms';
+import { onNgrxForms, onNgrxFormsAction, wrapReducerWithFormStateUpdate } from 'ngrx-form-state';
 
 const rawReducer = createReducer(
   initialState,
@@ -71,7 +71,7 @@ const rawReducer = createReducer(
     }
 
     return state;
-  }),
+  })
   // your other reducers...
 );
 
@@ -81,9 +81,9 @@ const rawReducer = createReducer(
 export const reducer = wrapReducerWithFormStateUpdate(
   rawReducer,
   // point to the form state to update
-  s => s.loginForm,
+  (s) => s.loginForm,
   // this function is always called after the reducer
-  validateLoginForm,
+  validateLoginForm
 );
 ```
 
@@ -91,9 +91,9 @@ export const reducer = wrapReducerWithFormStateUpdate(
 
 ```ts
 import { createReducer } from '@ngrx/store';
-import { onNgrxForms, wrapReducerWithFormStateUpdate } from 'ngrx-forms';
+import { onNgrxForms, wrapReducerWithFormStateUpdate } from 'ngrx-form-state';
 
-const initialState = createFormGroupState('loginForm', initialLoginFormValue)
+const initialState = createFormGroupState('loginForm', initialLoginFormValue);
 
 // this reducer is equivalent to the `formStateReducer` provided by
 // ngrx-forms, but it allows you simple composition of additional
@@ -104,13 +104,13 @@ export const reducer = createReducer(
 
   // this function automatically calls the appropriate reducer
   // for the form state
-  onNgrxForms(),
+  onNgrxForms()
 
   // your other reducers...
 );
 ```
 
-Below you will find a complete list of all update functions provided by **ngrx-forms**. Each section also shows how to use actions directly instead of the update functions (the examples directly call the `formStateReducer` but you can of course dispatch these actions from anywhere in your code). To view all available actions the best place is [the code itself](https://github.com/MrWolfZ/ngrx-forms/blob/master/src/actions.ts).
+Below you will find a complete list of all update functions provided by **ngrx-forms**. Each section also shows how to use actions directly instead of the update functions (the examples directly call the `formStateReducer` but you can of course dispatch these actions from anywhere in your code). To view all available actions the best place is [the code itself](https://github.com/johannesalt/ngrx-forms/blob/master/src/actions.ts).
 
 #### Setting the value
 
@@ -143,18 +143,18 @@ The `validate` update function takes one or more validation functions and return
 ```typescript
 // control
 const control = createFormControlState<string>('control ID', '');
-const updatedControl = validate<string>(value => !value ? { missing: true } : {})(control);
-const updatedControlUncurried = validate(control, value => !value ? { missing: true } : {});
+const updatedControl = validate<string>((value) => (!value ? { missing: true } : {}))(control);
+const updatedControlUncurried = validate(control, (value) => (!value ? { missing: true } : {}));
 
 // group
 const group = createFormGroupState<{ inner: string }>('group ID', { inner: '' });
-const updatedGroup = validate<{ inner: string }>(value => !value.inner ? { innerMissing: true } : {})(group);
-const updatedGroupUncurried = validate(group, value => !value.inner ? { innerMissing: true } : {});
+const updatedGroup = validate<{ inner: string }>((value) => (!value.inner ? { innerMissing: true } : {}))(group);
+const updatedGroupUncurried = validate(group, (value) => (!value.inner ? { innerMissing: true } : {}));
 
 // array
 const array = createFormArrayState<string>('array ID', ['']);
-const updatedArray = validate<string[]>(value => value.length === 0 ? { missing: true } : {})(array);
-const updatedArrayUncurried = validate(array, value => value.length === 0 ? { missing: true } : {});
+const updatedArray = validate<string[]>((value) => (value.length === 0 ? { missing: true } : {}))(array);
+const updatedArrayUncurried = validate(array, (value) => (value.length === 0 ? { missing: true } : {}));
 
 // there is no corresponding action for `validate`, it uses `SetErrorsAction` internally
 ```
@@ -317,7 +317,7 @@ const resetArrayViaAction = formStateReducer(updatedArray, new ResetAction(array
 
 #### Focusing and unfocusing
 
-The `focus` and `unfocus` update functions take a form control state and mark it as focused/unfocused. If focus tracking is enabled on the connected HTML form element (via ```[ngrxEnableFocusTracking]="true"```) the element will also focused (via `.focus()`) or unfocused (via `.blur()`).
+The `focus` and `unfocus` update functions take a form control state and mark it as focused/unfocused. If focus tracking is enabled on the connected HTML form element (via `[ngrxEnableFocusTracking]="true"`) the element will also focused (via `.focus()`) or unfocused (via `.blur()`).
 
 ```typescript
 const control = createFormControlState<string>('control ID', '');
@@ -384,6 +384,7 @@ const updatedArrayViaAction = formStateReducer(array, new SetUserDefinedProperty
 ```
 
 #### Updating groups
+
 The `updateGroup` update function takes a partial object in the shape of the group's value where each key contains an update function for that child and returns a projection function that takes a group state, applies all the provided update functions recursively and recomputes the state of the group afterwards. `updateGroup` has an overload that takes a form group state directly as the first parameter. As with all the functions above this function does not change the reference of the group if none of the child update functions change any children. The best example of how this can be used is simple validation (see [validation](validation.md) for an explanation of the validation functions used in this example):
 
 ```typescript
@@ -430,18 +431,19 @@ const updateMyFormGroup = updateGroup<MyFormValue>(
           return someNumber;
         },
       }),
-  },
+  }
 );
 ```
 
 If you need to update the form state based on data not contained in the form state itself you can simply parameterize the form update function. In the following example we validate that `someNumber` is greater than some other number from the state.
 
 ```typescript
-const createMyFormValidationFunction = (otherNumber: number) => updateGroup<MyFormValue>({
-  nested: updateGroup<MyFormValue['nested']>({
-    someNumber: validate(v => v > otherNumber ? {} : { tooSmall: otherNumber }),
-  }),
-});
+const createMyFormValidationFunction = (otherNumber: number) =>
+  updateGroup<MyFormValue>({
+    nested: updateGroup<MyFormValue['nested']>({
+      someNumber: validate((v) => (v > otherNumber ? {} : { tooSmall: otherNumber })),
+    }),
+  });
 
 export function appReducer(state = initialState, action: Action): AppState {
   let myForm = formGroupReducer(state.myForm, action);
@@ -522,16 +524,18 @@ const initialState: AppState = {
   myForm: initialFormState,
 };
 
-const validateAndUpdateFormState = updateGroup<MyFormValue>({
-  someTextInput: validate(required),
-  nested: updateGroup<MyFormValue['nested']>({
-    someNumber: validate(required, greaterThanOrEqualTo(2)),
-  }),
-  someNumbers: validate(minLength(3)),
-}, {
+const validateAndUpdateFormState = updateGroup<MyFormValue>(
+  {
+    someTextInput: validate(required),
+    nested: updateGroup<MyFormValue['nested']>({
+      someNumber: validate(required, greaterThanOrEqualTo(2)),
+    }),
+    someNumbers: validate(minLength(3)),
+  },
+  {
     nested: (nested, myForm) =>
       updateGroup<MyFormValue['nested']>(nested, {
-        someNumber: someNumber => {
+        someNumber: (someNumber) => {
           if (myForm.controls.someTextInput.errors.required) {
             return setErrors(setValue(someNumber, 1), {});
           }
@@ -539,7 +543,8 @@ const validateAndUpdateFormState = updateGroup<MyFormValue>({
           return someNumber;
         },
       }),
-  });
+  }
+);
 
 const myFormReducer = createFormStateReducerWithUpdate<MyFormValue>(validateAndUpdateFormState);
 
@@ -571,7 +576,7 @@ Below you can find an example of how this function can be used. In this example 
 export function appReducer(state = initialState, action: Action): AppState {
   switch (action.type) {
     case 'BLOCK_INPUTS': {
-      let myForm = updateRecursive(state.myForm, s => setUserDefinedProperty('wasDisabled', s.isDisabled)(s));
+      let myForm = updateRecursive(state.myForm, (s) => setUserDefinedProperty('wasDisabled', s.isDisabled)(s));
       myForm = disable(myForm);
 
       return {
@@ -582,7 +587,7 @@ export function appReducer(state = initialState, action: Action): AppState {
 
     case 'UNBLOCK_INPUTS': {
       let myForm = enable(state.myForm);
-      myForm = updateRecursive(myForm, s => s.userDefinedProperties.wasDisabled ? disable(s) : s);
+      myForm = updateRecursive(myForm, (s) => (s.userDefinedProperties.wasDisabled ? disable(s) : s));
 
       return {
         ...state,
@@ -646,7 +651,7 @@ function appReducer(state = INITIAL_APP_STATE, action: Action) {
             formState,
           };
         }
-        
+
         const formState = formGroupReducer(state.formState, new DisableAction(someNumberId));
         return {
           ...state,
@@ -658,10 +663,7 @@ function appReducer(state = INITIAL_APP_STATE, action: Action) {
       if (a.controlId === someNumberId) {
         const value: number | null = a.value;
         if (value === null) {
-          const formState = formGroupReducer(
-            state.formState,
-            new SetErrorsAction(someNumberId, { valueIsNull: true }),
-          );
+          const formState = formGroupReducer(state.formState, new SetErrorsAction(someNumberId, { valueIsNull: true }));
 
           return {
             ...state,
@@ -670,10 +672,7 @@ function appReducer(state = INITIAL_APP_STATE, action: Action) {
         }
 
         if (value < 1) {
-          const formState = formGroupReducer(
-            state.formState,
-            new SetErrorsAction(someNumberId, { valueTooSmall: true }),
-          );
+          const formState = formGroupReducer(state.formState, new SetErrorsAction(someNumberId, { valueTooSmall: true }));
 
           return {
             ...state,
@@ -682,10 +681,7 @@ function appReducer(state = INITIAL_APP_STATE, action: Action) {
         }
 
         if (value > 10) {
-          const formState = formGroupReducer(
-            state.formState,
-            new SetErrorsAction(someNumberId, { valueTooLarge: true }),
-          );
+          const formState = formGroupReducer(state.formState, new SetErrorsAction(someNumberId, { valueTooLarge: true }));
 
           return {
             ...state,

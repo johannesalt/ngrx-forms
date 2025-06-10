@@ -1,9 +1,9 @@
-
-Any pull requests are welcome. For new features please check out and target the `develop` branch with your PR. For bugfixes check out and target the `master` branch. All PRs are validated via [Travis CI](https://travis-ci.org/MrWolfZ/ngrx-forms). Please ensure that all checks complete successfully.
+Any pull requests are welcome. For new features please check out and target the `develop` branch with your PR. For bugfixes check out and target the `master` branch. All PRs are validated via [Travis CI](https://travis-ci.org/johannesalt/ngrx-forms). Please ensure that all checks complete successfully.
 
 To work on this library locally you can use the commands shown below.
 
 ### Testing
+
 The following command runs all unit tests:
 
 ```Shell
@@ -11,6 +11,7 @@ npm test
 ```
 
 ### Building and Packaging
+
 The following command:
 
 ```Shell
@@ -40,6 +41,7 @@ npm run example-install
 ```
 
 ### Documentation
+
 To generate the documentation, this library uses [mkdocs](http://www.mkdocs.org/). See their website on how to install it locally. Then you can view the documentation with:
 
 ```Shell

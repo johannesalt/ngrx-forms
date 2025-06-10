@@ -8,7 +8,7 @@ export class FormArrayState<TValue> {
   value: TValue[];
   isValid: boolean;
   isInvalid: boolean;
-  errors: { [key: string]: any; };
+  errors: { [key: string]: any };
   pendingValidations: string[];
   isValidationPending: boolean;
   isEnabled: boolean;
@@ -19,7 +19,7 @@ export class FormArrayState<TValue> {
   isUntouched: boolean;
   isSubmitted: boolean;
   isUnsubmitted: boolean;
-  userDefinedProperties: { [key: string]: any; };
+  userDefinedProperties: { [key: string]: any };
   controls: FormState<TValue>[];
 }
 ```
@@ -28,20 +28,20 @@ The `TValue` type parameter describes the value type of all child states and is 
 
 The following table explains each property of an array.
 
-|Property|Negated|Description|
-|-|-|-|
-|`id`||The unique ID of the array.|
-|`value`||The aggregated value of the array. The value is computed by aggregating the values of all children into an array.|
-|`isValid`|`isInvalid`|The `isValid` property is `true` if the array does not have any errors itself and none of its children have any errors.|
-|`errors`||The errors of the array. This property is computed by merging the errors of the control with the errors of all its children where the child errors are a property of the `errors` object prefixed with an underscore (e.g. `{ arrayError: true, _0: { childError: true } }`). If neither the array nor any children have errors the property is set to `{}`.|
-|`pendingValidations`||The names of all asynchronous validations currently running for the array.|
-|`isValidationPending`||The `isValidationPending` property indicates whether the array or any of its children are currently being asynchronously validated.|
-|`isEnabled`|`isDisabled`|The `isEnabled` property is `true` if at least one child state is enabled or the state itself is directly enabled.|
-|`isDirty`|`isPristine`|The `isDirty` property is `true` if at least one child state is marked as dirty or the state itself is directly marked as dirty.|
-|`isTouched`|`isUntouched`|The `isTouched` property is `true` if at least one child state is marked as touched or the state itself is directly marked as touched.|
-|`isSubmitted`|`isUnsubmitted`|The `isSubmitted` property is set to `true` if the array is submitted.|
-|`controls`||This property contains all child states of the array.|
-|`userDefinedProperties`||`userDefinedProperties` work the same for arrays as they do for controls.|
+| Property                | Negated         | Description                                                                                                                                                                                                                                                                                                                                                  |
+| ----------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `id`                    |                 | The unique ID of the array.                                                                                                                                                                                                                                                                                                                                  |
+| `value`                 |                 | The aggregated value of the array. The value is computed by aggregating the values of all children into an array.                                                                                                                                                                                                                                            |
+| `isValid`               | `isInvalid`     | The `isValid` property is `true` if the array does not have any errors itself and none of its children have any errors.                                                                                                                                                                                                                                      |
+| `errors`                |                 | The errors of the array. This property is computed by merging the errors of the control with the errors of all its children where the child errors are a property of the `errors` object prefixed with an underscore (e.g. `{ arrayError: true, _0: { childError: true } }`). If neither the array nor any children have errors the property is set to `{}`. |
+| `pendingValidations`    |                 | The names of all asynchronous validations currently running for the array.                                                                                                                                                                                                                                                                                   |
+| `isValidationPending`   |                 | The `isValidationPending` property indicates whether the array or any of its children are currently being asynchronously validated.                                                                                                                                                                                                                          |
+| `isEnabled`             | `isDisabled`    | The `isEnabled` property is `true` if at least one child state is enabled or the state itself is directly enabled.                                                                                                                                                                                                                                           |
+| `isDirty`               | `isPristine`    | The `isDirty` property is `true` if at least one child state is marked as dirty or the state itself is directly marked as dirty.                                                                                                                                                                                                                             |
+| `isTouched`             | `isUntouched`   | The `isTouched` property is `true` if at least one child state is marked as touched or the state itself is directly marked as touched.                                                                                                                                                                                                                       |
+| `isSubmitted`           | `isUnsubmitted` | The `isSubmitted` property is set to `true` if the array is submitted.                                                                                                                                                                                                                                                                                       |
+| `controls`              |                 | This property contains all child states of the array.                                                                                                                                                                                                                                                                                                        |
+| `userDefinedProperties` |                 | `userDefinedProperties` work the same for arrays as they do for controls.                                                                                                                                                                                                                                                                                    |
 
 Array states are mostly updated by intercepting all actions that change their children (i.e. the array's reducer is the parent reducer of all its child reducers and forwards any actions to all children; if any children change it recomputes the state of the array). An array state can be created via `createFormArrayState`, which takes an initial value and automatically creates all child states recursively. Below is an example of creating a simple form array.
 
@@ -59,15 +59,15 @@ Only the root [group](form-groups.md) or array of your form state needs to be co
 
 **ngrx-forms** adds CSS classes to `form` elements depending on the associated form state. The available classes are:
 
-* `ngrx-forms-valid`
-* `ngrx-forms-invalid`
-* `ngrx-forms-dirty`
-* `ngrx-forms-pristine`
-* `ngrx-forms-touched`
-* `ngrx-forms-untouched`
-* `ngrx-forms-submitted`
-* `ngrx-forms-unsubmitted`
-* `ngrx-forms-validation-pending`
+- `ngrx-forms-valid`
+- `ngrx-forms-invalid`
+- `ngrx-forms-dirty`
+- `ngrx-forms-pristine`
+- `ngrx-forms-touched`
+- `ngrx-forms-untouched`
+- `ngrx-forms-submitted`
+- `ngrx-forms-unsubmitted`
+- `ngrx-forms-validation-pending`
 
 A constant `NGRX_STATUS_CLASS_NAMES` is exported to allow accessing these class names in user code without needing to hard-code them.
 
@@ -75,14 +75,14 @@ A constant `NGRX_STATUS_CLASS_NAMES` is exported to allow accessing these class 
 
 Sometimes you will have to render a variable number of fields in your form. Form arrays support adding and removing controls dynamically. This can be done in two ways:
 
-1) explicitly call the [`addArrayControl`](updating-the-state.md#add-array-control) and [`removeArrayControl`](updating-the-state.md#remove-array-control) update functions
-2) set the value of the form array via [`setValue`](updating-the-state.md#set-value) which will automatically update the form array based on the value you provide
+1. explicitly call the [`addArrayControl`](updating-the-state.md#add-array-control) and [`removeArrayControl`](updating-the-state.md#remove-array-control) update functions
+2. set the value of the form array via [`setValue`](updating-the-state.md#set-value) which will automatically update the form array based on the value you provide
 
 Below you can find an example of how this would look. Assume that we have an action that provides a variable set of objects which each should be mapped to an array with two form controls.
 
 ```typescript
 import { Action } from '@ngrx/store';
-import { FormArrayState, setValue } from 'ngrx-forms';
+import { FormArrayState, setValue } from 'ngrx-form-state';
 
 interface DynamicObject {
   someNumber: number;

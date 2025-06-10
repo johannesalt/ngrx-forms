@@ -1,0 +1,41 @@
+@if (formState$ | async; as formState) {
+<ngf-form-example exampleName="Dynamic Form" githubLinkOverride="dynamic" [formState]="formState">
+  This example shows how to dynamically add and remove controls from arrays and groups. For arrays we directly dispatch the corresponding actions from the
+  component. For groups we dispatch custom actions which we handle in the reducer by calling the corresponding update functions.
+  <br />
+  <br />
+  <form>
+    <div>
+      <span class="section-heading">Array options:</span>
+      <button (click)="addArrayOption(0)" type="button" class="add-btn">+</button>
+      @for (o of arrayOptions$ | async; track $index; let i = $index) {
+      <div class="array-option">
+        <div>
+          <label>Option {{ o }}</label>
+          <div>
+            <input type="checkbox" [ngrxFormControlState]="formState.controls.array.controls[i]" />
+          </div>
+          <button (click)="removeArrayOption(i)" type="button" class="remove-btn">-</button>
+        </div>
+        <button (click)="addArrayOption(i + 1)" type="button" class="add-btn">+</button>
+      </div>
+      }
+    </div>
+    <div>
+      <span class="section-heading">Group options:</span>
+      @for (o of groupOptions$ | async; track trackById($index, o)) {
+      <div class="group-option">
+        <div>
+          <label>Option {{ o }}</label>
+          <div>
+            <input type="checkbox" [ngrxFormControlState]="formState.controls.group.controls[o]" />
+          </div>
+          <button (click)="removeGroupOption(o)" type="button" class="remove-btn">-</button>
+        </div>
+      </div>
+      }
+      <button (click)="addGroupOption()" type="button" class="add-btn">+</button>
+    </div>
+  </form>
+</ngf-form-example>
+}

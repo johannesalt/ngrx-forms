@@ -1,0 +1,25 @@
+.hint {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+:host {
+  a.mat-mdc-list-item {
+    height: auto;
+    padding: 8px;
+
+    &.active-link {
+      background: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  div.mat-line {
+    white-space: normal;
+
+    &.hint {
+      font-size: 0.6em;
+      line-height: normal !important;
+      padding-bottom: 4px;
+      padding-top: 4px;
+    }
+  }
+}
