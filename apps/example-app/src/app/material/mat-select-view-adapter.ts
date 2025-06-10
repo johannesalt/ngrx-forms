@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 
 // necessary since material 2 does not properly export the mat-select as a NG_VALUE_ACCESSOR
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'mat-select[ngrxFormControlState]',
   providers: [
     {

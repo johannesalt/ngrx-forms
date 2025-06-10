@@ -8,27 +8,37 @@ export default [
   {
     files: ['**/*.ts'],
     rules: {
+      '@angular-eslint/directive-class-suffix': [
+        'error',
+        {
+          suffixes: ['Directive', 'ViewAdapter'],
+        },
+      ],
       '@angular-eslint/directive-selector': [
         'error',
         {
           type: 'attribute',
-          prefix: 'app',
-          style: 'ngf',
+          prefix: 'ngf',
+          style: 'camelCase',
         },
       ],
       '@angular-eslint/component-selector': [
         'error',
         {
           type: 'element',
-          prefix: 'app',
-          style: 'ngf',
+          prefix: 'ngf',
+          style: 'kebab-case',
         },
       ],
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
     },
   },
   {
     files: ['**/*.html'],
     // Override or add rules here
-    rules: {},
+    rules: {
+      '@angular-eslint/template/label-has-associated-control': 'off',
+    },
   },
 ];

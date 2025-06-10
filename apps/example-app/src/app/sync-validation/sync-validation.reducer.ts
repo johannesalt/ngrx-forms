@@ -56,7 +56,6 @@ export const INITIAL_STATE = createFormGroupState<FormValue>(FORM_ID, {
   agreeToTermsOfUse: false,
 });
 
-// @ts-ignore
 declare module '@johannes-it-solution/ngrx-forms' {
   interface ValidationErrors {
     passwordMatch?: PasswordValue;

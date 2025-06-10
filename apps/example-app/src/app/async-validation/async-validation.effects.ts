@@ -39,7 +39,7 @@ export class AsyncValidationEffects {
 
                 return [new SetSearchResultAction([]), new SetAsyncErrorAction(fs.controls.searchTerm.id, 'exists', fs.value.searchTerm)];
               }),
-              catchError((_) => [new SetSearchResultAction([]), new SetAsyncErrorAction(fs.controls.searchTerm.id, 'exists', fs.value.searchTerm)])
+              catchError(() => [new SetSearchResultAction([]), new SetAsyncErrorAction(fs.controls.searchTerm.id, 'exists', fs.value.searchTerm)])
             )
         )
       )
