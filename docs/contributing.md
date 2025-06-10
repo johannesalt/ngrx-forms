@@ -1,4 +1,4 @@
-Any pull requests are welcome. For new features please check out and target the `develop` branch with your PR. For bugfixes check out and target the `master` branch. All PRs are validated via [Travis CI](https://travis-ci.org/MrWolfZ/ngrx-forms). Please ensure that all checks complete successfully.
+Any pull requests are welcome. For new features please check out and target the `develop` branch with your PR. For bugfixes check out and target the `master` branch. All PRs are validated via [Travis CI](https://travis-ci.org/johannesalt/ngrx-forms). Please ensure that all checks complete successfully.
 
 To work on this library locally you can use the commands shown below.
 

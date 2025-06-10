@@ -3,7 +3,7 @@
  * Proper integration of forms in Angular applications using Ngrx
  * Written by Jonathan Ziller.
  * MIT license.
- * https://github.com/MrWolfZ/ngrx-forms
+ * https://github.com/johannesalt/ngrx-forms
  */
 export { email, EmailValidationError } from './lib/email';
 export { equalTo, EqualToValidationError } from './lib/equal-to';

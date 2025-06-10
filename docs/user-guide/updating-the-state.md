@@ -110,7 +110,7 @@ export const reducer = createReducer(
 );
 ```
 
-Below you will find a complete list of all update functions provided by **ngrx-forms**. Each section also shows how to use actions directly instead of the update functions (the examples directly call the `formStateReducer` but you can of course dispatch these actions from anywhere in your code). To view all available actions the best place is [the code itself](https://github.com/MrWolfZ/ngrx-forms/blob/master/src/actions.ts).
+Below you will find a complete list of all update functions provided by **ngrx-forms**. Each section also shows how to use actions directly instead of the update functions (the examples directly call the `formStateReducer` but you can of course dispatch these actions from anywhere in your code). To view all available actions the best place is [the code itself](https://github.com/johannesalt/ngrx-forms/blob/master/src/actions.ts).
 
 #### Setting the value
 
