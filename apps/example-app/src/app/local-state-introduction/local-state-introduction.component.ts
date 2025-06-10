@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
-import { Actions } from '@johannes-it-solution/ngrx-forms';
-
+import {
+  Actions,
+  NgrxDefaultViewAdapter,
+  NgrxLocalFormControlDirective,
+  NgrxLocalFormDirective,
+  NgrxStatusCssClassesDirective,
+} from '@johannes-it-solution/ngrx-forms';
+import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { INITIAL_FORM_STATE, reducer } from './local-state-introduction.reducer';
 
 @Component({
   selector: 'ngf-local-state-introduction',
   templateUrl: './local-state-introduction.component.html',
   styleUrls: ['./local-state-introduction.component.scss'],
-  standalone: false,
+  imports: [FormExampleComponent, NgrxDefaultViewAdapter, NgrxLocalFormDirective, NgrxLocalFormControlDirective, NgrxStatusCssClassesDirective],
 })
 export class LocalStateIntroductionComponent {
   formState = INITIAL_FORM_STATE;

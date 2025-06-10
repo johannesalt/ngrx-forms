@@ -1,16 +1,16 @@
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { FormGroupState } from '@johannes-it-solution/ngrx-forms';
 import * as Prism from 'prismjs';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-typescript';
-
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FormGroupState } from '@johannes-it-solution/ngrx-forms';
 
 @Component({
   selector: 'ngf-form-example',
   templateUrl: './form-example.component.html',
   styleUrls: ['./form-example.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatCard, MatCardContent],
 })
 export class FormExampleComponent {
   @Input() exampleName = '';

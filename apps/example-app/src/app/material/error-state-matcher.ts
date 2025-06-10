@@ -4,10 +4,7 @@ import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import { FormControlState } from '@johannes-it-solution/ngrx-forms';
 
-@Directive({
-  selector: '[ngrxFormControlState]',
-  standalone: false,
-})
+@Directive({ selector: '[ngrxFormControlState]' })
 export class CustomErrorStateMatcherDirective {
   @Input() set ngrxFormControlState(state: FormControlState<any>) {
     const errorsAreShown = state.isInvalid && (state.isTouched || state.isSubmitted);

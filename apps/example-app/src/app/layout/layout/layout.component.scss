@@ -5,10 +5,6 @@ mat-sidenav-container {
   height: 100%;
 }
 
-mat-sidenav-container {
-  background: rgba(0, 0, 0, 0.03);
-}
-
 :host ::ng-deep .mat-sidenav-content {
   display: flex;
 }

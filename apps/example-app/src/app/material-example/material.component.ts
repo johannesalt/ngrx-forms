@@ -1,9 +1,29 @@
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
+import { MatError, MatFormField, MatInput, MatSuffix } from '@angular/material/input';
+import { MatListOption, MatSelectionList } from '@angular/material/list';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatOption, MatSelect } from '@angular/material/select';
+import {
+  FormGroupState,
+  NgrxDefaultViewAdapter,
+  NgrxFormControlDirective,
+  NgrxFormDirective,
+  NgrxStatusCssClassesDirective,
+  NgrxValueConverter,
+  NgrxValueConverters,
+  ResetAction,
+  SetValueAction,
+} from '@johannes-it-solution/ngrx-forms';
 import { select, Store } from '@ngrx/store';
-import { FormGroupState, NgrxValueConverter, NgrxValueConverters, ResetAction, SetValueAction } from '@johannes-it-solution/ngrx-forms';
 import { Observable } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
-
+import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
+import { NgrxMatSelectViewAdapter } from '../material/mat-select-view-adapter';
+import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './material.reducer';
 
 @Component({
@@ -11,9 +31,34 @@ import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './mate
   templateUrl: './material.component.html',
   styleUrls: ['./material.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    CustomErrorStateMatcherDirective,
+    FormExampleComponent,
+    JsonPipe,
+    MatButton,
+    MatCheckbox,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatError,
+    MatFormField,
+    MatInput,
+    MatListOption,
+    MatRadioButton,
+    MatRadioGroup,
+    MatOption,
+    MatSelect,
+    MatSelectionList,
+    MatSuffix,
+    NgrxDefaultViewAdapter,
+    NgrxFormControlDirective,
+    NgrxFormDirective,
+    NgrxMatSelectViewAdapter,
+    NgrxStatusCssClassesDirective,
+  ],
 })
-export class DynamicPageComponent {
+export class MaterialPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;
   submittedValue$: Observable<FormValue | undefined>;
 

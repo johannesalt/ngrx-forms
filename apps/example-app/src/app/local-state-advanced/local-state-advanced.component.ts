@@ -1,8 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Actions,
+  NgrxDefaultViewAdapter,
+  NgrxFallbackSelectOption,
+  NgrxLocalFormControlDirective,
+  NgrxLocalFormDirective,
+  NgrxSelectMultipleOption,
+  NgrxSelectOption,
+  NgrxSelectViewAdapter,
+  NgrxStatusCssClassesDirective,
+  SetValueAction,
+} from '@johannes-it-solution/ngrx-forms';
 import { Action, ActionsSubject } from '@ngrx/store';
-import { Actions, SetValueAction } from '@johannes-it-solution/ngrx-forms';
 import { Subscription } from 'rxjs';
-
+import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { GetManufacturersAction, INITIAL_LOCAL_STATE, reducer } from './local-state-advanced.reducer';
 
 @Component({
@@ -10,7 +21,17 @@ import { GetManufacturersAction, INITIAL_LOCAL_STATE, reducer } from './local-st
   templateUrl: './local-state-advanced.component.html',
   styleUrls: ['./local-state-advanced.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    FormExampleComponent,
+    NgrxLocalFormControlDirective,
+    NgrxLocalFormDirective,
+    NgrxDefaultViewAdapter,
+    NgrxFallbackSelectOption,
+    NgrxSelectViewAdapter,
+    NgrxSelectMultipleOption,
+    NgrxSelectOption,
+    NgrxStatusCssClassesDirective,
+  ],
 })
 export class LocalStateAdvancedComponent implements OnInit, OnDestroy {
   localState = INITIAL_LOCAL_STATE;

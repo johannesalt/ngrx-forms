@@ -1,17 +1,20 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { ClearAsyncErrorAction, SetAsyncErrorAction, StartAsyncValidationAction } from '@johannes-it-solution/ngrx-forms';
 import { createEffect } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
-import { ClearAsyncErrorAction, SetAsyncErrorAction, StartAsyncValidationAction } from '@johannes-it-solution/ngrx-forms';
 import { concat, Observable, timer } from 'rxjs';
 import { catchError, distinct, filter, map, mergeMap, switchMap } from 'rxjs/operators';
-
 import { SetSearchResultAction, State } from './async-validation.reducer';
 
 @Injectable()
 export class AsyncValidationEffects {
-  searchBooks$: Observable<Action> = createEffect(() =>
-    this.store.pipe(
+  private readonly httpClient = inject(HttpClient);
+
+  private readonly store = inject(Store<State>);
+
+  public readonly searchBooks$: Observable<Action> = createEffect(() => {
+    return this.store.pipe(
       select((s) => s.asyncValidation.formState),
       filter((fs) => !!fs.value.searchTerm && fs.controls.numberOfResultsToShow.isValid),
       distinct((fs) => fs.value),
@@ -40,8 +43,6 @@ export class AsyncValidationEffects {
             )
         )
       )
-    )
-  );
-
-  constructor(private store: Store<State>, private httpClient: HttpClient) {}
+    );
+  });
 }

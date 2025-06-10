@@ -5,19 +5,21 @@
 :host {
   a.mat-mdc-list-item {
     height: auto;
-    padding: 10px 0;
+    padding: 8px;
 
     &.active-link {
       background: rgba(0, 0, 0, 0.08);
     }
   }
 
-  span.mat-line {
+  div.mat-line {
     white-space: normal;
 
     &.hint {
-      padding-top: 5px;
-      font-size: 13px;
+      font-size: 0.6em;
+      line-height: normal !important;
+      padding-bottom: 4px;
+      padding-top: 4px;
     }
   }
 }

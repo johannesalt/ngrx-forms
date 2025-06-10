@@ -1,9 +1,18 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  AddArrayControlAction,
+  FormGroupState,
+  NgrxCheckboxViewAdapter,
+  NgrxFormControlDirective,
+  NgrxStatusCssClassesDirective,
+  RemoveArrayControlAction,
+} from '@johannes-it-solution/ngrx-forms';
 import { select, Store } from '@ngrx/store';
-import { AddArrayControlAction, FormGroupState, RemoveArrayControlAction } from '@johannes-it-solution/ngrx-forms';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-
+import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
+import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { CreateGroupElementAction, FormValue, RemoveGroupElementAction, State } from './dynamic.reducer';
 
 @Component({
@@ -11,7 +20,14 @@ import { CreateGroupElementAction, FormValue, RemoveGroupElementAction, State } 
   templateUrl: './dynamic.component.html',
   styleUrls: ['./dynamic.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    CustomErrorStateMatcherDirective,
+    FormExampleComponent,
+    NgrxCheckboxViewAdapter,
+    NgrxFormControlDirective,
+    NgrxStatusCssClassesDirective,
+  ],
 })
 export class DynamicPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

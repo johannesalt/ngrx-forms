@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -8,7 +8,9 @@ import { GetManufacturersAction, SetManufacturersAction } from './local-state-ad
 
 @Injectable()
 export class LocalStateAdvancedEffects {
-  getManufacturers$: Observable<Action> = createEffect(() =>
+  private readonly actions$ = inject(Actions);
+
+  public readonly getManufacturers$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(GetManufacturersAction.TYPE),
       debounceTime(300),
@@ -24,6 +26,4 @@ export class LocalStateAdvancedEffects {
       })
     )
   );
-
-  constructor(private actions$: Actions) {}
 }

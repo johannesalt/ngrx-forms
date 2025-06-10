@@ -1,8 +1,18 @@
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  FormGroupState,
+  NgrxFallbackSelectOption,
+  NgrxFormControlDirective,
+  NgrxSelectMultipleOption,
+  NgrxSelectMultipleViewAdapter,
+  NgrxSelectOption,
+  NgrxStatusCssClassesDirective,
+  unbox,
+} from '@johannes-it-solution/ngrx-forms';
 import { select, Store } from '@ngrx/store';
-import { FormGroupState, unbox } from '@johannes-it-solution/ngrx-forms';
 import { Observable } from 'rxjs';
-
+import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { FormValue, State } from './value-boxing.reducer';
 
 @Component({
@@ -10,7 +20,17 @@ import { FormValue, State } from './value-boxing.reducer';
   templateUrl: './value-boxing.component.html',
   styleUrls: ['./value-boxing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    FormExampleComponent,
+    JsonPipe,
+    NgrxFallbackSelectOption,
+    NgrxFormControlDirective,
+    NgrxSelectMultipleOption,
+    NgrxSelectMultipleViewAdapter,
+    NgrxSelectOption,
+    NgrxStatusCssClassesDirective,
+  ],
 })
 export class ValueBoxingPageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

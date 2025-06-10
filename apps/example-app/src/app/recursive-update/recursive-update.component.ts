@@ -1,9 +1,23 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  FormGroupState,
+  NgrxCheckboxViewAdapter,
+  NgrxDefaultViewAdapter,
+  NgrxFallbackSelectOption,
+  NgrxFormControlDirective,
+  NgrxFormDirective,
+  NgrxRadioViewAdapter,
+  NgrxSelectMultipleOption,
+  NgrxSelectOption,
+  NgrxSelectViewAdapter,
+  NgrxStatusCssClassesDirective,
+} from '@johannes-it-solution/ngrx-forms';
 import { select, Store } from '@ngrx/store';
-import { FormGroupState } from '@johannes-it-solution/ngrx-forms';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-
+import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
+import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { BlockUIAction, FormValue, State, UnblockUIAction } from './recursive-update.reducer';
 
 @Component({
@@ -11,7 +25,21 @@ import { BlockUIAction, FormValue, State, UnblockUIAction } from './recursive-up
   templateUrl: './recursive-update.component.html',
   styleUrls: ['./recursive-update.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    AsyncPipe,
+    CustomErrorStateMatcherDirective,
+    FormExampleComponent,
+    NgrxCheckboxViewAdapter,
+    NgrxDefaultViewAdapter,
+    NgrxFallbackSelectOption,
+    NgrxFormControlDirective,
+    NgrxFormDirective,
+    NgrxRadioViewAdapter,
+    NgrxSelectMultipleOption,
+    NgrxSelectOption,
+    NgrxSelectViewAdapter,
+    NgrxStatusCssClassesDirective,
+  ],
 })
 export class RecursiveUpdatePageComponent {
   formState$: Observable<FormGroupState<FormValue>>;

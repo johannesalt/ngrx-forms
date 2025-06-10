@@ -13,7 +13,6 @@ import { Subscription } from 'rxjs';
       multi: true,
     },
   ],
-  standalone: false,
 })
 export class NgrxMatSelectViewAdapter implements FormViewAdapter, AfterViewInit, OnDestroy {
   private value: any;

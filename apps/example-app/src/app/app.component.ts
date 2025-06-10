@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { LayoutComponent } from './layout/layout/layout.component';
+import { NavItemComponent } from './layout/nav-item/nav-item.component';
+import { SidenavComponent } from './layout/sidenav/sidenav.component';
 
 @Component({
+  imports: [LayoutComponent, NavItemComponent, RouterOutlet, SidenavComponent],
   selector: 'ngf-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
 })
 export class AppComponent {
   examples = [

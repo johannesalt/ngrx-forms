@@ -1,4 +1,3 @@
-import { Action, combineReducers } from '@ngrx/store';
 import {
   AddArrayControlAction,
   addGroupControl,
@@ -9,6 +8,7 @@ import {
   setValue,
   updateGroup,
 } from '@johannes-it-solution/ngrx-forms';
+import { Action, combineReducers } from '@ngrx/store';
 
 import { State as RootState } from '../app.reducer';
 
