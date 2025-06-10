@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { FormGroupState } from '@johannes-it-solution/ngrx-forms';
+import { FormGroupState } from 'ngrx-form-state';
 import * as Prism from 'prismjs';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-typescript';

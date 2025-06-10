@@ -1,6 +1,6 @@
 import { AfterViewInit, Directive, forwardRef, OnDestroy } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
-import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '@johannes-it-solution/ngrx-forms';
+import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from 'ngrx-form-state';
 import { Subscription } from 'rxjs';
 
 // necessary since material 2 does not properly export the mat-select as a NG_VALUE_ACCESSOR

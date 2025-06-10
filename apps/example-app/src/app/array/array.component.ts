@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormGroupState, NgrxCheckboxViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective } from '@johannes-it-solution/ngrx-forms';
+import { FormGroupState, NgrxCheckboxViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective } from 'ngrx-form-state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';

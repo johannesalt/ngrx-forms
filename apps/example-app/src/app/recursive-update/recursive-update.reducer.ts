@@ -1,14 +1,5 @@
 import { Action, combineReducers } from '@ngrx/store';
-import {
-  createFormGroupState,
-  disable,
-  enable,
-  formGroupReducer,
-  FormGroupState,
-  setUserDefinedProperty,
-  updateGroup,
-  updateRecursive,
-} from '@johannes-it-solution/ngrx-forms';
+import { createFormGroupState, disable, enable, formGroupReducer, FormGroupState, setUserDefinedProperty, updateGroup, updateRecursive } from 'ngrx-form-state';
 
 import { State as RootState } from '../app.reducer';
 

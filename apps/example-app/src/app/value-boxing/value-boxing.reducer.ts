@@ -1,5 +1,5 @@
 import { Action, combineReducers } from '@ngrx/store';
-import { box, Boxed, createFormGroupState, formGroupReducer, FormGroupState } from '@johannes-it-solution/ngrx-forms';
+import { box, Boxed, createFormGroupState, formGroupReducer, FormGroupState } from 'ngrx-form-state';
 
 import { State as RootState } from '../app.reducer';
 

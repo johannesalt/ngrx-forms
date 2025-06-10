@@ -14,7 +14,7 @@ import {
   NgrxStatusCssClassesDirective,
   ResetAction,
   SetValueAction,
-} from '@johannes-it-solution/ngrx-forms';
+} from 'ngrx-form-state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';

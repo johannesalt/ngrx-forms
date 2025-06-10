@@ -1,4 +1,4 @@
-import { Boxed, unbox, ValidationErrors } from '@johannes-it-solution/ngrx-forms';
+import { Boxed, unbox, ValidationErrors } from 'ngrx-form-state';
 
 // this regex is taken from the @angular/forms source code
 export const NGRX_FORMS_EMAIL_VALIDATION_REGEXP =
@@ -9,7 +9,7 @@ export interface EmailValidationError {
   actual: string;
 }
 
-declare module '@johannes-it-solution/ngrx-forms' {
+declare module 'ngrx-form-state' {
   export interface ValidationErrors {
     email?: EmailValidationError;
   }

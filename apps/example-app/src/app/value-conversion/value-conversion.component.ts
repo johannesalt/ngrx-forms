@@ -2,13 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import { MatFormField, MatInput, MatSuffix } from '@angular/material/input';
-import {
-  FormGroupState,
-  NgrxDefaultViewAdapter,
-  NgrxFormControlDirective,
-  NgrxStatusCssClassesDirective,
-  NgrxValueConverters,
-} from '@johannes-it-solution/ngrx-forms';
+import { FormGroupState, NgrxDefaultViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective, NgrxValueConverters } from 'ngrx-form-state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';

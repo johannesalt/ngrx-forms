@@ -9,7 +9,7 @@ import {
   NgrxSelectOption,
   NgrxStatusCssClassesDirective,
   unbox,
-} from '@johannes-it-solution/ngrx-forms';
+} from 'ngrx-form-state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';

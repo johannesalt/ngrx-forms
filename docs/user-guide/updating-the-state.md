@@ -1,10 +1,10 @@
-All form states are internally updated by **ngrx-forms** through dispatching actions from the directives. While this is of course also possible for you there exist a set of update functions that can be used to update form states. This is mainly useful to change the state as a result of a different action in your reducer. Note that **ngrx-forms** is coded in such a way that no state references will change if nothing inside the state changes. It is therefore perfectly safe to repeatedly call any of the functions below and the state will be updated exactly once or not at all if nothing changed. Each function can be imported from `'@johannes-it-solution/ngrx-forms'` (e.g. `import { setValue } from '@johannes-it-solution/ngrx-forms';`).
+All form states are internally updated by **ngrx-forms** through dispatching actions from the directives. While this is of course also possible for you there exist a set of update functions that can be used to update form states. This is mainly useful to change the state as a result of a different action in your reducer. Note that **ngrx-forms** is coded in such a way that no state references will change if nothing inside the state changes. It is therefore perfectly safe to repeatedly call any of the functions below and the state will be updated exactly once or not at all if nothing changed. Each function can be imported from `'ngrx-form-state'` (e.g. `import { setValue } from 'ngrx-form-state';`).
 
 Usually you will update your form states in your reducers. The following example shows how this can be done.
 
 ```ts
 import { Action } from '@ngrx/store';
-import { createFormGroupState, updateGroup, validate } from '@johannes-it-solution/ngrx-forms';
+import { createFormGroupState, updateGroup, validate } from 'ngrx-form-state';
 
 export interface LoginFormValue {
   username: string;
@@ -53,7 +53,7 @@ If you are using ngrx version 8 or above you can alternatively use `onNgrxForms`
 
 ```ts
 import { createReducer } from '@ngrx/store';
-import { onNgrxForms, onNgrxFormsAction, wrapReducerWithFormStateUpdate } from '@johannes-it-solution/ngrx-forms';
+import { onNgrxForms, onNgrxFormsAction, wrapReducerWithFormStateUpdate } from 'ngrx-form-state';
 
 const rawReducer = createReducer(
   initialState,
@@ -91,7 +91,7 @@ export const reducer = wrapReducerWithFormStateUpdate(
 
 ```ts
 import { createReducer } from '@ngrx/store';
-import { onNgrxForms, wrapReducerWithFormStateUpdate } from '@johannes-it-solution/ngrx-forms';
+import { onNgrxForms, wrapReducerWithFormStateUpdate } from 'ngrx-form-state';
 
 const initialState = createFormGroupState('loginForm', initialLoginFormValue);
 

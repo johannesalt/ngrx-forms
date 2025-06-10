@@ -10,7 +10,7 @@ import {
   NgrxSelectViewAdapter,
   NgrxStatusCssClassesDirective,
   SetValueAction,
-} from '@johannes-it-solution/ngrx-forms';
+} from 'ngrx-form-state';
 import { Action, ActionsSubject } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';

@@ -12,7 +12,7 @@ import {
   NgrxSelectOption,
   NgrxSelectViewAdapter,
   NgrxStatusCssClassesDirective,
-} from '@johannes-it-solution/ngrx-forms';
+} from 'ngrx-form-state';
 import { select, Store } from '@ngrx/store';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ClearAsyncErrorAction, SetAsyncErrorAction, StartAsyncValidationAction } from '@johannes-it-solution/ngrx-forms';
+import { ClearAsyncErrorAction, SetAsyncErrorAction, StartAsyncValidationAction } from 'ngrx-form-state';
 import { createEffect } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import { concat, Observable, timer } from 'rxjs';

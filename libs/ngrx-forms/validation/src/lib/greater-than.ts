@@ -1,11 +1,11 @@
-import { Boxed, unbox, ValidationErrors } from '@johannes-it-solution/ngrx-forms';
+import { Boxed, unbox, ValidationErrors } from 'ngrx-form-state';
 
 export interface GreaterThanValidationError {
   comparand: number;
   actual: number;
 }
 
-declare module '@johannes-it-solution/ngrx-forms' {
+declare module 'ngrx-form-state' {
   export interface ValidationErrors {
     greaterThan?: GreaterThanValidationError;
   }

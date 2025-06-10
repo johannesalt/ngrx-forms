@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { createFormGroupState, formGroupReducer, FormGroupState } from '@johannes-it-solution/ngrx-forms';
+import { createFormGroupState, formGroupReducer, FormGroupState } from 'ngrx-form-state';
 
 export interface FormValue {
   countryCode: string;

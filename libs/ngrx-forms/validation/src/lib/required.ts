@@ -1,10 +1,10 @@
-import { Boxed, unbox, ValidationErrors } from '@johannes-it-solution/ngrx-forms';
+import { Boxed, unbox, ValidationErrors } from 'ngrx-form-state';
 
 export interface RequiredValidationError<T> {
   actual: T | null | undefined;
 }
 
-declare module '@johannes-it-solution/ngrx-forms' {
+declare module 'ngrx-form-state' {
   export interface ValidationErrors {
     required?: RequiredValidationError<any>;
   }

@@ -1,11 +1,11 @@
-import { Boxed, unbox, ValidationErrors } from '@johannes-it-solution/ngrx-forms';
+import { Boxed, unbox, ValidationErrors } from 'ngrx-form-state';
 
 export interface PatternValidationError {
   pattern: string;
   actual: string;
 }
 
-declare module '@johannes-it-solution/ngrx-forms' {
+declare module 'ngrx-form-state' {
   export interface ValidationErrors {
     pattern?: PatternValidationError;
   }

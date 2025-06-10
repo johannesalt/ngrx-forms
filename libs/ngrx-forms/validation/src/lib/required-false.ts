@@ -1,4 +1,4 @@
-import { Boxed, unbox, ValidationErrors } from '@johannes-it-solution/ngrx-forms';
+import { Boxed, unbox, ValidationErrors } from 'ngrx-form-state';
 
 /**
  * A validation function that requires the value to be `false`. Considers `null` and

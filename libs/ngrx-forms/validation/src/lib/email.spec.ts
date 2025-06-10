@@ -1,4 +1,4 @@
-import { AbstractControlState, box, unbox, validate } from '@johannes-it-solution/ngrx-forms';
+import { AbstractControlState, box, unbox, validate } from 'ngrx-form-state';
 import { email, NGRX_FORMS_EMAIL_VALIDATION_REGEXP } from './email';
 
 // note that we do not test the validation regex itself, but we

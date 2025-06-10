@@ -66,7 +66,7 @@ import {
   wrapReducerWithFormStateUpdate,
 } from './ngrx-forms';
 
-describe('@johannes-it-solution/ngrx-forms', () => {
+describe('ngrx-form-state', () => {
   it(`should export ALL_NGRX_FORMS_ACTION_TYPES`, () => expect(ALL_NGRX_FORMS_ACTION_TYPES).toBeDefined());
   it(`should export NGRX_FORM_VIEW_ADAPTER`, () => expect(NGRX_FORM_VIEW_ADAPTER).toBeDefined());
   it(`should export NGRX_UPDATE_ON_TYPE`, () => expect(NGRX_UPDATE_ON_TYPE).toBeDefined());

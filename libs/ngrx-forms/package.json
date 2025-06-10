@@ -1,5 +1,5 @@
 {
-  "author": "Jonathan Ziller <jonathan.ziller@gmail.com> (https://github.com/johannesalt)",
+  "author": "Johannes Alt <altjohannes510@gmail.com> (https://github.com/johannesalt)",
   "bugs": {
     "url": "https://github.com/johannesalt/ngrx-forms/issues"
   },
@@ -13,7 +13,7 @@
     "redux"
   ],
   "license": "MIT",
-  "name": "@johannes-it-solution/ngrx-forms",
+  "name": "ngrx-form-state",
   "repository": {
     "type": "git",
     "url": "https://github.com/johannesalt/ngrx-forms.git"
@@ -25,5 +25,6 @@
     "@angular/forms": "^19.2.0",
     "@ngrx/store": "19.2.1"
   },
+  "private": false,
   "sideEffects": false
 }

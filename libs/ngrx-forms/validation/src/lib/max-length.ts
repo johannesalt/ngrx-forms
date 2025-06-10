@@ -1,4 +1,4 @@
-import { Boxed, unbox, ValidationErrors } from '@johannes-it-solution/ngrx-forms';
+import { Boxed, unbox, ValidationErrors } from 'ngrx-form-state';
 
 export interface MaxLengthValidationError {
   maxLength: number;
@@ -6,7 +6,7 @@ export interface MaxLengthValidationError {
   actualLength: number;
 }
 
-declare module '@johannes-it-solution/ngrx-forms' {
+declare module 'ngrx-form-state' {
   export interface ValidationErrors {
     maxLength?: MaxLengthValidationError;
   }

@@ -2,7 +2,7 @@ import { Directive, Host, Input, Optional } from '@angular/core';
 import { MatChipGrid } from '@angular/material/chips';
 import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
-import { FormControlState } from '@johannes-it-solution/ngrx-forms';
+import { FormControlState } from 'ngrx-form-state';
 
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector

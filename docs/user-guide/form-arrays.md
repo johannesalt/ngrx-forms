@@ -82,7 +82,7 @@ Below you can find an example of how this would look. Assume that we have an act
 
 ```typescript
 import { Action } from '@ngrx/store';
-import { FormArrayState, setValue } from '@johannes-it-solution/ngrx-forms';
+import { FormArrayState, setValue } from 'ngrx-form-state';
 
 interface DynamicObject {
   someNumber: number;

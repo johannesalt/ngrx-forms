@@ -1,16 +1,6 @@
 import { Action, combineReducers } from '@ngrx/store';
-import {
-  box,
-  Boxed,
-  createFormGroupState,
-  createFormStateReducerWithUpdate,
-  disable,
-  enable,
-  FormGroupState,
-  updateGroup,
-  validate,
-} from '@johannes-it-solution/ngrx-forms';
-import { equalTo, minLength, required, requiredTrue } from '@johannes-it-solution/ngrx-forms/validation';
+import { box, Boxed, createFormGroupState, createFormStateReducerWithUpdate, disable, enable, FormGroupState, updateGroup, validate } from 'ngrx-form-state';
+import { equalTo, minLength, required, requiredTrue } from 'ngrx-form-state/validation';
 
 import { State as RootState } from '../app.reducer';
 
