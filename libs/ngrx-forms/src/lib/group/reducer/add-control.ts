@@ -11,7 +11,7 @@ export function addControlReducer<TValue extends KeyValue>(state: FormGroupState
     return childReducer(state, action);
   }
 
-  if (state.controls.hasOwnProperty(action.name)) {
+  if (Object.prototype.hasOwnProperty.call(state.controls, action.name)) {
     throw new Error(`Group '${state.id}' already has child control '${action.name as string}'!`); // `;
   }
 

@@ -11,7 +11,6 @@ const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
   imports: [NgrxFormsModule],
-  selector: 'select-test',
   template: ` <select [ngrxFormControlState]="state" (ngrxFormsAction)="handleAction($event)">
     @for (o of options; track o) {
     <option [value]="o">{{ o }}</option>

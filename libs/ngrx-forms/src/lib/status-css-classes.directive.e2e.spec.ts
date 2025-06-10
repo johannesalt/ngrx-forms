@@ -6,7 +6,6 @@ import { NGRX_STATUS_CLASS_NAMES, NgrxStatusCssClassesDirective } from './status
 
 @Component({
   imports: [NgrxStatusCssClassesDirective],
-  selector: 'classes-test',
   template: `
     <form [ngrxFormState]="state">
       <input type="text" [ngrxFormControlState]="state.controls.inner" />

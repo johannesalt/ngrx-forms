@@ -5,7 +5,6 @@ export interface LessThanOrEqualToValidationError {
   actual: number;
 }
 
-// @ts-ignore
 declare module '@johannes-it-solution/ngrx-forms' {
   export interface ValidationErrors {
     lessThanOrEqualTo?: LessThanOrEqualToValidationError;

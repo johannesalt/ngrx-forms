@@ -11,7 +11,7 @@ function updateGroupControlsState<TValue extends KeyValue>(updateFns: StateUpdat
     const newControls = Object.keys(state.controls).reduce((res, key) => {
       const control = state.controls[key];
       Object.assign(res, { [key]: control });
-      if (updateFns.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(updateFns, key)) {
         const newControl = updateFns[key]!(control, state);
         hasChanged = hasChanged || newControl !== control;
         Object.assign(res, { [key]: newControl });

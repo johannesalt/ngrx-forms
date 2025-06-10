@@ -15,7 +15,7 @@ export function clearAsyncErrorReducer<TValue>(state: FormArrayState<TValue>, ac
 
   let errors = state.errors;
 
-  if (state.errors.hasOwnProperty(name)) {
+  if (Object.prototype.hasOwnProperty.call(state.errors, name)) {
     errors = { ...state.errors };
     delete (errors as any)[name];
   }

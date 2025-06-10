@@ -10,7 +10,6 @@ const OPTION3_VALUE = 'op3';
 
 @Component({
   imports: [NgrxSelectMultipleViewAdapter, NgrxSelectMultipleOption],
-  selector: 'select-test',
   template: `
     <select multiple [ngrxFormControlState]="state">
       <option value="op1">op1</option>

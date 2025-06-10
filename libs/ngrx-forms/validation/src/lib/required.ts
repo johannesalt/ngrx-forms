@@ -4,7 +4,6 @@ export interface RequiredValidationError<T> {
   actual: T | null | undefined;
 }
 
-// @ts-ignore
 declare module '@johannes-it-solution/ngrx-forms' {
   export interface ValidationErrors {
     required?: RequiredValidationError<any>;

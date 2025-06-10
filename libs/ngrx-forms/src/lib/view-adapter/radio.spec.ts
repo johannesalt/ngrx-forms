@@ -9,7 +9,6 @@ const OPTION2_VALUE = 'op2';
 
 @Component({
   imports: [NgrxRadioViewAdapter],
-  selector: 'radio-test',
   template: `
     <input type="radio" value="op1" [ngrxFormControlState]="state" />
     <input type="radio" value="op2" checked="checked" [ngrxFormControlState]="state" />

@@ -7,18 +7,18 @@ import { createFormGroupState } from '../state';
 import { NgrxLocalFormDirective } from './local-state-directive';
 
 describe(NgrxLocalFormDirective.name, () => {
-  let directive: NgrxLocalFormDirective<{}>;
+  let directive: NgrxLocalFormDirective<any>;
   let actionsSubject: ReplaySubject<Action>;
   let actions$: Observable<Action>;
   const FORM_GROUP_ID = 'test ID';
   const INITIAL_FORM_CONTROL_VALUE = {};
-  const INITIAL_STATE = createFormGroupState<{}>(FORM_GROUP_ID, INITIAL_FORM_CONTROL_VALUE);
+  const INITIAL_STATE = createFormGroupState(FORM_GROUP_ID, INITIAL_FORM_CONTROL_VALUE);
 
   beforeEach(() => {
     actionsSubject = new ReplaySubject<Action>();
     actions$ = actionsSubject;
-    directive = new NgrxLocalFormDirective<{}>();
-    directive.state = INITIAL_STATE;
+    directive = new NgrxLocalFormDirective();
+    directive.ngrxFormState = INITIAL_STATE;
     directive.ngOnInit();
   });
 
@@ -51,7 +51,7 @@ describe(NgrxLocalFormDirective.name, () => {
           done();
         });
 
-        directive.state = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
+        directive.ngrxFormState = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
         directive.onSubmit({ preventDefault: () => void 0 } as any);
         actionsSubject.complete();
       }));
@@ -63,7 +63,7 @@ describe(NgrxLocalFormDirective.name, () => {
           done();
         });
 
-        directive.state = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
+        directive.ngrxFormState = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
         directive.onSubmit({ preventDefault: () => void 0 } as any);
         directive.ngrxFormsAction.complete();
       }));

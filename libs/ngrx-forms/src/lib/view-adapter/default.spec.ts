@@ -6,7 +6,6 @@ const TEST_ID = 'test ID';
 
 @Component({
   imports: [NgrxDefaultViewAdapter],
-  selector: 'default-test',
   template: `
     <input type="text" [ngrxFormControlState]="state" />
     <input type="text" [ngrxFormControlState]="state" id="customId" />

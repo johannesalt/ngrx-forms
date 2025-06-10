@@ -50,7 +50,7 @@ export function deepEquals<T>(_1: T, _2: T, options: DeepEqualsOptions = {}) {
       return false;
     }
 
-    if (x.isPrototypeOf(y) || y.isPrototypeOf(x)) {
+    if (Object.prototype.isPrototypeOf.call(x, y) || Object.prototype.isPrototypeOf.call(y, x)) {
       return false;
     }
 
@@ -65,11 +65,16 @@ export function deepEquals<T>(_1: T, _2: T, options: DeepEqualsOptions = {}) {
 
     // Quick checking of one object being a subset of another.
     for (p in y) {
-      if (treatUndefinedAndMissingKeyAsSame && y.hasOwnProperty(p) && !x.hasOwnProperty(p) && y[p] === undefined) {
+      if (
+        treatUndefinedAndMissingKeyAsSame &&
+        Object.prototype.hasOwnProperty.call(y, p) &&
+        !Object.prototype.hasOwnProperty.call(x, p) &&
+        y[p] === undefined
+      ) {
         continue;
       }
 
-      if (y.hasOwnProperty(p) !== x.hasOwnProperty(p)) {
+      if (Object.prototype.hasOwnProperty.call(y, p) !== Object.prototype.hasOwnProperty.call(x, p)) {
         return false;
       } else if (typeof y[p] !== typeof x[p]) {
         return false;
@@ -77,8 +82,13 @@ export function deepEquals<T>(_1: T, _2: T, options: DeepEqualsOptions = {}) {
     }
 
     for (p in x) {
-      if (y.hasOwnProperty(p) !== x.hasOwnProperty(p)) {
-        if (!treatUndefinedAndMissingKeyAsSame || !x.hasOwnProperty(p) || y.hasOwnProperty(p) || x[p] !== undefined) {
+      if (Object.prototype.hasOwnProperty.call(y, p) !== Object.prototype.hasOwnProperty.call(x, p)) {
+        if (
+          !treatUndefinedAndMissingKeyAsSame ||
+          !Object.prototype.hasOwnProperty.call(x, p) ||
+          Object.prototype.hasOwnProperty.call(y, p) ||
+          x[p] !== undefined
+        ) {
           return false;
         }
       }

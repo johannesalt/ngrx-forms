@@ -6,7 +6,6 @@ const TEST_ID = 'test ID';
 
 @Component({
   imports: [NgrxCheckboxViewAdapter],
-  selector: 'checkbox-test',
   template: `
     <input type="checkbox" [ngrxFormControlState]="state" />
     <input type="checkbox" [ngrxFormControlState]="state" id="customId" />

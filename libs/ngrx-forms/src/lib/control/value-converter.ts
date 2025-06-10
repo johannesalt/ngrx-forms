@@ -19,5 +19,5 @@ export const NgrxValueConverters = {
   objectToJSON: {
     convertViewToStateValue: (value) => (value === null ? null : JSON.stringify(value)),
     convertStateToViewValue: (s) => (s === null ? null : JSON.parse(s)),
-  } as NgrxValueConverter<{} | null, string | null>,
+  } as NgrxValueConverter<any | null, string | null>,
 };

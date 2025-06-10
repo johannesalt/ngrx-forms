@@ -610,21 +610,31 @@ export type FormState<T> = InferredFormState<InferenceWrapper<T>>;
  * This function determines if a value is a form state.
  */
 export function isFormState<TValue = any>(state: any): state is FormState<TValue> {
-  return !!state && state.hasOwnProperty('id') && state.hasOwnProperty('value') && state.hasOwnProperty('errors');
+  return (
+    !!state &&
+    Object.prototype.hasOwnProperty.call(state, 'id') &&
+    Object.prototype.hasOwnProperty.call(state, 'value') &&
+    Object.prototype.hasOwnProperty.call(state, 'errors')
+  );
 }
 
 /**
  * This function determines if a value is an array state.
  */
 export function isArrayState<TValue = any>(state: any): state is FormArrayState<TValue> {
-  return isFormState(state) && state.hasOwnProperty('controls') && Array.isArray((state as any).controls);
+  return isFormState(state) && Object.prototype.hasOwnProperty.call(state, 'controls') && Array.isArray((state as any).controls);
 }
 
 /**
  * This function determines if a value is a group state.
  */
 export function isGroupState<TValue extends KeyValue = any>(state: any): state is FormGroupState<TValue> {
-  return isFormState(state) && state.hasOwnProperty('controls') && !Array.isArray((state as any).controls) && typeof (state as any).controls !== 'function';
+  return (
+    isFormState(state) &&
+    Object.prototype.hasOwnProperty.call(state, 'controls') &&
+    !Array.isArray((state as any).controls) &&
+    typeof (state as any).controls !== 'function'
+  );
 }
 
 export function createChildState<TValue>(id: string, childValue: TValue): FormState<TValue> {
@@ -718,7 +728,7 @@ export function getFormGroupErrors<TValue extends KeyValue>(controls: FormGroupC
       hasChanged = hasChanged || originalErrors[`_${key}`] !== controlErrors;
       Object.assign(res, { [`_${key}`]: control.errors });
     } else {
-      hasChanged = hasChanged || originalErrors.hasOwnProperty(`_${key}`);
+      hasChanged = hasChanged || Object.prototype.hasOwnProperty.call(originalErrors, `_${key}`);
     }
 
     return res;
@@ -810,7 +820,7 @@ function getFormArrayErrors<TValue>(controls: readonly AbstractControlState<TVal
       hasChanged = hasChanged || originalErrors[`_${i}`] !== controlErrors;
       Object.assign(res, { [`_${i}`]: controlErrors });
     } else {
-      hasChanged = hasChanged || originalErrors.hasOwnProperty(`_${i}`);
+      hasChanged = hasChanged || Object.prototype.hasOwnProperty.call(originalErrors, `_${i}`);
     }
 
     return res;

@@ -5,7 +5,6 @@ export interface PatternValidationError {
   actual: string;
 }
 
-// @ts-ignore
 declare module '@johannes-it-solution/ngrx-forms' {
   export interface ValidationErrors {
     pattern?: PatternValidationError;

@@ -6,7 +6,6 @@ export interface MinLengthValidationError {
   actualLength: number;
 }
 
-// @ts-ignore
 declare module '@johannes-it-solution/ngrx-forms' {
   export interface ValidationErrors {
     minLength?: MinLengthValidationError;

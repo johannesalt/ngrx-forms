@@ -15,7 +15,7 @@ export function clearAsyncErrorReducer<TValue extends KeyValue>(state: FormGroup
 
   let errors = state.errors;
 
-  if (errors.hasOwnProperty(name)) {
+  if (Object.prototype.hasOwnProperty.call(errors, name)) {
     errors = { ...state.errors };
     delete (errors as any)[name];
   }

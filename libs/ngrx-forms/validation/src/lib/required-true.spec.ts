@@ -36,13 +36,11 @@ describe(requiredTrue.name, () => {
     });
   });
 
-  it('should properly infer value type when used with validate update function', () => {
-    // this code is never meant to be executed, it should just pass the type checker
-    if (1 !== 1) {
-      const state: AbstractControlState<boolean> = undefined!;
-      const v = validate(state, requiredTrue);
-      const v2: boolean = v.value;
-      console.log(v2);
-    }
+  // this code is never meant to be executed, it should just pass the type checker
+  test.skip('should properly infer value type when used with validate update function', () => {
+    const state: AbstractControlState<boolean> = undefined!;
+    const v = validate(state, requiredTrue);
+    const v2: boolean = v.value;
+    console.log(v2);
   });
 });

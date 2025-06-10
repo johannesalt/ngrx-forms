@@ -132,10 +132,7 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
     }
   }
 
-  updateViewIfValueChanged(
-    newState: FormControlState<NgrxFormControlValueType<TStateValue>>,
-    _: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined
-  ) {
+  updateViewIfValueChanged(newState: FormControlState<NgrxFormControlValueType<TStateValue>>) {
     if (newState.value === this.stateValue) {
       return;
     }

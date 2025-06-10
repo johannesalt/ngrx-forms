@@ -6,7 +6,6 @@ const TEST_ID = 'test ID';
 
 @Component({
   imports: [NgrxRangeViewAdapter],
-  selector: 'range-test',
   template: `
     <input type="range" [ngrxFormControlState]="state" />
     <input type="range" [ngrxFormControlState]="state" id="customId" />

@@ -9,6 +9,7 @@ export default [
       '@nx/dependency-checks': [
         'error',
         {
+          ignoredDependencies: ['@analogjs/vite-plugin-angular', '@nx/vite', 'vite'],
           ignoredFiles: ['{projectRoot}/eslint.config.{js,cjs,mjs}'],
         },
       ],
@@ -22,11 +23,17 @@ export default [
   {
     files: ['**/*.ts'],
     rules: {
+      '@angular-eslint/directive-class-suffix': [
+        'error',
+        {
+          suffixes: ['Directive', 'Option', 'ViewAdapter'],
+        },
+      ],
       '@angular-eslint/directive-selector': [
         'error',
         {
           type: 'attribute',
-          prefix: 'lib',
+          prefix: 'ngrx',
           style: 'camelCase',
         },
       ],
@@ -34,10 +41,13 @@ export default [
         'error',
         {
           type: 'element',
-          prefix: 'lib',
+          prefix: 'ngrx',
           style: 'kebab-case',
         },
       ],
+      '@typescript-eslint/no-empty-interface': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
     },
   },
   {

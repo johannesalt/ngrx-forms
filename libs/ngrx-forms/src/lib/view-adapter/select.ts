@@ -122,6 +122,7 @@ const NULL_RENDERER: Renderer2 = {
 } as any;
 
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'option',
 })
 export class NgrxSelectOption implements OnDestroy {
@@ -134,7 +135,7 @@ export class NgrxSelectOption implements OnDestroy {
     this.id = this.viewAdapter.createOptionId();
   }
 
-  @Input('value')
+  @Input()
   set value(value: any) {
     // this cannot be done inside ngOnInit since the value property
     // must be already set when the option value is updated in the view

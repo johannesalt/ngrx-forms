@@ -37,7 +37,7 @@ describe('form control setValueReducer', () => {
 
   it('should throw if value is not supported', () => {
     const value = {};
-    expect(() => setValueReducer<any>(INITIAL_STATE, new SetValueAction<{}>(FORM_CONTROL_ID, value))).toThrowError();
+    expect(() => setValueReducer<any>(INITIAL_STATE, new SetValueAction(FORM_CONTROL_ID, value))).toThrowError();
   });
 
   it('should allow setting boxed object values', () => {

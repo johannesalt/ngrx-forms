@@ -4,7 +4,6 @@ export interface NumberValidationError<T> {
   actual: T;
 }
 
-// @ts-ignore
 declare module '@johannes-it-solution/ngrx-forms' {
   export interface ValidationErrors {
     number?: NumberValidationError<any>;

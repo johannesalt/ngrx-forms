@@ -81,7 +81,7 @@ describe(`form group ${setValueReducer.name}`, () => {
     }
     const id = 'ID';
     const state = createFormGroupState<FormValue>(id, { inner: 5 });
-    const resultState = setValueReducer<FormValue>(state, new SetValueAction<{}>(id, {}));
+    const resultState = setValueReducer<FormValue>(state, new SetValueAction(id, {}));
     expect(resultState.value).toEqual({});
     expect(resultState.controls.inner).toBeUndefined();
   });
@@ -178,7 +178,7 @@ describe(`form group ${setValueReducer.name}`, () => {
         },
       },
     };
-    const resultState = setValueReducer<FormValue>(state, new SetValueAction<{}>(id, {}));
+    const resultState = setValueReducer<FormValue>(state, new SetValueAction(id, {}));
     expect(resultState.value).toEqual({});
     expect(resultState.errors).toEqual({});
     expect(resultState.controls.inner).toBeUndefined();
@@ -204,7 +204,7 @@ describe(`form group ${setValueReducer.name}`, () => {
         },
       },
     };
-    const resultState = setValueReducer<FormValue>(state, new SetValueAction<{}>(id, {}));
+    const resultState = setValueReducer<FormValue>(state, new SetValueAction(id, {}));
     expect(resultState.value).toEqual({});
     expect(resultState.errors).toEqual(errors);
     expect(resultState.controls.inner).toBeUndefined();

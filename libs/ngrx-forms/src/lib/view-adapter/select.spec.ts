@@ -8,7 +8,6 @@ const OPTION1_VALUE = 'op1';
 
 @Component({
   imports: [NgrxSelectViewAdapter, NgrxSelectOption],
-  selector: 'select-test',
   template: `
     <select [ngrxFormControlState]="state">
       <option value="op1">op1</option>

@@ -11,7 +11,6 @@ const RADIO_OPTIONS = ['op1', 'op2'] as readonly string[];
 
 @Component({
   imports: [NgrxFormsModule],
-  selector: 'radio-test',
   template: '@for (o of options; track trackByIndex($index, o)) {<input type="radio" [value]="o" [ngrxFormControlState]="state" />}',
 })
 export class RadioTestComponent {

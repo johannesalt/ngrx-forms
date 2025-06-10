@@ -1,4 +1,4 @@
-import { Action, createReducer } from '@ngrx/store';
+import { createReducer } from '@ngrx/store';
 import { MarkAsDirtyAction, MarkAsTouchedAction, SetValueAction } from './actions';
 import { formArrayReducer } from './array/reducer';
 import { formControlReducer } from './control/reducer';
@@ -268,7 +268,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
     array: INITIAL_STATE.controls.inner5,
   };
 
-  function reducer(state = initialState, _: Action) {
+  function reducer(state = initialState) {
     return state;
   }
 

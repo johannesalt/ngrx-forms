@@ -11,7 +11,6 @@ const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
   imports: [NgrxFormsModule],
-  selector: 'select-test',
   template: '<select [ngrxFormControlState]="state">@for (o of options; track o) {<option [value]="o">{{ o }}</option>}</select>',
 })
 export class SelectComponent {
@@ -21,7 +20,6 @@ export class SelectComponent {
 
 @Component({
   imports: [NgrxFormsModule],
-  selector: 'select-test-fallback',
   template: '<select>@for (o of options; track o) {<option [value]="o">{{ o }} Label</option>}</select>',
 })
 export class SelectFallbackComponent {
@@ -105,7 +103,6 @@ const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
   imports: [NgrxFormsModule],
-  selector: 'select-test',
   template: '<select [ngrxFormControlState]="state">@for (o of options; track o) {<option [value]="o">{{ o }}</option>}</select>',
 })
 export class NumberSelectComponent {

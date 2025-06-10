@@ -11,7 +11,7 @@ export function removeControlReducer<TValue extends KeyValue>(state: FormGroupSt
     return childReducer(state, action);
   }
 
-  if (!state.controls.hasOwnProperty(action.name)) {
+  if (!Object.prototype.hasOwnProperty.call(state.controls, action.name)) {
     throw new Error(`Group '${state.id}' does not have child control '${action.name as string}'!`); // `;
   }
 

@@ -19,6 +19,7 @@ const NULL_RENDERER: Renderer2 = {
  * directives that try to set the `[value]` but that is very unlikely.
  */
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'option',
 })
 export class NgrxFallbackSelectOption {
@@ -31,7 +32,7 @@ export class NgrxFallbackSelectOption {
     this.renderer = viewAdapter || multipleViewAdapter ? NULL_RENDERER : renderer;
   }
 
-  @Input('value')
+  @Input()
   set value(value: any) {
     this.renderer.setProperty(this.element.nativeElement, 'value', value);
   }

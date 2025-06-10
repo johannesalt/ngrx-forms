@@ -17,7 +17,16 @@
     "src/**/*.spec.js",
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "validation/**/*.test.ts",
+    "validation/**/*.spec.ts",
+    "validation/**/*.test.tsx",
+    "validation/**/*.spec.tsx",
+    "validation/**/*.test.js",
+    "validation/**/*.spec.js",
+    "validation/**/*.test.jsx",
+    "validation/**/*.spec.jsx",
+    "validation/**/*.d.ts"
   ],
   "files": ["src/test-setup.ts"]
 }

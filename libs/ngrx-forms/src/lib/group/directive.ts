@@ -7,13 +7,13 @@ import { FormGroupState, KeyValue } from '../state';
 // this interface just exists to prevent a direct reference to
 // `Event` in our code, which otherwise causes issues in NativeScript
 // applications
-interface CustomEvent extends Event {}
+type CustomEvent = Event;
 
 @Directive({
   selector: 'form:not([ngrxFormsAction])[ngrxFormState]',
 })
 export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
-  @Input('ngrxFormState') state: FormGroupState<TStateValue>;
+  @Input() ngrxFormState: FormGroupState<TStateValue>;
 
   constructor(@Optional() @Inject(ActionsSubject) private actionsSubject: ActionsSubject | null) {
     this.actionsSubject = actionsSubject;
@@ -28,7 +28,7 @@ export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.state) {
+    if (!this.ngrxFormState) {
       throw new Error('The form state must not be undefined!');
     }
   }
@@ -36,8 +36,8 @@ export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
   @HostListener('submit', ['$event'])
   onSubmit(event: CustomEvent) {
     event.preventDefault();
-    if (this.state.isUnsubmitted) {
-      this.dispatchAction(new MarkAsSubmittedAction(this.state.id));
+    if (this.ngrxFormState.isUnsubmitted) {
+      this.dispatchAction(new MarkAsSubmittedAction(this.ngrxFormState.id));
     }
   }
 }

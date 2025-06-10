@@ -127,6 +127,7 @@ const NULL_RENDERER: Renderer2 = {
 } as any;
 
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'option',
 })
 export class NgrxSelectMultipleOption implements OnInit, OnDestroy {
@@ -138,7 +139,7 @@ export class NgrxSelectMultipleOption implements OnInit, OnDestroy {
     this.id = this.viewAdapter.registerOption(this);
   }
 
-  @Input('value')
+  @Input()
   set value(value: any) {
     this.viewAdapter.updateOptionValue(this.id, value);
   }

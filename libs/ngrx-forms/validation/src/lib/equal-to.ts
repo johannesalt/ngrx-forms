@@ -5,7 +5,6 @@ export interface EqualToValidationError<T> {
   actual: T;
 }
 
-// @ts-ignore
 declare module '@johannes-it-solution/ngrx-forms' {
   export interface ValidationErrors {
     equalTo?: EqualToValidationError<any>;
