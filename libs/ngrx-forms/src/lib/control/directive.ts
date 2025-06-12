@@ -1,17 +1,11 @@
-import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Directive, ElementRef, HostBinding, HostListener, Inject, Input, OnInit, Optional, Self } from '@angular/core';
+import { AfterViewInit, booleanAttribute, Directive, ElementRef, HostBinding, HostListener, Inject, Input, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ActionsSubject } from '@ngrx/store';
-
 import { Actions, FocusAction, MarkAsDirtyAction, MarkAsTouchedAction, SetValueAction, UnfocusAction } from '../actions';
 import { FormControlState, FormControlValueTypes } from '../state';
 import { selectViewAdapter } from '../view-adapter/util';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '../view-adapter/view-adapter';
 import { NgrxValueConverter, NgrxValueConverters } from './value-converter';
-
-export interface Document {
-  activeElement: any;
-}
 
 export enum NGRX_UPDATE_ON_TYPE {
   CHANGE = 'change',
@@ -47,7 +41,6 @@ export type NgrxFormControlValueType<TStateValue> = TStateValue extends FormCont
 })
 export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> implements AfterViewInit, OnInit {
   private isInitialized = false;
-  private focusTrackingIsEnabled = false;
 
   @Input() set ngrxFormControlState(newState: FormControlState<NgrxFormControlValueType<TStateValue>>) {
     if (!newState) {
@@ -66,13 +59,9 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
   }
 
   @Input() ngrxUpdateOn: NGRX_UPDATE_ON_TYPE = NGRX_UPDATE_ON_TYPE.CHANGE;
-  @Input() set ngrxEnableFocusTracking(value: boolean) {
-    if (value && !this.dom) {
-      throw new Error('focus tracking is only supported on the browser platform');
-    }
 
-    this.focusTrackingIsEnabled = value;
-  }
+  @Input({ transform: booleanAttribute })
+  public ngrxEnableFocusTracking = false;
 
   @Input() ngrxValueConverter: NgrxValueConverter<TViewValue, TStateValue> = NgrxValueConverters.default<any>();
 
@@ -99,9 +88,6 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
 
   constructor(
     private el: ElementRef,
-    // for the dom parameter the `null` type must be last to ensure that in the compiled output
-    // there is no reference to the Document type to support non-browser platforms
-    @Optional() @Inject(DOCUMENT) private dom: Document | null,
     @Optional() @Inject(ActionsSubject) private actionsSubject: ActionsSubject | null,
     @Self() @Optional() @Inject(NGRX_FORM_VIEW_ADAPTER) viewAdapters: FormViewAdapter[],
     @Self() @Optional() @Inject(NG_VALUE_ACCESSOR) valueAccessors: ControlValueAccessor[]
@@ -161,7 +147,7 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
     newState: FormControlState<NgrxFormControlValueType<TStateValue>>,
     oldState: FormControlState<NgrxFormControlValueType<TStateValue>> | undefined
   ) {
-    if (!this.focusTrackingIsEnabled) {
+    if (!this.ngrxEnableFocusTracking) {
       return;
     }
 
@@ -240,15 +226,24 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
   }
 
   @HostListener('focusin')
-  @HostListener('focusout')
-  onFocusChange() {
-    if (!this.focusTrackingIsEnabled) {
+  public handleFocusIn() {
+    if (!this.ngrxEnableFocusTracking) {
       return;
     }
 
-    const isControlFocused = this.el.nativeElement === this.dom!.activeElement;
-    if (isControlFocused !== this.state.isFocused) {
-      this.dispatchAction(isControlFocused ? new FocusAction(this.state.id) : new UnfocusAction(this.state.id));
+    if (!this.state.isFocused) {
+      this.dispatchAction(new FocusAction(this.state.id));
+    }
+  }
+
+  @HostListener('focusout')
+  public handleFocusOut() {
+    if (!this.ngrxEnableFocusTracking) {
+      return;
+    }
+
+    if (this.state.isFocused) {
+      this.dispatchAction(new UnfocusAction(this.state.id));
     }
   }
 }
