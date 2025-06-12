@@ -1,63 +1,107 @@
-name: CI
-
+name: ngrx-form-state
 on:
   push:
-    branches: [master, develop]
+    branches:
+      - master
   pull_request:
-    branches: [master, develop]
-
-  workflow_dispatch:
+    branches:
+      - master
 
 jobs:
   build:
+    name: build
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          node-version: 14.x
+          fetch-depth: 0
+          filter: tree:0
 
-      - run: npm i -g npm@7
-      - run: npm ci
-      - run: npm run build
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build affected projects
+        run: npx nx affected:build --base=origin/master --head=HEAD
 
   lint:
+    name: lint
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          node-version: 14.x
+          fetch-depth: 0
+          filter: tree:0
 
-      - run: npm i -g npm@7
-      - run: npm ci
-      - run: npm run lint
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint affected projects
+        run: npx nx affected:lint --base=origin/master --head=HEAD
+
+      - run: npx nx format:check --base=origin/master --head=HEAD
 
   test:
+    name: test
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          node-version: 14.x
+          fetch-depth: 0
+          filter: tree:0
 
-      - run: npm i -g npm@7
-      - run: npm ci
-      - run: npm run test-no-progress
-      - run: npm run report-coverage
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: 'lts/*'
 
-  tsd:
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test affected projects
+        run: npx nx affected:test --base=origin/master --head=HEAD
+
+  release:
+    name: release
+    needs:
+      - build
+      - test
+      - lint
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          node-version: 14.x
+          fetch-depth: 0
+          filter: tree:0
 
-      - run: npm i -g npm@7
-      - run: npm ci
-      - run: npm run tsd
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx nx release
