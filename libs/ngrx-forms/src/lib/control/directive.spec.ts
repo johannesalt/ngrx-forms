@@ -14,7 +14,6 @@ describe(NgrxFormControlDirective.name, () => {
   let directive: NgrxFormControlDirective<string | null, any>;
   let elementRef: ElementRef;
   let nativeElement: Partial<HTMLElement>;
-  let document: Document;
   let actionsSubject: ReplaySubject<Action>;
   let actions$: Observable<Action>;
   let viewAdapter: Required<FormViewAdapter>;
@@ -27,7 +26,6 @@ describe(NgrxFormControlDirective.name, () => {
   beforeEach(() => {
     nativeElement = { blur: vi.fn(), focus: vi.fn() };
     elementRef = { nativeElement } as any as ElementRef;
-    document = {} as any as Document;
     actionsSubject = new ReplaySubject<Action>();
     actions$ = actionsSubject as any; // required due to mismatch of lift() function signature
     viewAdapter = {
@@ -36,7 +34,7 @@ describe(NgrxFormControlDirective.name, () => {
       setOnTouchedCallback: (fn) => (onTouched = fn),
       setIsDisabled: () => void 0,
     };
-    directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, [viewAdapter], []);
+    directive = new NgrxFormControlDirective<string | null>(elementRef, actionsSubject as any, [viewAdapter], []);
     directive.ngrxFormControlState = INITIAL_STATE;
   });
 
@@ -45,12 +43,12 @@ describe(NgrxFormControlDirective.name, () => {
   });
 
   it('should throw if state is not set when component is initialized', () => {
-    directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, [viewAdapter], []);
+    directive = new NgrxFormControlDirective<string | null>(elementRef, actionsSubject as any, [viewAdapter], []);
     expect(() => directive.ngOnInit()).toThrowError();
   });
 
   it('should throw while trying to emit actions if no ActionsSubject was provided', () => {
-    directive = new NgrxFormControlDirective<string | null>(elementRef, document, null as any as ActionsSubject, [viewAdapter], []);
+    directive = new NgrxFormControlDirective<string | null>(elementRef, null as any as ActionsSubject, [viewAdapter], []);
     directive.ngrxFormControlState = INITIAL_STATE;
     directive.ngOnInit();
     const newValue = 'new value';
@@ -190,7 +188,7 @@ describe(NgrxFormControlDirective.name, () => {
         ...viewAdapter,
         setViewValue: (v) => expect(v).toEqual(convertedValue),
       };
-      directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, [viewAdapter], []);
+      directive = new NgrxFormControlDirective<string | null>(elementRef, actionsSubject as any, [viewAdapter], []);
       directive.ngrxFormControlState = INITIAL_STATE;
       directive.ngrxValueConverter = {
         convertStateToViewValue: () => convertedValue,
@@ -447,8 +445,7 @@ describe(NgrxFormControlDirective.name, () => {
             done();
           });
 
-          (document as any).activeElement = nativeElement;
-          directive.onFocusChange();
+          directive.handleFocusIn();
           actionsSubject.complete();
         }));
 
@@ -462,8 +459,7 @@ describe(NgrxFormControlDirective.name, () => {
           });
 
           directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
-          (document as any).activeElement = nativeElement;
-          directive.onFocusChange();
+          directive.handleFocusIn();
           actionsSubject.complete();
         }));
 
@@ -477,7 +473,7 @@ describe(NgrxFormControlDirective.name, () => {
           });
 
           directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
-          directive.onFocusChange();
+          directive.handleFocusOut();
           actionsSubject.complete();
         }));
 
@@ -490,7 +486,7 @@ describe(NgrxFormControlDirective.name, () => {
             done();
           });
 
-          directive.onFocusChange();
+          directive.handleFocusOut();
           actionsSubject.complete();
         }));
 
@@ -540,8 +536,7 @@ describe(NgrxFormControlDirective.name, () => {
             done();
           });
 
-          (document as any).activeElement = nativeElement;
-          directive.onFocusChange();
+          directive.handleFocusIn();
           actionsSubject.complete();
         }));
 
@@ -555,8 +550,7 @@ describe(NgrxFormControlDirective.name, () => {
           });
 
           directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
-          (document as any).activeElement = nativeElement;
-          directive.onFocusChange();
+          directive.handleFocusIn();
           actionsSubject.complete();
         }));
 
@@ -570,7 +564,7 @@ describe(NgrxFormControlDirective.name, () => {
           });
 
           directive.ngrxFormControlState = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
-          directive.onFocusChange();
+          directive.handleFocusOut();
           actionsSubject.complete();
         }));
 
@@ -583,20 +577,9 @@ describe(NgrxFormControlDirective.name, () => {
             done();
           });
 
-          directive.onFocusChange();
+          directive.handleFocusOut();
           actionsSubject.complete();
         }));
-    });
-  });
-
-  describe('non-browser platforms', () => {
-    beforeEach(() => {
-      directive = new NgrxFormControlDirective<string | null>(elementRef, null, actionsSubject as any, [viewAdapter], []);
-      directive.ngrxFormControlState = INITIAL_STATE;
-    });
-
-    it('should throw when trying to enable focus tracking', () => {
-      expect(() => (directive.ngrxEnableFocusTracking = true)).toThrowError();
     });
   });
 
@@ -609,7 +592,7 @@ describe(NgrxFormControlDirective.name, () => {
         writeValue: vi.fn(),
       };
 
-      directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, null as any, [controlValueAccessor]);
+      directive = new NgrxFormControlDirective<string | null>(elementRef, actionsSubject as any, null as any, [controlValueAccessor]);
 
       directive.state = { ...INITIAL_STATE, isDisabled: true, isEnabled: false };
       directive.ngOnInit();
@@ -626,14 +609,14 @@ describe(NgrxFormControlDirective.name, () => {
         writeValue: vi.fn(),
       };
 
-      directive = new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, null as any, [controlValueAccessor]);
+      directive = new NgrxFormControlDirective<string | null>(elementRef, actionsSubject as any, null as any, [controlValueAccessor]);
 
       directive.state = { ...INITIAL_STATE, isDisabled: true, isEnabled: false };
       expect(() => directive.ngOnInit()).not.toThrow();
     });
 
     it('should throw if more than one control value accessor is provided', () => {
-      expect(() => new NgrxFormControlDirective<string | null>(elementRef, document, actionsSubject as any, [], [{} as any, {} as any])).toThrowError();
+      expect(() => new NgrxFormControlDirective<string | null>(elementRef, actionsSubject as any, [], [{} as any, {} as any])).toThrowError();
     });
   });
 });

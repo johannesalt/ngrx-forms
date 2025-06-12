@@ -2,7 +2,6 @@ import { ElementRef } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Observable, ReplaySubject } from 'rxjs';
 import { count, first } from 'rxjs/operators';
-
 import { SetValueAction } from '../actions';
 import { createFormControlState } from '../state';
 import { FormViewAdapter } from '../view-adapter/view-adapter';
@@ -12,7 +11,6 @@ describe(NgrxLocalFormControlDirective.name, () => {
   let directive: NgrxLocalFormControlDirective<string | null, any>;
   let elementRef: ElementRef;
   let nativeElement: Partial<HTMLElement>;
-  let document: Document;
   let actionsSubject: ReplaySubject<Action>;
   let actions$: Observable<Action>;
   let viewAdapter: FormViewAdapter;
@@ -24,7 +22,6 @@ describe(NgrxLocalFormControlDirective.name, () => {
   beforeEach(() => {
     nativeElement = { blur: vi.fn(), focus: vi.fn() };
     elementRef = { nativeElement } as any as ElementRef;
-    document = {} as any as Document;
     actionsSubject = new ReplaySubject<Action>();
     actions$ = actionsSubject as any; // required due to mismatch of lift() function signature
     viewAdapter = {
@@ -33,7 +30,7 @@ describe(NgrxLocalFormControlDirective.name, () => {
       setOnTouchedCallback: () => void 0,
       setIsDisabled: () => void 0,
     };
-    directive = new NgrxLocalFormControlDirective<string | null>(elementRef, document, [viewAdapter], []);
+    directive = new NgrxLocalFormControlDirective<string | null>(elementRef, [viewAdapter], []);
     directive.ngrxFormControlState = INITIAL_STATE;
   });
 
