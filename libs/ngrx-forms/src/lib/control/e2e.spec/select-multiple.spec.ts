@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
@@ -14,15 +14,17 @@ const SELECT_OPTIONS = ['op1', 'op2'];
 @Component({
   imports: [NgrxFormsModule],
   template: `
+    @if (state) {
     <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
       @for (o of options; track o) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
+    }
   `,
 })
 export class SelectMultipleComponent {
-  @Input() state: FormControlState<string>;
+  state: FormControlState<string> | undefined;
   options = SELECT_OPTIONS;
   valueConverter = NgrxValueConverters.objectToJSON;
 }
@@ -93,15 +95,17 @@ describe(SelectMultipleComponent.name, () => {
 @Component({
   imports: [NgrxFormsModule],
   template: `
+    @if (state) {
     <select multiple [ngrxFormControlState]="state">
       @for (o of options; track o) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
+    }
   `,
 })
 export class SelectMultipleWithoutConverterComponent {
-  @Input() state: FormControlState<Boxed<string[]>>;
+  state: FormControlState<Boxed<string[]>> | undefined;
   options = SELECT_OPTIONS;
 }
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
@@ -11,10 +11,18 @@ const SELECT_OPTIONS = ['op1', 'op2'];
 
 @Component({
   imports: [NgrxFormsModule],
-  template: '<select [ngrxFormControlState]="state">@for (o of options; track o) {<option [value]="o">{{ o }}</option>}</select>',
+  template: `
+    @if (state) {
+    <select [ngrxFormControlState]="state">
+      @for (o of options; track o) {
+      <option [value]="o">{{ o }}</option>
+      }
+    </select>
+    }
+  `,
 })
 export class SelectComponent {
-  @Input() state: FormControlState<string>;
+  state: FormControlState<string> | undefined;
   options = SELECT_OPTIONS;
 }
 
@@ -103,10 +111,18 @@ const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
   imports: [NgrxFormsModule],
-  template: '<select [ngrxFormControlState]="state">@for (o of options; track o) {<option [value]="o">{{ o }}</option>}</select>',
+  template: `
+    @if (state) {
+    <select [ngrxFormControlState]="state">
+      @for (o of options; track o) {
+      <option [value]="o">{{ o }}</option>
+      }
+    </select>
+    }
+  `,
 })
 export class NumberSelectComponent {
-  @Input() state: FormControlState<number>;
+  state: FormControlState<number> | undefined;
   options = SELECT_NUMBER_OPTIONS;
 }
 
