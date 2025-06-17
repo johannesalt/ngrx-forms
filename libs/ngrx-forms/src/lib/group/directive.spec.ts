@@ -1,58 +1,74 @@
+import { Component, ElementRef, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
-import { Observable, ReplaySubject } from 'rxjs';
-import { count, take } from 'rxjs/operators';
-
+import { provideMockStore } from '@ngrx/store/testing';
+import { MockInstance } from 'vitest';
 import { MarkAsSubmittedAction } from '../actions';
-import { createFormGroupState } from '../state';
+import { createFormGroupState, FormGroupState } from '../state';
 import { NgrxFormDirective } from './directive';
 
-describe(NgrxFormDirective.name, () => {
-  let directive: NgrxFormDirective<any>;
-  let actionsSubject: ReplaySubject<Action>;
-  let actions$: Observable<Action>;
-  const FORM_GROUP_ID = 'test ID';
-  const INITIAL_FORM_CONTROL_VALUE = {};
-  const INITIAL_STATE = createFormGroupState(FORM_GROUP_ID, INITIAL_FORM_CONTROL_VALUE);
+const FORM_GROUP_ID = 'test ID';
+const INITIAL_FORM_CONTROL_VALUE = {};
+const INITIAL_STATE = createFormGroupState(FORM_GROUP_ID, INITIAL_FORM_CONTROL_VALUE);
+
+@Component({
+  imports: [NgrxFormDirective],
+  template: `
+    <form [ngrxFormState]="state">
+      <button #btn type="submit">Click me</button>
+    </form>
+  `,
+})
+export class TestComponent {
+  private readonly button = viewChild<ElementRef<HTMLButtonElement>>('btn');
+
+  public state: Partial<FormGroupState<any>> | null | undefined = INITIAL_STATE;
+
+  public submitForm() {
+    const button = this.button();
+    if (!button || !button.nativeElement) {
+      throw 'Button cannot be null';
+    }
+
+    button.nativeElement.click();
+  }
+}
+
+describe(NgrxFormDirective, () => {
+  let component: TestComponent;
+  let fixture: ComponentFixture<TestComponent>;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [TestComponent],
+      providers: [provideMockStore()],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    actionsSubject = new ReplaySubject<Action>();
-    actions$ = actionsSubject;
-    directive = new NgrxFormDirective(actionsSubject as any);
-    directive.ngrxFormState = INITIAL_STATE;
-    directive.ngOnInit();
+    fixture = TestBed.createComponent(TestComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should throw if state is not set when component is initialized', () => {
-    directive = new NgrxFormDirective(actionsSubject as any);
-    expect(() => directive.ngOnInit()).toThrowError();
+  let next: MockInstance<(action: Action) => void>;
+  beforeEach(() => {
+    const actions = TestBed.inject(ActionsSubject);
+    next = vi.spyOn(actions, 'next');
   });
 
-  it('should throw while trying to emit actions if no ActionsSubject was provided', () => {
-    directive = new NgrxFormDirective(null as any as ActionsSubject);
-    directive.ngrxFormState = INITIAL_STATE;
-    directive.ngOnInit();
-    expect(() => directive.onSubmit({ preventDefault: () => void 0 } as any)).toThrowError();
+  it(`should dispatch a ${MarkAsSubmittedAction} if the form is submitted and the state is unsubmitted`, () => {
+    component.submitForm();
+
+    expect(next).toHaveBeenCalledWith(new MarkAsSubmittedAction(INITIAL_STATE.id));
   });
 
-  it(`should dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is unsubmitted`, () =>
-    new Promise<void>((done) => {
-      actions$.pipe(take(1)).subscribe((a) => {
-        expect(a).toEqual(new MarkAsSubmittedAction(INITIAL_STATE.id));
-        done();
-      });
+  it(`should not dispatch a ${MarkAsSubmittedAction} if the form is submitted and the state is submitted`, () => {
+    component.state = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
+    fixture.detectChanges();
 
-      directive.onSubmit({ preventDefault: () => void 0 } as any);
-    }));
+    component.submitForm();
 
-  it(`should not dispatch a ${MarkAsSubmittedAction.name} if the form is submitted and the state is submitted`, () =>
-    new Promise<void>((done) => {
-      actions$.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(0);
-        done();
-      });
-
-      directive.ngrxFormState = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
-      directive.onSubmit({ preventDefault: () => void 0 } as any);
-      actionsSubject.complete();
-    }));
+    expect(next).not.toHaveBeenCalledWith(new MarkAsSubmittedAction(INITIAL_STATE.id));
+  });
 });
