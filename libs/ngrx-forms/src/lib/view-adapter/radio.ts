@@ -1,6 +1,5 @@
-import { AfterViewInit, Directive, ElementRef, forwardRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
-
-import { FormControlState } from '../state';
+import { Directive, forwardRef, HostListener, Input, OnInit } from '@angular/core';
+import { SetNativeName } from './set-native-name';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
 @Directive({
@@ -13,29 +12,13 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
     },
   ],
 })
-export class NgrxRadioViewAdapter implements FormViewAdapter, OnInit, AfterViewInit {
-  private state: FormControlState<any>;
-  private nativeNameWasSet = false;
-
+export class NgrxRadioViewAdapter extends SetNativeName implements FormViewAdapter, OnInit {
   @Input() set value(val: any) {
     if (val !== this.latestValue) {
       this.latestValue = val;
       if (this.isChecked) {
         this.onChange();
       }
-    }
-  }
-
-  @Input() set ngrxFormControlState(value: FormControlState<any>) {
-    if (!value) {
-      throw new Error('The control state must not be undefined!');
-    }
-
-    this.state = value;
-    const nativeName = this.elementRef.nativeElement.name;
-    const shouldSetNativeName = value.id !== nativeName && this.nativeNameWasSet;
-    if (shouldSetNativeName) {
-      this.renderer.setProperty(this.elementRef.nativeElement, 'name', value.id);
     }
   }
 
@@ -48,19 +31,8 @@ export class NgrxRadioViewAdapter implements FormViewAdapter, OnInit, AfterViewI
   @HostListener('blur')
   onTouched: () => void = () => void 0;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
-
   ngOnInit() {
     this.isChecked = (this.elementRef.nativeElement as HTMLInputElement).checked;
-  }
-
-  ngAfterViewInit() {
-    const nativeName = this.elementRef.nativeElement.name;
-    const shouldSetNativeName = this.state.id !== nativeName && !nativeName;
-    if (shouldSetNativeName) {
-      this.renderer.setProperty(this.elementRef.nativeElement, 'name', this.state.id);
-      this.nativeNameWasSet = true;
-    }
   }
 
   setViewValue(value: any): void {

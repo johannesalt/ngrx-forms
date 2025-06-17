@@ -1,7 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Directive, ElementRef, forwardRef, HostListener, Inject, Input, Optional, PLATFORM_ID, Renderer2 } from '@angular/core';
-
-import { FormControlState } from '../state';
+import { AfterViewInit, Directive, forwardRef, HostListener, Inject, Optional, PLATFORM_ID } from '@angular/core';
+import { SetNativeId } from './set-native-id';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
 export interface Navigator {
@@ -30,49 +29,23 @@ function isAndroid(navigator: Navigator): boolean {
     },
   ],
 })
-export class NgrxDefaultViewAdapter implements FormViewAdapter, AfterViewInit {
-  private state: FormControlState<any>;
-  private nativeIdWasSet = false;
-
+export class NgrxDefaultViewAdapter extends SetNativeId implements FormViewAdapter, AfterViewInit {
   onChange: (value: any) => void = () => void 0;
 
   @HostListener('blur')
   onTouched: () => void = () => void 0;
-
-  @Input() set ngrxFormControlState(value: FormControlState<any>) {
-    if (!value) {
-      throw new Error('The control state must not be undefined!');
-    }
-
-    this.state = value;
-    const nativeId = this.elementRef.nativeElement.id;
-    const shouldSetNativeId = value.id !== nativeId && this.nativeIdWasSet;
-    if (shouldSetNativeId) {
-      this.renderer.setProperty(this.elementRef.nativeElement, 'id', value.id);
-    }
-  }
 
   /** Whether the user is creating a composition string (IME events). */
   private isComposing = false;
   private isCompositionSupported: boolean;
 
   constructor(
-    private renderer: Renderer2,
-    private elementRef: ElementRef,
     @Optional() @Inject(PLATFORM_ID) private platformId: string | null = null,
     // we use a special injection string that should never exist at runtime to allow mocking this dependency for testing
     @Optional() @Inject('ngrx-forms/never') navigator: Navigator | null = null
   ) {
+    super();
     this.isCompositionSupported = isPlatformBrowser(this.platformId || '') && !isAndroid(navigator || window.navigator);
-  }
-
-  ngAfterViewInit() {
-    const nativeId = this.elementRef.nativeElement.id;
-    const shouldSetNativeId = this.state.id !== nativeId && !nativeId;
-    if (shouldSetNativeId) {
-      this.renderer.setProperty(this.elementRef.nativeElement, 'id', this.state.id);
-      this.nativeIdWasSet = true;
-    }
   }
 
   setViewValue(value: any): void {
