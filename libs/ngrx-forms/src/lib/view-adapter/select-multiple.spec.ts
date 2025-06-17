@@ -430,6 +430,11 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
       expect(() => viewAdapter.setViewValue(oldValue)).not.toThrow();
     });
   });
+
+  it('should not throw if calling callbacks before they are registered', () => {
+    expect(() => viewAdapter.onChange()).not.toThrowError();
+    expect(() => viewAdapter.onTouched()).not.toThrowError();
+  });
 });
 
 describe(NgrxSelectMultipleOption.name, () => {

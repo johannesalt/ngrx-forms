@@ -422,6 +422,11 @@ describe(NgrxSelectViewAdapter.name, () => {
       expect(newOption.selected).toBe(true);
     });
   });
+
+  it('should not throw if calling callbacks before they are registered', () => {
+    expect(() => viewAdapter.onChange({ target: option1 })).not.toThrowError();
+    expect(() => viewAdapter.onTouched()).not.toThrowError();
+  });
 });
 
 describe(NgrxSelectOption.name, () => {

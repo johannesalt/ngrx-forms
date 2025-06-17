@@ -164,7 +164,7 @@ describe(NgrxNumberViewAdapter.name, () => {
   });
 
   it('should not throw if calling callbacks before they are registered', () => {
-    expect(() => new NgrxNumberViewAdapter(undefined as any, undefined as any).onChange(undefined)).not.toThrowError();
-    expect(() => new NgrxNumberViewAdapter(undefined as any, undefined as any).onTouched()).not.toThrowError();
+    expect(() => viewAdapter.onChange(undefined)).not.toThrowError();
+    expect(() => viewAdapter.onTouched()).not.toThrowError();
   });
 });
