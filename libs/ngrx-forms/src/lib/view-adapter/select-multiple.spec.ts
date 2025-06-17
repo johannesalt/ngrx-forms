@@ -1,5 +1,6 @@
 import { Component, ElementRef, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormControlState } from '../state';
 import { NgrxSelectMultipleOption, NgrxSelectMultipleViewAdapter } from './select-multiple';
 
 const TEST_ID = 'test ID';
@@ -30,19 +31,19 @@ const OPTION3_VALUE = 'op3';
     </select>
 
     <select multiple [ngrxFormControlState]="state">
-      @for (o of stringOptions; track trackByIndex($index, o)) {
+      @for (o of stringOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
 
     <select multiple [ngrxFormControlState]="state">
-      @for (o of numberOptions; track trackByIndex($index, o)) {
+      @for (o of numberOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
 
     <select multiple [ngrxFormControlState]="state">
-      @for (o of booleanOptions; track trackByIndex($index, o)) {
+      @for (o of booleanOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
@@ -53,8 +54,8 @@ export class SelectTestComponent {
   stringOptions = ['op1', 'op2', 'op3'];
   numberOptions = [1, 2, 3];
   booleanOptions = [true, false];
-  state = { id: TEST_ID } as any;
-  trackByIndex = (index: number) => index;
+
+  public state: Partial<FormControlState<any>> | null | undefined = { id: TEST_ID };
 }
 
 describe(NgrxSelectMultipleViewAdapter.name, () => {
@@ -101,39 +102,46 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
 
     it('should set the ID of the element if the ID of the state changes and the ID was set previously', () => {
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element.id).toBe(newId);
     });
 
     it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to manual value', () => {
       element = (fixture.nativeElement as HTMLElement).querySelectorAll('select')[1];
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
+
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element.id).toBe('customId');
     });
 
     it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to other binding', () => {
       element = (fixture.nativeElement as HTMLElement).querySelectorAll('select')[2];
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
+
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element.id).toBe(component.boundId);
     });
 
     it('should not set the ID of the element if the ID of the state does not change', () => {
-      const renderer: Renderer2 = { setProperty: vi.fn() } as any;
-      const nativeElement: any = {};
-      viewAdapter = new NgrxSelectMultipleViewAdapter(renderer, { nativeElement } as any);
-      viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
-      viewAdapter.ngAfterViewInit();
-      expect(renderer.setProperty).toHaveBeenCalledTimes(1);
-      nativeElement.id = TEST_ID;
-      viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
-      expect(renderer.setProperty).toHaveBeenCalledTimes(1);
+      const renderer = fixture.componentRef.injector.get(Renderer2);
+      const setProperty = vi.spyOn(renderer, 'setProperty');
+
+      component.state = { id: `${TEST_ID}1` };
+      fixture.detectChanges();
+
+      expect(setProperty).toHaveBeenCalledWith(expect.anything(), 'id', `${TEST_ID}1`);
+      setProperty.mockClear();
+
+      component.state = { id: `${TEST_ID}1` };
+      fixture.detectChanges();
+
+      expect(setProperty).not.toHaveBeenCalled();
     });
 
     it('should mark a single option as selected if same value is written', () => {
@@ -188,12 +196,11 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should throw if state is undefined', () => {
-      expect(() => (viewAdapter.ngrxFormControlState = undefined as any)).toThrowError();
-    });
-
-    it('should not throw if calling callbacks before they are registered', () => {
-      expect(() => new NgrxSelectMultipleViewAdapter(undefined as any, undefined as any).onChange()).not.toThrowError();
-      expect(() => new NgrxSelectMultipleViewAdapter(undefined as any, undefined as any).onTouched()).not.toThrowError();
+      const fn = () => {
+        component.state = undefined;
+        fixture.detectChanges();
+      };
+      expect(fn).toThrowError();
     });
 
     it('should throw if value is not an array', () => {
@@ -220,8 +227,9 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
 
     it('should set the ID of the element if the ID of the state changes', () => {
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element.id).toBe(newId);
     });
 

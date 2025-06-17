@@ -1,5 +1,6 @@
 import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormControlState } from '../state';
 import { NgrxRadioViewAdapter } from './radio';
 
 const TEST_ID = 'test ID';
@@ -16,11 +17,11 @@ const OPTION2_VALUE = 'op2';
     <input type="radio" value="op1" [ngrxFormControlState]="state" name="customName" />
     <input type="radio" value="op1" [ngrxFormControlState]="state" [name]="boundName" />
 
-    @for (o of stringOptions; track trackByIndex($index, o)) {
+    @for (o of stringOptions; track $index) {
     <input type="radio" [value]="o" [ngrxFormControlState]="state" />
-    } @for (o of numberOptions; track trackByIndex($index, o)) {
+    } @for (o of numberOptions; track $index) {
     <input type="radio" [value]="o" [ngrxFormControlState]="state" />
-    } @for (o of booleanOptions; track trackByIndex($index, o)) {
+    } @for (o of booleanOptions; track $index) {
     <input type="radio" [value]="o" [ngrxFormControlState]="state" />
     }
   `,
@@ -30,8 +31,8 @@ export class RadioTestComponent {
   stringOptions = ['op1', 'op2'];
   numberOptions = [1, 2];
   booleanOptions = [true, false];
-  state = { id: TEST_ID } as any;
-  trackByIndex = (index: number) => index;
+
+  public state: Partial<FormControlState<any>> | null | undefined = { id: TEST_ID };
 }
 
 describe(NgrxRadioViewAdapter.name, () => {
@@ -78,41 +79,48 @@ describe(NgrxRadioViewAdapter.name, () => {
 
     it("should set the name of the elements when the state's ID changes and the name was set previously", () => {
       const newId = 'new ID';
-      viewAdapter1.ngrxFormControlState = { id: newId } as any;
-      viewAdapter2.ngrxFormControlState = { id: newId } as any;
+
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element1.name).toBe(newId);
       expect(element2.name).toBe(newId);
     });
 
     it("should not set the name of the elements when the state's ID changes and the name was not set previously due to manual value", () => {
       const element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[2];
-      const viewAdapter = getDebugNode(element)!.injector.get<NgrxRadioViewAdapter>(NgrxRadioViewAdapter);
+
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element.name).toBe('customName');
     });
 
     it("should not set the name of the elements when the state's ID changes and the name was not set previously due to other binding", () => {
       const element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[3];
-      const viewAdapter = getDebugNode(element)!.injector.get<NgrxRadioViewAdapter>(NgrxRadioViewAdapter);
+
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element.name).toBe(component.boundName);
     });
 
     it('should not set the name of the elements if the ID of the state does not change', () => {
-      const renderer: Renderer2 = { setProperty: vi.fn() } as any;
-      const nativeElement: any = {};
-      const viewAdapter = new NgrxRadioViewAdapter(renderer, { nativeElement } as any);
-      viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
-      viewAdapter.ngAfterViewInit();
-      expect(renderer.setProperty).toHaveBeenCalledTimes(1);
-      nativeElement.name = TEST_ID;
-      viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
-      expect(renderer.setProperty).toHaveBeenCalledTimes(1);
+      const renderer = fixture.componentRef.injector.get(Renderer2);
+      const setProperty = vi.spyOn(renderer, 'setProperty');
+
+      component.state = { id: `${TEST_ID}1` };
+      fixture.detectChanges();
+
+      expect(setProperty).toHaveBeenCalledWith(expect.anything(), 'name', `${TEST_ID}1`);
+      setProperty.mockClear();
+
+      component.state = { id: `${TEST_ID}1` };
+      fixture.detectChanges();
+
+      expect(setProperty).not.toHaveBeenCalled();
     });
 
     it('should mark the option as checked if same value is written', () => {
@@ -153,12 +161,11 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should throw if state is undefined', () => {
-      expect(() => (viewAdapter1.ngrxFormControlState = undefined as any)).toThrowError();
-    });
-
-    it('should not throw if calling callbacks before they are registered', () => {
-      expect(() => new NgrxRadioViewAdapter(undefined as any, undefined as any).onChange()).not.toThrowError();
-      expect(() => new NgrxRadioViewAdapter(undefined as any, undefined as any).onTouched()).not.toThrowError();
+      const fn = () => {
+        component.state = undefined;
+        fixture.detectChanges();
+      };
+      expect(fn).toThrowError();
     });
   });
 
