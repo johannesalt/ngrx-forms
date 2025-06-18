@@ -1,7 +1,8 @@
-import { Component, ElementRef, getDebugNode, Renderer2 } from '@angular/core';
+import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControlState } from '../state';
-import { NgrxSelectOption, NgrxSelectViewAdapter } from './select';
+import { NgrxSelectOption } from './option';
+import { NgrxSelectViewAdapter } from './select';
 
 const TEST_ID = 'test ID';
 
@@ -79,7 +80,9 @@ describe(NgrxSelectViewAdapter.name, () => {
       fixture.detectChanges();
     });
 
-    it('should attach the view adapter', () => expect(viewAdapter).toBeDefined());
+    it('should attach the view adapter', () => {
+      expect(viewAdapter).toBeDefined();
+    });
 
     it('should set the ID of the element to the ID of the state if the ID is not already set', () => {
       expect(element.id).toBe(TEST_ID);
@@ -426,34 +429,5 @@ describe(NgrxSelectViewAdapter.name, () => {
   it('should not throw if calling callbacks before they are registered', () => {
     expect(() => viewAdapter.onChange({ target: option1 })).not.toThrowError();
     expect(() => viewAdapter.onTouched()).not.toThrowError();
-  });
-});
-
-describe(NgrxSelectOption.name, () => {
-  let viewAdapter: NgrxSelectViewAdapter;
-  let option: NgrxSelectOption;
-  let renderer: Renderer2;
-  let elementRef: ElementRef;
-
-  beforeEach(() => {
-    elementRef = { nativeElement: {} } as any;
-    renderer = { setProperty: vi.fn() } as any;
-    viewAdapter = new NgrxSelectViewAdapter(renderer, {} as any);
-    option = new NgrxSelectOption(elementRef, renderer, viewAdapter);
-  });
-
-  it('should work if option is created without view adapter', () => {
-    expect(new NgrxSelectOption({} as any, {} as any, null as any)).toBeDefined();
-  });
-
-  it('should set the value to the id of the element', () => {
-    option.value = 'value';
-    expect(renderer.setProperty).not.toHaveBeenCalledWith(elementRef.nativeElement, 'value', 0);
-  });
-
-  it('should not set the value to the id if no view adapter is provided', () => {
-    option = new NgrxSelectOption({} as any, {} as any, null as any);
-    option.value = 'value';
-    expect(renderer.setProperty).not.toHaveBeenCalled();
   });
 });

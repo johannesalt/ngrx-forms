@@ -67,11 +67,17 @@ export { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter/view-ada
 export { NgrxCheckboxViewAdapter } from './view-adapter/checkbox';
 export { NgrxDefaultViewAdapter } from './view-adapter/default';
 export { NgrxNumberViewAdapter } from './view-adapter/number';
-export { NgrxFallbackSelectOption } from './view-adapter/option';
+export {
+  NGRX_SELECT_VIEW_ADAPTER,
+  NgrxSelectOption as NgrxFallbackSelectOption,
+  NgrxSelectOption as NgrxSelectMultipleOption,
+  NgrxSelectOption,
+  SelectViewAdapter
+} from './view-adapter/option';
 export { NgrxRadioViewAdapter } from './view-adapter/radio';
 export { NgrxRangeViewAdapter } from './view-adapter/range';
-export { NgrxSelectViewAdapter, NgrxSelectOption } from './view-adapter/select';
-export { NgrxSelectMultipleViewAdapter, NgrxSelectMultipleOption } from './view-adapter/select-multiple';
+export { NgrxSelectViewAdapter } from './view-adapter/select';
+export { NgrxSelectMultipleViewAdapter } from './view-adapter/select-multiple';
 
 export { NgrxFormControlDirective, NgrxFormControlValueType, NGRX_UPDATE_ON_TYPE } from './control/directive';
 export { NgrxLocalFormControlDirective } from './control/local-state-directive';

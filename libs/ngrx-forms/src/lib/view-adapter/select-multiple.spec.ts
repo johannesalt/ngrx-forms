@@ -1,7 +1,8 @@
-import { Component, ElementRef, getDebugNode, Renderer2 } from '@angular/core';
+import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControlState } from '../state';
-import { NgrxSelectMultipleOption, NgrxSelectMultipleViewAdapter } from './select-multiple';
+import { NgrxSelectOption } from './option';
+import { NgrxSelectMultipleViewAdapter } from './select-multiple';
 
 const TEST_ID = 'test ID';
 
@@ -10,7 +11,7 @@ const OPTION2_VALUE = 'op2';
 const OPTION3_VALUE = 'op3';
 
 @Component({
-  imports: [NgrxSelectMultipleViewAdapter, NgrxSelectMultipleOption],
+  imports: [NgrxSelectMultipleViewAdapter, NgrxSelectOption],
   template: `
     <select multiple [ngrxFormControlState]="state">
       <option value="op1">op1</option>
@@ -434,34 +435,5 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
   it('should not throw if calling callbacks before they are registered', () => {
     expect(() => viewAdapter.onChange()).not.toThrowError();
     expect(() => viewAdapter.onTouched()).not.toThrowError();
-  });
-});
-
-describe(NgrxSelectMultipleOption.name, () => {
-  let viewAdapter: NgrxSelectMultipleViewAdapter;
-  let option: NgrxSelectMultipleOption;
-  let renderer: Renderer2;
-  let elementRef: ElementRef;
-
-  beforeEach(() => {
-    elementRef = { nativeElement: {} } as any;
-    renderer = { setProperty: vi.fn() } as any;
-    viewAdapter = new NgrxSelectMultipleViewAdapter(renderer, {} as any);
-    option = new NgrxSelectMultipleOption({} as any, renderer, viewAdapter);
-  });
-
-  it('should work if option is created without view adapter', () => {
-    expect(new NgrxSelectMultipleOption({} as any, {} as any, null as any)).toBeDefined();
-  });
-
-  it('should set the value to the id of the element', () => {
-    option.ngOnInit();
-    expect(renderer.setProperty).not.toHaveBeenCalledWith(elementRef.nativeElement, 'value', 0);
-  });
-
-  it('should not set the value to the id if no view adapter is provided', () => {
-    option = new NgrxSelectMultipleOption({} as any, renderer, null as any);
-    option.ngOnInit();
-    expect(renderer.setProperty).not.toHaveBeenCalled();
   });
 });

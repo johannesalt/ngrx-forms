@@ -1,6 +1,7 @@
-import { Directive, ElementRef, forwardRef, Host, HostListener, Input, OnDestroy, Optional, Renderer2 } from '@angular/core';
+import { Directive, forwardRef, HostListener } from '@angular/core';
+import { NGRX_SELECT_VIEW_ADAPTER, SelectViewAdapter } from './option';
 import { SetNativeId } from './set-native-id';
-import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
 @Directive({
   selector: 'select:not([multiple])[ngrxFormControlState]',
@@ -10,9 +11,13 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
       useExisting: forwardRef(() => NgrxSelectViewAdapter),
       multi: true,
     },
+    {
+      provide: NGRX_SELECT_VIEW_ADAPTER,
+      useExisting: forwardRef(() => NgrxSelectViewAdapter),
+    },
   ],
 })
-export class NgrxSelectViewAdapter extends SetNativeId implements FormViewAdapter {
+export class NgrxSelectViewAdapter extends SetNativeId implements SelectViewAdapter {
   private optionMap: { [id: string]: any } = {};
   private idCounter = 0;
   private selectedId: string | null = null;
@@ -53,7 +58,7 @@ export class NgrxSelectViewAdapter extends SetNativeId implements FormViewAdapte
     this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
   }
 
-  createOptionId() {
+  registerOption(): string {
     const id = this.idCounter.toString();
     this.idCounter += 1;
     return id;
@@ -81,48 +86,5 @@ export class NgrxSelectViewAdapter extends SetNativeId implements FormViewAdapte
     }
 
     return null;
-  }
-}
-
-const NULL_VIEW_ADAPTER: NgrxSelectViewAdapter = {
-  createOptionId: () => '',
-  deregisterOption: () => void 0,
-  updateOptionValue: () => void 0,
-} as any;
-
-const NULL_RENDERER: Renderer2 = {
-  setProperty: () => void 0,
-} as any;
-
-@Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: 'option',
-})
-export class NgrxSelectOption implements OnDestroy {
-  private isInitialized = false;
-  id: string;
-
-  constructor(private element: ElementRef, private renderer: Renderer2, @Host() @Optional() private viewAdapter: NgrxSelectViewAdapter) {
-    this.renderer = viewAdapter ? renderer : NULL_RENDERER;
-    this.viewAdapter = viewAdapter || NULL_VIEW_ADAPTER;
-    this.id = this.viewAdapter.createOptionId();
-  }
-
-  @Input()
-  set value(value: any) {
-    // this cannot be done inside ngOnInit since the value property
-    // must be already set when the option value is updated in the view
-    // adapter and the initial binding of 'value' happens before
-    // ngOnInit runs
-    if (!this.isInitialized) {
-      this.isInitialized = true;
-      this.renderer.setProperty(this.element.nativeElement, 'value', this.id);
-    }
-
-    this.viewAdapter.updateOptionValue(this.id, value);
-  }
-
-  ngOnDestroy(): void {
-    this.viewAdapter.deregisterOption(this.id);
   }
 }

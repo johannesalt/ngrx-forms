@@ -1,6 +1,7 @@
-import { Directive, ElementRef, forwardRef, Host, HostListener, Input, OnDestroy, OnInit, Optional, Renderer2 } from '@angular/core';
+import { Directive, forwardRef, HostListener } from '@angular/core';
+import { NGRX_SELECT_VIEW_ADAPTER, NgrxSelectOption, SelectViewAdapter } from './option';
 import { SetNativeId } from './set-native-id';
-import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
 @Directive({
   selector: 'select[multiple][ngrxFormControlState]',
@@ -10,10 +11,14 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
       useExisting: forwardRef(() => NgrxSelectMultipleViewAdapter),
       multi: true,
     },
+    {
+      provide: NGRX_SELECT_VIEW_ADAPTER,
+      useExisting: forwardRef(() => NgrxSelectMultipleViewAdapter),
+    },
   ],
 })
-export class NgrxSelectMultipleViewAdapter extends SetNativeId implements FormViewAdapter {
-  private options: { [id: string]: NgrxSelectMultipleOption } = {};
+export class NgrxSelectMultipleViewAdapter extends SetNativeId implements SelectViewAdapter {
+  private options: { [id: string]: NgrxSelectOption } = {};
   private optionValues: { [id: string]: any } = {};
   private idCounter = 0;
   private selectedIds: string[] = [];
@@ -36,12 +41,12 @@ export class NgrxSelectMultipleViewAdapter extends SetNativeId implements FormVi
       .map((v) => this.getOptionId(v))
       .filter((id) => id !== null)
       .map((id) => id as string);
-    Object.keys(this.options).forEach((id) => (this.options[id].isSelected = this.selectedIds.indexOf(id) >= 0));
+    Object.keys(this.options).forEach((id) => (this.options[id].selected = this.selectedIds.indexOf(id) >= 0));
   }
 
   @HostListener('change')
   onChange() {
-    this.selectedIds = Object.keys(this.options).filter((id) => this.options[id].isSelected);
+    this.selectedIds = Object.keys(this.options).filter((id) => this.options[id].selected);
     const value = this.selectedIds.map((id) => this.optionValues[id]);
     this.onChangeFn(value);
   }
@@ -58,7 +63,7 @@ export class NgrxSelectMultipleViewAdapter extends SetNativeId implements FormVi
     this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
   }
 
-  registerOption(option: NgrxSelectMultipleOption) {
+  registerOption(option: NgrxSelectOption): string {
     const id = this.idCounter.toString();
     this.options[id] = option;
     this.idCounter += 1;
@@ -86,50 +91,5 @@ export class NgrxSelectMultipleViewAdapter extends SetNativeId implements FormVi
     }
 
     return null;
-  }
-}
-
-const NULL_VIEW_ADAPTER: NgrxSelectMultipleViewAdapter = {
-  registerOption: () => '',
-  deregisterOption: () => void 0,
-  updateOptionValue: () => void 0,
-} as any;
-
-const NULL_RENDERER: Renderer2 = {
-  setProperty: () => void 0,
-} as any;
-
-@Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: 'option',
-})
-export class NgrxSelectMultipleOption implements OnInit, OnDestroy {
-  id: string;
-
-  constructor(private element: ElementRef, private renderer: Renderer2, @Host() @Optional() private viewAdapter: NgrxSelectMultipleViewAdapter) {
-    this.renderer = viewAdapter ? renderer : NULL_RENDERER;
-    this.viewAdapter = viewAdapter || NULL_VIEW_ADAPTER;
-    this.id = this.viewAdapter.registerOption(this);
-  }
-
-  @Input()
-  set value(value: any) {
-    this.viewAdapter.updateOptionValue(this.id, value);
-  }
-
-  set isSelected(selected: boolean) {
-    this.renderer.setProperty(this.element.nativeElement, 'selected', selected);
-  }
-
-  get isSelected() {
-    return (this.element.nativeElement as HTMLOptionElement).selected;
-  }
-
-  ngOnInit() {
-    this.renderer.setProperty(this.element.nativeElement, 'value', this.id);
-  }
-
-  ngOnDestroy(): void {
-    this.viewAdapter.deregisterOption(this.id);
   }
 }
