@@ -1,6 +1,5 @@
-import { Directive, HostListener, Inject, Input, OnInit, Optional } from '@angular/core';
+import { Directive, HostListener, Inject, OnInit, Optional, input } from '@angular/core';
 import { ActionsSubject } from '@ngrx/store';
-
 import { Actions, MarkAsSubmittedAction } from '../actions';
 import { FormGroupState, KeyValue } from '../state';
 
@@ -13,7 +12,7 @@ type CustomEvent = Event;
   selector: 'form:not([ngrxFormsAction])[ngrxFormState]',
 })
 export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
-  @Input() ngrxFormState: FormGroupState<TStateValue>;
+  public readonly ngrxFormState = input.required<FormGroupState<TStateValue>>();
 
   constructor(@Optional() @Inject(ActionsSubject) private actionsSubject: ActionsSubject | null) {
     this.actionsSubject = actionsSubject;
@@ -28,7 +27,8 @@ export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.ngrxFormState) {
+    const state = this.ngrxFormState();
+    if (!state) {
       throw new Error('The form state must not be undefined!');
     }
   }
@@ -36,8 +36,10 @@ export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
   @HostListener('submit', ['$event'])
   onSubmit(event: CustomEvent) {
     event.preventDefault();
-    if (this.ngrxFormState.isUnsubmitted) {
-      this.dispatchAction(new MarkAsSubmittedAction(this.ngrxFormState.id));
+
+    const { id, isUnsubmitted } = this.ngrxFormState();
+    if (isUnsubmitted) {
+      this.dispatchAction(new MarkAsSubmittedAction(id));
     }
   }
 }

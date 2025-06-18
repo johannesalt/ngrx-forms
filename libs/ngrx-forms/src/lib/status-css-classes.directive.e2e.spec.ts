@@ -16,7 +16,7 @@ import { NGRX_STATUS_CLASS_NAMES, NgrxStatusCssClassesDirective } from './status
   `,
 })
 export class TestComponent {
-  @Input() state: FormGroupState<{ inner: string }>;
+  state: FormGroupState<{ inner: string }>;
 }
 
 describe(NgrxStatusCssClassesDirective.name, () => {
