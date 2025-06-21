@@ -1,5 +1,4 @@
-import { Directive, EventEmitter, Output } from '@angular/core';
-
+import { Directive, output } from '@angular/core';
 import { Actions } from '../actions';
 import { KeyValue } from '../state';
 import { NgrxFormDirective } from './directive';
@@ -8,7 +7,7 @@ import { NgrxFormDirective } from './directive';
   selector: 'form[ngrxFormState][ngrxFormsAction]',
 })
 export class NgrxLocalFormDirective<TStateValue extends KeyValue> extends NgrxFormDirective<TStateValue> {
-  @Output() ngrxFormsAction = new EventEmitter<Actions<TStateValue>>();
+  public readonly ngrxFormsAction = output<Actions<TStateValue>>();
 
   constructor() {
     super(null);

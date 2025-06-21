@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, Inject, Optional, Output, Self } from '@angular/core';
+import { Directive, ElementRef, Inject, Optional, output, Self } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Actions } from '../actions';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '../view-adapter/view-adapter';
@@ -8,7 +8,7 @@ import { NgrxFormControlDirective, NgrxFormControlValueType } from './directive'
   selector: '[ngrxFormControlState][ngrxFormsAction]',
 })
 export class NgrxLocalFormControlDirective<TStateValue, TViewValue = TStateValue> extends NgrxFormControlDirective<TStateValue, TViewValue> {
-  @Output() ngrxFormsAction = new EventEmitter<Actions<NgrxFormControlValueType<TStateValue>>>();
+  public readonly ngrxFormsAction = output<Actions<NgrxFormControlValueType<TStateValue>>>();
 
   constructor(
     el: ElementRef,
