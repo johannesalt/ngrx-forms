@@ -72,7 +72,7 @@ export {
   NgrxSelectOption as NgrxFallbackSelectOption,
   NgrxSelectOption as NgrxSelectMultipleOption,
   NgrxSelectOption,
-  SelectViewAdapter
+  SelectViewAdapter,
 } from './view-adapter/option';
 export { NgrxRadioViewAdapter } from './view-adapter/radio';
 export { NgrxRangeViewAdapter } from './view-adapter/range';
