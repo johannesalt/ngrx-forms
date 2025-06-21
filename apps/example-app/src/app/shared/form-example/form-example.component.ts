@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { FormGroupState } from 'ngrx-form-state';
 import * as Prism from 'prismjs';
@@ -13,17 +13,26 @@ import 'prismjs/components/prism-typescript';
   imports: [MatCard, MatCardContent],
 })
 export class FormExampleComponent {
-  @Input() exampleName = '';
-  @Input() githubLinkOverride: string | undefined;
+  public readonly exampleName = input<string>('');
 
-  @Input() set formState(value: FormGroupState<any>) {
-    const formStateJson = JSON.stringify(value, null, 2);
-    this.formattedFormState = Prism.highlight(formStateJson, Prism.languages['json'], 'en');
-  }
+  public readonly formState = input<FormGroupState<any>>();
 
-  formattedFormState = '';
+  public readonly githubLinkOverride = input<string | undefined>(undefined);
 
-  get githubLink() {
-    return this.githubLinkOverride || this.exampleName.replace(' ', '-').toLowerCase();
-  }
+  public readonly formattedFormState = computed(() => {
+    const state = this.formState();
+
+    const json = JSON.stringify(state, null, 2);
+    return Prism.highlight(json, Prism.languages['json'], 'json');
+  });
+
+  public readonly githubLink = computed(() => {
+    const exampleName = this.exampleName();
+    const githubLinkOverride = this.githubLinkOverride();
+
+    let result = 'https://github.com/johannesalt/ngrx-forms/tree/master/example-app/src/app/';
+    result += githubLinkOverride || exampleName.replace(' ', '-').toLowerCase();
+
+    return result;
+  });
 }

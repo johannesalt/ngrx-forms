@@ -2,9 +2,9 @@
   <mat-card-content>
     <div class="title-wrapper">
       <div class="title">
-        {{ exampleName }}
+        {{ exampleName() }}
       </div>
-      <a class="github-link" href="https://github.com/johannesalt/ngrx-forms/tree/master/example-app/src/app/{{ githubLink }}" target="_blank">
+      <a class="github-link" [href]="githubLink()" target="_blank">
         View code on GitHub
         <img src="public/GitHub-Mark.png" alt="Github" />
       </a>
@@ -16,6 +16,6 @@
 </mat-card>
 <mat-card appearance="outlined" class="form-state">
   <mat-card-content>
-    <pre><code [innerHtml]="formattedFormState"></code></pre>
+    <pre><code [innerHtml]="formattedFormState()"></code></pre>
   </mat-card-content>
 </mat-card>
