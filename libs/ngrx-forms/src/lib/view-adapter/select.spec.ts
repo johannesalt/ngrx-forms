@@ -1,6 +1,8 @@
-import { Component, ElementRef, getDebugNode, Renderer2 } from '@angular/core';
+import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { NgrxSelectOption, NgrxSelectViewAdapter } from './select';
+import { FormControlState } from '../state';
+import { NgrxSelectOption } from './option';
+import { NgrxSelectViewAdapter } from './select';
 
 const TEST_ID = 'test ID';
 
@@ -25,19 +27,19 @@ const OPTION1_VALUE = 'op1';
     </select>
 
     <select [ngrxFormControlState]="state">
-      @for (o of stringOptions; track trackByIndex($index, o)) {
+      @for (o of stringOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
 
     <select [ngrxFormControlState]="state">
-      @for (o of numberOptions; track trackByIndex($index, o)) {
+      @for (o of numberOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
 
     <select [ngrxFormControlState]="state">
-      @for (o of booleanOptions; track trackByIndex($index, o)) {
+      @for (o of booleanOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
@@ -48,8 +50,8 @@ export class SelectTestComponent {
   stringOptions = ['op1', 'op2'];
   numberOptions = [1, 2];
   booleanOptions = [true, false];
-  state = { id: TEST_ID } as any;
-  trackByIndex = (index: number) => index;
+
+  public state: Partial<FormControlState<any>> | null | undefined = { id: TEST_ID };
 }
 
 describe(NgrxSelectViewAdapter.name, () => {
@@ -78,7 +80,9 @@ describe(NgrxSelectViewAdapter.name, () => {
       fixture.detectChanges();
     });
 
-    it('should attach the view adapter', () => expect(viewAdapter).toBeDefined());
+    it('should attach the view adapter', () => {
+      expect(viewAdapter).toBeDefined();
+    });
 
     it('should set the ID of the element to the ID of the state if the ID is not already set', () => {
       expect(element.id).toBe(TEST_ID);
@@ -96,39 +100,46 @@ describe(NgrxSelectViewAdapter.name, () => {
 
     it('should set the ID of the element if the ID of the state changes and the ID was set previously', () => {
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element.id).toBe(newId);
     });
 
     it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to manual value', () => {
       element = (fixture.nativeElement as HTMLElement).querySelectorAll('select')[1];
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxSelectViewAdapter>(NgrxSelectViewAdapter);
+
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element.id).toBe('customId');
     });
 
     it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to other binding', () => {
       element = (fixture.nativeElement as HTMLElement).querySelectorAll('select')[2];
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxSelectViewAdapter>(NgrxSelectViewAdapter);
+
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId };
       fixture.detectChanges();
+
       expect(element.id).toBe(component.boundId);
     });
 
     it('should not set the ID of the element if the ID of the state does not change', () => {
-      const renderer: Renderer2 = { setProperty: vi.fn() } as any;
-      const nativeElement: any = {};
-      viewAdapter = new NgrxSelectViewAdapter(renderer, { nativeElement } as any);
-      viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
-      viewAdapter.ngAfterViewInit();
-      expect(renderer.setProperty).toHaveBeenCalledTimes(1);
-      nativeElement.id = TEST_ID;
-      viewAdapter.ngrxFormControlState = { id: TEST_ID } as any;
-      expect(renderer.setProperty).toHaveBeenCalledTimes(1);
+      const renderer = fixture.componentRef.injector.get(Renderer2);
+      const setProperty = vi.spyOn(renderer, 'setProperty');
+
+      component.state = { id: `${TEST_ID}1` };
+      fixture.detectChanges();
+
+      expect(setProperty).toHaveBeenCalledWith(expect.anything(), 'id', `${TEST_ID}1`);
+      setProperty.mockClear();
+
+      component.state = { id: `${TEST_ID}1` };
+      fixture.detectChanges();
+
+      expect(setProperty).not.toHaveBeenCalled(1);
     });
 
     it('should mark the option as selected if same value is written', () => {
@@ -168,12 +179,11 @@ describe(NgrxSelectViewAdapter.name, () => {
     });
 
     it('should throw if state is undefined', () => {
-      expect(() => (viewAdapter.ngrxFormControlState = undefined as any)).toThrowError();
-    });
-
-    it('should not throw if calling callbacks before they are registered', () => {
-      expect(() => new NgrxSelectViewAdapter(undefined as any, undefined as any).onChangeFn(undefined)).not.toThrowError();
-      expect(() => new NgrxSelectViewAdapter(undefined as any, undefined as any).onTouched()).not.toThrowError();
+      const fn = () => {
+        component.state = undefined;
+        fixture.detectChanges();
+      };
+      expect(fn).toThrowError();
     });
   });
 
@@ -196,8 +206,9 @@ describe(NgrxSelectViewAdapter.name, () => {
 
     it('should set the ID of the element if the ID of the state changes', () => {
       const newId = 'new ID';
-      viewAdapter.ngrxFormControlState = { id: newId } as any;
+      component.state = { id: newId } as any;
       fixture.detectChanges();
+
       expect(element.id).toBe(newId);
     });
 
@@ -414,33 +425,9 @@ describe(NgrxSelectViewAdapter.name, () => {
       expect(newOption.selected).toBe(true);
     });
   });
-});
 
-describe(NgrxSelectOption.name, () => {
-  let viewAdapter: NgrxSelectViewAdapter;
-  let option: NgrxSelectOption;
-  let renderer: Renderer2;
-  let elementRef: ElementRef;
-
-  beforeEach(() => {
-    elementRef = { nativeElement: {} } as any;
-    renderer = { setProperty: vi.fn() } as any;
-    viewAdapter = new NgrxSelectViewAdapter(renderer, {} as any);
-    option = new NgrxSelectOption(elementRef, renderer, viewAdapter);
-  });
-
-  it('should work if option is created without view adapter', () => {
-    expect(new NgrxSelectOption({} as any, {} as any, null as any)).toBeDefined();
-  });
-
-  it('should set the value to the id of the element', () => {
-    option.value = 'value';
-    expect(renderer.setProperty).not.toHaveBeenCalledWith(elementRef.nativeElement, 'value', 0);
-  });
-
-  it('should not set the value to the id if no view adapter is provided', () => {
-    option = new NgrxSelectOption({} as any, {} as any, null as any);
-    option.value = 'value';
-    expect(renderer.setProperty).not.toHaveBeenCalled();
+  it('should not throw if calling callbacks before they are registered', () => {
+    expect(() => viewAdapter.onChange({ target: option1 })).not.toThrowError();
+    expect(() => viewAdapter.onTouched()).not.toThrowError();
   });
 });

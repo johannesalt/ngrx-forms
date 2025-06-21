@@ -1,4 +1,4 @@
-import { Directive, Host, Input, Optional } from '@angular/core';
+import { computed, Directive, effect, inject, input } from '@angular/core';
 import { MatChipGrid } from '@angular/material/chips';
 import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
@@ -9,8 +9,21 @@ import { FormControlState } from 'ngrx-form-state';
   selector: '[ngrxFormControlState]',
 })
 export class CustomErrorStateMatcherDirective {
-  @Input() set ngrxFormControlState(state: FormControlState<any>) {
-    const errorsAreShown = state.isInvalid && (state.isTouched || state.isSubmitted);
+  public readonly ngrxFormControlState = input.required<FormControlState<any>>();
+
+  private readonly chipGrid = inject(MatChipGrid, { host: true, optional: true });
+
+  private readonly errorsAreShown = computed(() => {
+    const { isInvalid, isTouched, isSubmitted } = this.ngrxFormControlState();
+    return isInvalid && (isTouched || isSubmitted);
+  });
+
+  private readonly input = inject(MatInput, { host: true, optional: true });
+
+  private readonly select = inject(MatSelect, { host: true, optional: true });
+
+  private readonly updateErrorState = effect(() => {
+    const errorsAreShown = this.errorsAreShown();
 
     if (this.input) {
       this.input.errorState = errorsAreShown;
@@ -26,7 +39,5 @@ export class CustomErrorStateMatcherDirective {
       this.chipGrid.errorState = errorsAreShown;
       this.chipGrid.stateChanges.next();
     }
-  }
-
-  constructor(@Host() @Optional() private input: MatInput, @Host() @Optional() private select: MatSelect, @Host() @Optional() private chipGrid: MatChipGrid) {}
+  });
 }

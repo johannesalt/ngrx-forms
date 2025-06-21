@@ -1,8 +1,8 @@
-<a mat-list-item [routerLink]="routerLink" routerLinkActive="active-link">
+<a mat-list-item [routerLink]="routerLink()" routerLinkActive="active-link">
   <span mat-line>
     <ng-content></ng-content>
   </span>
-  @if (hint) {
+  @if (hint(); as hint) {
   <div mat-line class="hint">{{ hint }}</div>
   }
 </a>

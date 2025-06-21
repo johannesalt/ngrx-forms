@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { computed, Directive, input } from '@angular/core';
 import { AbstractControlState } from './state';
 
 /**
@@ -19,62 +19,74 @@ export const NGRX_STATUS_CLASS_NAMES = {
 
 @Directive({
   selector: 'form[ngrxFormState],[ngrxFormControlState]',
+  host: {
+    '[class.ngrx-forms-dirty]': 'isDirty()',
+    '[class.ngrx-forms-invalid]': 'isInvalid()',
+    '[class.ngrx-forms-pristine]': 'isPristine()',
+    '[class.ngrx-forms-submitted]': 'isSubmitted()',
+    '[class.ngrx-forms-touched]': 'isTouched()',
+    '[class.ngrx-forms-unsubmitted]': 'isUnsubmitted()',
+    '[class.ngrx-forms-untouched]': 'isUntouched()',
+    '[class.ngrx-forms-valid]': 'isValid()',
+    '[class.ngrx-forms-validation-pending]': 'isValidationPending()',
+  },
 })
 export class NgrxStatusCssClassesDirective {
-  private state: AbstractControlState<any>;
+  public readonly ngrxFormControlState = input<AbstractControlState<any>>();
 
-  @Input()
-  set ngrxFormControlState(state: AbstractControlState<any>) {
-    this.state = state;
-  }
+  public readonly ngrxFormState = input<AbstractControlState<any>>();
 
-  @Input()
-  set ngrxFormState(state: AbstractControlState<any>) {
-    this.state = state;
-  }
+  public readonly isDirty = computed(() => {
+    const { isDirty } = this.state();
+    return isDirty;
+  });
 
-  @HostBinding(`class.${NGRX_STATUS_CLASS_NAMES.isValid}`)
-  get isValid() {
-    return this.state.isValid;
-  }
+  public readonly isInvalid = computed(() => {
+    const { isInvalid } = this.state();
+    return isInvalid;
+  });
 
-  @HostBinding(`class.${NGRX_STATUS_CLASS_NAMES.isInvalid}`)
-  get isInvalid() {
-    return this.state.isInvalid;
-  }
+  public readonly isPristine = computed(() => {
+    const { isPristine } = this.state();
+    return isPristine;
+  });
 
-  @HostBinding(`class.${NGRX_STATUS_CLASS_NAMES.isDirty}`)
-  get isDirty() {
-    return this.state.isDirty;
-  }
+  public readonly isSubmitted = computed(() => {
+    const { isSubmitted } = this.state();
+    return isSubmitted;
+  });
 
-  @HostBinding(`class.${NGRX_STATUS_CLASS_NAMES.isPristine}`)
-  get isPristine() {
-    return this.state.isPristine;
-  }
+  public readonly isTouched = computed(() => {
+    const { isTouched } = this.state();
+    return isTouched;
+  });
 
-  @HostBinding(`class.${NGRX_STATUS_CLASS_NAMES.isTouched}`)
-  get isTouched() {
-    return this.state.isTouched;
-  }
+  public readonly isUnsubmitted = computed(() => {
+    const { isUnsubmitted } = this.state();
+    return isUnsubmitted;
+  });
 
-  @HostBinding(`class.${NGRX_STATUS_CLASS_NAMES.isUntouched}`)
-  get isUntouched() {
-    return this.state.isUntouched;
-  }
+  public readonly isUntouched = computed(() => {
+    const { isUntouched } = this.state();
+    return isUntouched;
+  });
 
-  @HostBinding(`class.${NGRX_STATUS_CLASS_NAMES.isSubmitted}`)
-  get isSubmitted() {
-    return this.state.isSubmitted;
-  }
+  public readonly isValid = computed(() => {
+    const { isValid } = this.state();
+    return isValid;
+  });
 
-  @HostBinding(`class.${NGRX_STATUS_CLASS_NAMES.isUnsubmitted}`)
-  get isUnsubmitted() {
-    return this.state.isUnsubmitted;
-  }
+  public readonly isValidationPending = computed(() => {
+    const { isValidationPending } = this.state();
+    return isValidationPending;
+  });
 
-  @HostBinding(`class.${NGRX_STATUS_CLASS_NAMES.isValidationPending}`)
-  get isValidationPending() {
-    return this.state.isValidationPending;
-  }
+  private readonly state = computed(() => {
+    const formState = this.ngrxFormControlState() ?? this.ngrxFormState();
+    if (!formState) {
+      throw 'Form state cannot be null';
+    }
+
+    return formState;
+  });
 }

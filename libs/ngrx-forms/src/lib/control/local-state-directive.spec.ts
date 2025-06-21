@@ -1,89 +1,135 @@
-import { ElementRef } from '@angular/core';
-import { Action } from '@ngrx/store';
-import { Observable, ReplaySubject } from 'rxjs';
-import { count, first } from 'rxjs/operators';
+import { Component, ElementRef, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { Action, ActionsSubject } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { Mock, MockInstance } from 'vitest';
 import { SetValueAction } from '../actions';
-import { createFormControlState } from '../state';
-import { FormViewAdapter } from '../view-adapter/view-adapter';
+import { createFormControlState, FormControlState } from '../state';
+import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '../view-adapter/view-adapter';
 import { NgrxLocalFormControlDirective } from './local-state-directive';
+import { NgrxValueConverters } from './value-converter';
 
-describe(NgrxLocalFormControlDirective.name, () => {
-  let directive: NgrxLocalFormControlDirective<string | null, any>;
-  let elementRef: ElementRef;
-  let nativeElement: Partial<HTMLElement>;
-  let actionsSubject: ReplaySubject<Action>;
-  let actions$: Observable<Action>;
-  let viewAdapter: FormViewAdapter;
+const FORM_CONTROL_ID = 'test ID';
+const INITIAL_FORM_CONTROL_VALUE = 'value';
+const INITIAL_STATE = createFormControlState<string>(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
+
+@Component({
+  imports: [NgrxLocalFormControlDirective],
+  template: `
+    <input
+      #el
+      type="text"
+      (ngrxFormsAction)="formsAction($event)"
+      [ngrxEnableFocusTracking]="enableFocusTracking"
+      [ngrxFormControlState]="state"
+      [ngrxValueConverter]="valueConverter"
+    />
+  `,
+})
+export class TestComponent {
+  public readonly element = viewChild<ElementRef<HTMLInputElement>>('el');
+
+  public readonly formsAction = vi.fn();
+
+  public enableFocusTracking = false;
+
+  public state: FormControlState<string> = INITIAL_STATE;
+
+  public valueConverter = NgrxValueConverters.default<any>();
+}
+
+describe(NgrxLocalFormControlDirective, () => {
+  let component: TestComponent;
+  let fixture: ComponentFixture<TestComponent>;
+
+  let setIsDisabled: Mock<(isDisabled: boolean) => void>;
+  beforeEach(() => {
+    setIsDisabled = vi.fn();
+  });
+
+  let setOnChangeCallback: Mock<(fn: (value: any) => void) => void>;
   let onChange: (value: any) => void;
-  const FORM_CONTROL_ID = 'test ID';
-  const INITIAL_FORM_CONTROL_VALUE = 'value';
-  const INITIAL_STATE = createFormControlState<string>(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
+  beforeEach(() => {
+    setOnChangeCallback = vi.fn().mockImplementation((fn) => (onChange = fn));
+  });
+
+  let setOnTouchedCallback: Mock<(fn: () => void) => void>;
+  beforeEach(() => {
+    setOnTouchedCallback = vi.fn();
+  });
+
+  let setViewValue: Mock<(value: any) => void>;
+  beforeEach(() => {
+    setViewValue = vi.fn();
+  });
+
+  let viewAdapter: FormViewAdapter;
+  beforeEach(() => {
+    viewAdapter = {
+      setIsDisabled: undefined,
+      setOnChangeCallback: setOnChangeCallback,
+      setOnTouchedCallback: setOnTouchedCallback,
+      setViewValue: setViewValue,
+    };
+  });
 
   beforeEach(() => {
-    nativeElement = { blur: vi.fn(), focus: vi.fn() };
-    elementRef = { nativeElement } as any as ElementRef;
-    actionsSubject = new ReplaySubject<Action>();
-    actions$ = actionsSubject as any; // required due to mismatch of lift() function signature
-    viewAdapter = {
-      setViewValue: () => void 0,
-      setOnChangeCallback: (fn) => (onChange = fn),
-      setOnTouchedCallback: () => void 0,
-      setIsDisabled: () => void 0,
-    };
-    directive = new NgrxLocalFormControlDirective<string | null>(elementRef, [viewAdapter], []);
-    directive.ngrxFormControlState = INITIAL_STATE;
+    TestBed.overrideDirective(NgrxLocalFormControlDirective, {
+      set: {
+        providers: [{ multi: true, provide: NGRX_FORM_VIEW_ADAPTER, useValue: viewAdapter }],
+      },
+    });
+  });
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [TestComponent],
+      providers: [provideMockStore()],
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  beforeEach(() => {
+    setIsDisabled.mockClear();
+    setViewValue.mockClear();
+  });
+
+  let next: MockInstance<(action: Action) => void>;
+  beforeEach(() => {
+    const actions = TestBed.inject(ActionsSubject);
+    next = vi.spyOn(actions, 'next');
   });
 
   describe('local action emit', () => {
-    beforeEach(() => {
-      directive.ngOnInit();
+    it(`should not dispatch a ${SetValueAction} to the global store if the view value changes`, () => {
+      const newValue = 'new value';
+      onChange(newValue);
+
+      expect(next).not.toHaveBeenCalled();
     });
 
-    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value changes`, () =>
-      new Promise<void>((done) => {
-        const newValue = 'new value';
+    it(`should dispatch a ${SetValueAction} to the output event emitter if the view value changes`, () => {
+      const newValue = 'new value';
+      onChange(newValue);
 
-        actions$.pipe(count()).subscribe((c) => {
-          expect(c).toEqual(0);
-          done();
-        });
+      expect(component.formsAction).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, newValue));
+    });
 
-        onChange(newValue);
-        actionsSubject.complete();
-      }));
+    it(`should not dispatch a ${SetValueAction} to the global store if the view value is the same as the state`, () => {
+      onChange(INITIAL_STATE.value);
 
-    it(`should dispatch a ${SetValueAction.name} to the output event emitter if the view value changes`, () =>
-      new Promise<void>((done) => {
-        const newValue = 'new value';
+      expect(next).not.toHaveBeenCalled();
+    });
 
-        directive.ngrxFormsAction.pipe(first()).subscribe((a) => {
-          expect(a).toEqual(new SetValueAction(INITIAL_STATE.id, newValue));
-          done();
-        });
+    it(`should not dispatch a ${SetValueAction.name} to the output event emitter if the view value is the same as the state`, () => {
+      onChange(INITIAL_STATE.value);
 
-        onChange(newValue);
-      }));
-
-    it(`should not dispatch a ${SetValueAction.name} to the global store if the view value is the same as the state`, () =>
-      new Promise<void>((done) => {
-        actions$.pipe(count()).subscribe((c) => {
-          expect(c).toEqual(0);
-          done();
-        });
-
-        onChange(INITIAL_STATE.value);
-        actionsSubject.complete();
-      }));
-
-    it(`should not dispatch a ${SetValueAction.name} to the output event emitter if the view value is the same as the state`, () =>
-      new Promise<void>((done) => {
-        directive.ngrxFormsAction.pipe(count()).subscribe((c) => {
-          expect(c).toEqual(0);
-          done();
-        });
-
-        onChange(INITIAL_STATE.value);
-        directive.ngrxFormsAction.complete();
-      }));
+      expect(component.formsAction).not.toHaveBeenCalled();
+    });
   });
 });

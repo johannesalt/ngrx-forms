@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Action, ActionsSubject } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
@@ -11,14 +11,16 @@ const SELECT_NUMBER_OPTIONS = [1, 2];
 
 @Component({
   imports: [NgrxFormsModule],
-  template: ` <select [ngrxFormControlState]="state" (ngrxFormsAction)="handleAction($event)">
-    @for (o of options; track o) {
-    <option [value]="o">{{ o }}</option>
-    }
-  </select>`,
+  template: ` @if (state) {
+    <select [ngrxFormControlState]="state" (ngrxFormsAction)="handleAction($event)">
+      @for (o of options; track o) {
+      <option [value]="o">{{ o }}</option>
+      }
+    </select>
+    }`,
 })
 export class NumberSelectComponentLocalStateComponent {
-  @Input() state: FormControlState<number>;
+  state: FormControlState<number> | undefined;
   options = SELECT_NUMBER_OPTIONS;
 
   action: Action | null = null;
