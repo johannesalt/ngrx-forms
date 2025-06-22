@@ -1,18 +1,17 @@
-import { isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Directive, forwardRef, HostListener, Inject, Optional, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { AfterViewInit, Directive, forwardRef, HostListener, inject, InjectionToken, PLATFORM_ID } from '@angular/core';
 import { SetNativeId } from './set-native-id';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
-export interface Navigator {
-  userAgent: string;
-}
+export const NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED = new InjectionToken<boolean>('NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED');
 
 /**
  * We must check whether the agent is Android because composition events
  * behave differently between iOS and Android.
  */
-function isAndroid(navigator: Navigator): boolean {
-  return /android (\d+)/.test(navigator.userAgent.toLowerCase());
+function isAndroid(navigator: Navigator | null | undefined): boolean {
+  const userAgent = (navigator?.userAgent ?? '').toLowerCase();
+  return /android (\d+)/.test(userAgent);
 }
 
 // TODO: since this directive has a side-effect (setting the element's id attribute)
@@ -27,9 +26,18 @@ function isAndroid(navigator: Navigator): boolean {
       useExisting: forwardRef(() => NgrxDefaultViewAdapter),
       multi: true,
     },
+    {
+      deps: [PLATFORM_ID, DOCUMENT],
+      provide: NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED,
+      useFactory: (platformId: string, document: Document) => {
+        return isPlatformBrowser(platformId) && !isAndroid(document?.defaultView?.navigator);
+      },
+    },
   ],
 })
 export class NgrxDefaultViewAdapter extends SetNativeId implements FormViewAdapter, AfterViewInit {
+  private readonly isCompositionSupported = inject(NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED);
+
   onChange: (value: any) => void = () => void 0;
 
   @HostListener('blur')
@@ -37,16 +45,6 @@ export class NgrxDefaultViewAdapter extends SetNativeId implements FormViewAdapt
 
   /** Whether the user is creating a composition string (IME events). */
   private isComposing = false;
-  private isCompositionSupported: boolean;
-
-  constructor(
-    @Optional() @Inject(PLATFORM_ID) private platformId: string | null = null,
-    // we use a special injection string that should never exist at runtime to allow mocking this dependency for testing
-    @Optional() @Inject('ngrx-forms/never') navigator: Navigator | null = null
-  ) {
-    super();
-    this.isCompositionSupported = isPlatformBrowser(this.platformId || '') && !isAndroid(navigator || window.navigator);
-  }
 
   setViewValue(value: any): void {
     const normalizedValue = value == null ? '' : value;

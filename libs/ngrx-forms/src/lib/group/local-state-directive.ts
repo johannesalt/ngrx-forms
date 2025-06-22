@@ -1,4 +1,5 @@
 import { Directive, output } from '@angular/core';
+
 import { Actions } from '../actions';
 import { KeyValue } from '../state';
 import { NgrxFormDirective } from './directive';
@@ -8,10 +9,6 @@ import { NgrxFormDirective } from './directive';
 })
 export class NgrxLocalFormDirective<TStateValue extends KeyValue> extends NgrxFormDirective<TStateValue> {
   public readonly ngrxFormsAction = output<Actions<TStateValue>>();
-
-  constructor() {
-    super(null);
-  }
 
   protected override dispatchAction(action: Actions<TStateValue>) {
     this.ngrxFormsAction.emit(action);

@@ -1,6 +1,6 @@
 import { Component, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Action, ActionsSubject } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { Mock, MockInstance } from 'vitest';
 import { SetValueAction } from '../actions';
@@ -99,10 +99,10 @@ describe(NgrxLocalFormControlDirective, () => {
     setViewValue.mockClear();
   });
 
-  let next: MockInstance<(action: Action) => void>;
+  let dispatch: MockInstance<(action: Action) => void>;
   beforeEach(() => {
-    const actions = TestBed.inject(ActionsSubject);
-    next = vi.spyOn(actions, 'next');
+    const store = TestBed.inject(Store);
+    dispatch = vi.spyOn(store, 'dispatch');
   });
 
   describe('local action emit', () => {
@@ -110,7 +110,7 @@ describe(NgrxLocalFormControlDirective, () => {
       const newValue = 'new value';
       onChange(newValue);
 
-      expect(next).not.toHaveBeenCalled();
+      expect(dispatch).not.toHaveBeenCalled();
     });
 
     it(`should dispatch a ${SetValueAction} to the output event emitter if the view value changes`, () => {
@@ -123,7 +123,7 @@ describe(NgrxLocalFormControlDirective, () => {
     it(`should not dispatch a ${SetValueAction} to the global store if the view value is the same as the state`, () => {
       onChange(INITIAL_STATE.value);
 
-      expect(next).not.toHaveBeenCalled();
+      expect(dispatch).not.toHaveBeenCalled();
     });
 
     it(`should not dispatch a ${SetValueAction.name} to the output event emitter if the view value is the same as the state`, () => {

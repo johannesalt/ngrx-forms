@@ -7,7 +7,7 @@ export abstract class SetNativeId implements AfterViewInit {
   public readonly ngrxFormControlState = input.required<FormControlState<any>>();
 
   /** Reference to the element. */
-  protected readonly elementRef = inject(ElementRef);
+  protected readonly elementRef = inject(ElementRef<HTMLElement>);
 
   /** Used to set custom property. */
   protected readonly renderer = inject(Renderer2);
