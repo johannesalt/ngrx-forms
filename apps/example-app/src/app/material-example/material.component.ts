@@ -1,5 +1,5 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
@@ -7,8 +7,8 @@ import { MatError, MatFormField, MatInput, MatSuffix } from '@angular/material/i
 import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { select, Store } from '@ngrx/store';
 import {
-  FormGroupState,
   NgrxDefaultViewAdapter,
   NgrxFormControlDirective,
   NgrxFormDirective,
@@ -18,13 +18,11 @@ import {
   ResetAction,
   SetValueAction,
 } from 'ngrx-form-state';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { NgrxMatSelectViewAdapter } from '../material/mat-select-view-adapter';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
-import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './material.reducer';
+import { INITIAL_STATE, SetSubmittedValueAction, State } from './material.reducer';
 
 @Component({
   selector: 'ngf-material',
@@ -59,13 +57,11 @@ import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './mate
   ],
 })
 export class MaterialPageComponent {
-  formState$: Observable<FormGroupState<FormValue>>;
-  submittedValue$: Observable<FormValue | undefined>;
+  private readonly store = inject(Store<State>);
 
-  constructor(private store: Store<State>) {
-    this.formState$ = store.pipe(select((s) => s.material.formState));
-    this.submittedValue$ = store.pipe(select((s) => s.material.submittedValue));
-  }
+  public readonly formState$ = this.store.pipe(select((s) => s.material.formState));
+
+  public readonly submittedValue$ = this.store.pipe(select((s) => s.material.submittedValue));
 
   hobbyOptions = ['Sports', 'Video Games'];
 

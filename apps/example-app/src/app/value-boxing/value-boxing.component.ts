@@ -1,7 +1,7 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import {
-  FormGroupState,
   NgrxFallbackSelectOption,
   NgrxFormControlDirective,
   NgrxSelectMultipleOption,
@@ -10,10 +10,8 @@ import {
   NgrxStatusCssClassesDirective,
   unbox,
 } from 'ngrx-form-state';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
-import { FormValue, State } from './value-boxing.reducer';
+import { State } from './value-boxing.reducer';
 
 @Component({
   selector: 'ngf-value-boxing',
@@ -33,11 +31,9 @@ import { FormValue, State } from './value-boxing.reducer';
   ],
 })
 export class ValueBoxingPageComponent {
-  formState$: Observable<FormGroupState<FormValue>>;
+  private readonly store = inject(Store<State>);
 
-  constructor(store: Store<State>) {
-    this.formState$ = store.pipe(select((s) => s.valueBoxing.formState));
-  }
+  public readonly formState$ = this.store.pipe(select((s) => s.valueBoxing.formState));
 
   unbox = unbox;
 }

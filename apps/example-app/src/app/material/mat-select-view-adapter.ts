@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, forwardRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, forwardRef, inject, OnDestroy } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from 'ngrx-form-state';
 import { Subscription } from 'rxjs';
@@ -16,10 +16,10 @@ import { Subscription } from 'rxjs';
   ],
 })
 export class NgrxMatSelectViewAdapter implements FormViewAdapter, AfterViewInit, OnDestroy {
+  private readonly matSelect = inject(MatSelect);
+
   private value: any;
   private subscriptions: Subscription[] = [];
-
-  constructor(private matSelect: MatSelect) {}
 
   ngAfterViewInit() {
     this.subscriptions.push(

@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Actions } from '@ngrx/effects';
+import { Action, Store } from '@ngrx/store';
 import {
-  Actions,
   NgrxDefaultViewAdapter,
   NgrxFallbackSelectOption,
+  Actions as NgrxFormActions,
   NgrxLocalFormControlDirective,
   NgrxLocalFormDirective,
   NgrxSelectMultipleOption,
@@ -11,7 +13,6 @@ import {
   NgrxStatusCssClassesDirective,
   SetValueAction,
 } from 'ngrx-form-state';
-import { Action, ActionsSubject } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { GetManufacturersAction, INITIAL_LOCAL_STATE, reducer } from './local-state-advanced.reducer';
@@ -34,19 +35,23 @@ import { GetManufacturersAction, INITIAL_LOCAL_STATE, reducer } from './local-st
   ],
 })
 export class LocalStateAdvancedComponent implements OnInit, OnDestroy {
-  localState = INITIAL_LOCAL_STATE;
+  private actions = inject(Actions);
+
+  private store = inject(Store);
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   private subscription = new Subscription();
 
-  constructor(private actionsSubject: ActionsSubject, private cd: ChangeDetectorRef) {}
+  public localState = INITIAL_LOCAL_STATE;
 
   ngOnInit() {
-    this.subscription = this.actionsSubject.subscribe((action) => {
+    this.subscription = this.actions.subscribe((action) => {
       const updated = this.updateState(action);
       if (updated) {
         // since OnPush is used, need to trigger detectChanges
         // when action from outside updates localState
-        this.cd.detectChanges();
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -55,12 +60,12 @@ export class LocalStateAdvancedComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  handleFormAction(action: Actions<any>) {
+  handleFormAction(action: NgrxFormActions<any>) {
     this.updateState(action);
 
     // trigger loading of new manufacturers list in effect
     if (action.type === SetValueAction.TYPE && action.controlId === this.localState.formState.controls.countryCode.id) {
-      this.actionsSubject.next(new GetManufacturersAction(action.value));
+      this.store.dispatch(new GetManufacturersAction(action.value));
     }
   }
 

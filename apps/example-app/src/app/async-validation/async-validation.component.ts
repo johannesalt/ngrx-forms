@@ -1,11 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormGroupState, NgrxDefaultViewAdapter, NgrxFormControlDirective, NgrxNumberViewAdapter, NgrxStatusCssClassesDirective } from 'ngrx-form-state';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { NgrxDefaultViewAdapter, NgrxFormControlDirective, NgrxNumberViewAdapter, NgrxStatusCssClassesDirective } from 'ngrx-form-state';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
-import { FormValue, State } from './async-validation.reducer';
+import { State } from './async-validation.reducer';
 
 @Component({
   selector: 'ngf-async-validation',
@@ -23,11 +22,9 @@ import { FormValue, State } from './async-validation.reducer';
   ],
 })
 export class AsyncValidationPageComponent {
-  formState$: Observable<FormGroupState<FormValue>>;
-  searchResults$: Observable<string[]>;
+  private readonly store = inject(Store<State>);
 
-  constructor(store: Store<State>) {
-    this.formState$ = store.pipe(select((s) => s.asyncValidation.formState));
-    this.searchResults$ = store.pipe(select((s) => s.asyncValidation.searchResults));
-  }
+  public readonly formState$ = this.store.pipe(select((s) => s.asyncValidation.formState));
+
+  public readonly searchResults$ = this.store.pipe(select((s) => s.asyncValidation.searchResults));
 }

@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import {
-  FormGroupState,
   NgrxCheckboxViewAdapter,
   NgrxDefaultViewAdapter,
   NgrxFallbackSelectOption,
@@ -13,12 +13,11 @@ import {
   NgrxSelectViewAdapter,
   NgrxStatusCssClassesDirective,
 } from 'ngrx-form-state';
-import { select, Store } from '@ngrx/store';
-import { Observable, timer } from 'rxjs';
+import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
-import { BlockUIAction, FormValue, State, UnblockUIAction } from './recursive-update.reducer';
+import { BlockUIAction, State, UnblockUIAction } from './recursive-update.reducer';
 
 @Component({
   selector: 'ngf-recursive-update',
@@ -42,13 +41,11 @@ import { BlockUIAction, FormValue, State, UnblockUIAction } from './recursive-up
   ],
 })
 export class RecursiveUpdatePageComponent {
-  formState$: Observable<FormGroupState<FormValue>>;
+  private readonly store = inject(Store<State>);
 
-  constructor(private store: Store<State>) {
-    this.formState$ = store.pipe(select((s) => s.recursiveUpdate.formState));
-  }
+  public readonly formState$ = this.store.pipe(select((s) => s.recursiveUpdate.formState));
 
-  submit() {
+  public submit() {
     this.store.dispatch(new BlockUIAction());
     timer(1000)
       .pipe(map(() => new UnblockUIAction()))
