@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Action, ActionsSubject } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { first, skip } from 'rxjs/operators';
+import { Action, Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { MockInstance } from 'vitest';
 import { MarkAsDirtyAction, SetValueAction } from '../../actions';
 import { box, Boxed } from '../../boxing';
 import { NgrxValueConverters } from '../../control/value-converter';
@@ -32,8 +32,6 @@ export class SelectMultipleComponent {
 describe(SelectMultipleComponent.name, () => {
   let component: SelectMultipleComponent;
   let fixture: ComponentFixture<SelectMultipleComponent>;
-  let actionsSubject: ActionsSubject;
-  let actions$: Observable<Action>;
   let element: HTMLSelectElement;
   let option1: HTMLOptionElement;
   let option2: HTMLOptionElement;
@@ -41,15 +39,10 @@ describe(SelectMultipleComponent.name, () => {
   const INITIAL_FORM_CONTROL_VALUE = `["${SELECT_OPTIONS[1]}"]`;
   const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  beforeEach(() => {
-    actionsSubject = new Subject<Action>() as ActionsSubject;
-    actions$ = actionsSubject as Observable<Action>; // cast required due to mismatch of lift() function signature
-  });
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [SelectMultipleComponent],
-      providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
+      providers: [provideMockStore()],
     }).compileComponents();
   }));
 
@@ -64,32 +57,29 @@ describe(SelectMultipleComponent.name, () => {
     option2 = nativeElement.querySelectorAll('option')[1];
   });
 
+  let dispatch: MockInstance<(action: Action) => void>;
+  beforeEach(() => {
+    const store = TestBed.inject(Store);
+    dispatch = vi.spyOn(store, 'dispatch');
+  });
+
   it('should select the correct option initially', () => {
     expect(option2.selected).toBe(true);
   });
 
-  it('should trigger a SetValueAction with the selected value when an option is selected', () =>
-    new Promise<void>((done) => {
-      actions$.pipe(first()).subscribe((a) => {
-        expect(a.type).toBe(SetValueAction.TYPE);
-        expect((a as SetValueAction<string>).value).toBe(JSON.stringify(SELECT_OPTIONS));
-        done();
-      });
+  it('should trigger a SetValueAction with the selected value when an option is selected', () => {
+    option1.selected = true;
+    element.dispatchEvent(new Event('change'));
 
-      option1.selected = true;
-      element.dispatchEvent(new Event('change'));
-    }));
+    expect(dispatch).toHaveBeenCalledWith(new SetValueAction(FORM_CONTROL_ID, JSON.stringify(SELECT_OPTIONS)));
+  });
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () =>
-    new Promise<void>((done) => {
-      actions$.pipe(skip(1), first()).subscribe((a) => {
-        expect(a.type).toBe(MarkAsDirtyAction.TYPE);
-        done();
-      });
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () => {
+    option1.selected = true;
+    element.dispatchEvent(new Event('change'));
 
-      option1.selected = true;
-      element.dispatchEvent(new Event('change'));
-    }));
+    expect(dispatch).toHaveBeenCalledWith(new MarkAsDirtyAction(FORM_CONTROL_ID));
+  });
 });
 
 @Component({
@@ -112,8 +102,6 @@ export class SelectMultipleWithoutConverterComponent {
 describe(SelectMultipleWithoutConverterComponent.name, () => {
   let component: SelectMultipleWithoutConverterComponent;
   let fixture: ComponentFixture<SelectMultipleWithoutConverterComponent>;
-  let actionsSubject: ActionsSubject;
-  let actions$: Observable<Action>;
   let element: HTMLSelectElement;
   let option1: HTMLOptionElement;
   let option2: HTMLOptionElement;
@@ -121,15 +109,10 @@ describe(SelectMultipleWithoutConverterComponent.name, () => {
   const INITIAL_FORM_CONTROL_VALUE = box([SELECT_OPTIONS[1]]);
   const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  beforeEach(() => {
-    actionsSubject = new Subject<Action>() as ActionsSubject;
-    actions$ = actionsSubject as Observable<Action>; // cast required due to mismatch of lift() function signature
-  });
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [SelectMultipleWithoutConverterComponent],
-      providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
+      providers: [provideMockStore()],
     }).compileComponents();
   }));
 
@@ -144,30 +127,27 @@ describe(SelectMultipleWithoutConverterComponent.name, () => {
     option2 = nativeElement.querySelectorAll('option')[1];
   });
 
+  let dispatch: MockInstance<(action: Action) => void>;
+  beforeEach(() => {
+    const store = TestBed.inject(Store);
+    dispatch = vi.spyOn(store, 'dispatch');
+  });
+
   it('should select the correct option initially', () => {
     expect(option2.selected).toBe(true);
   });
 
-  it('should trigger a SetValueAction with the selected value when an option is selected', () =>
-    new Promise<void>((done) => {
-      actions$.pipe(first()).subscribe((a) => {
-        expect(a.type).toBe(SetValueAction.TYPE);
-        expect((a as SetValueAction<Boxed<string[]>>).value).toEqual(box(SELECT_OPTIONS));
-        done();
-      });
+  it('should trigger a SetValueAction with the selected value when an option is selected', () => {
+    option1.selected = true;
+    element.dispatchEvent(new Event('change'));
 
-      option1.selected = true;
-      element.dispatchEvent(new Event('change'));
-    }));
+    expect(dispatch).toHaveBeenCalledWith(new SetValueAction(FORM_CONTROL_ID, box(SELECT_OPTIONS)));
+  });
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () =>
-    new Promise<void>((done) => {
-      actions$.pipe(skip(1), first()).subscribe((a) => {
-        expect(a.type).toBe(MarkAsDirtyAction.TYPE);
-        done();
-      });
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () => {
+    option1.selected = true;
+    element.dispatchEvent(new Event('change'));
 
-      option1.selected = true;
-      element.dispatchEvent(new Event('change'));
-    }));
+    expect(dispatch).toHaveBeenCalledWith(new MarkAsDirtyAction(FORM_CONTROL_ID));
+  });
 });
