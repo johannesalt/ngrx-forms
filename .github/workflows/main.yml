@@ -104,8 +104,12 @@ jobs:
         run: |
           git config --global user.name "Github Actions"
 
-      - name: Run release
+      - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx nx release --skip-publish
+
+      - name: Publish packages
+        env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx nx release
+        run: npx nx release publish
