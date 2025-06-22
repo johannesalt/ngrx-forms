@@ -94,7 +94,7 @@ jobs:
       - test
       - lint
     permissions:
-      contents: read
+      contents: write
       id-token: write
     runs-on: ubuntu-latest
     steps:
@@ -109,6 +109,7 @@ jobs:
         with:
           cache: 'npm'
           node-version: 'lts/*'
+          registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
         run: npm ci
