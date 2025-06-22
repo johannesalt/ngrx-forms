@@ -1,6 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { createFormGroupState, FormGroupState } from './state';
 import { NGRX_STATUS_CLASS_NAMES, NgrxStatusCssClassesDirective } from './status-css-classes.directive';
 
