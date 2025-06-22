@@ -1,5 +1,5 @@
-import { Directive, HostListener, Inject, OnInit, Optional, input } from '@angular/core';
-import { ActionsSubject } from '@ngrx/store';
+import { Directive, HostListener, OnInit, inject, input } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Actions, MarkAsSubmittedAction } from '../actions';
 import { FormGroupState, KeyValue } from '../state';
 
@@ -12,18 +12,16 @@ type CustomEvent = Event;
   selector: 'form:not([ngrxFormsAction])[ngrxFormState]',
 })
 export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
+  private readonly store = inject<Store>(Store, { optional: true });
+
   public readonly ngrxFormState = input.required<FormGroupState<TStateValue>>();
 
-  constructor(@Optional() @Inject(ActionsSubject) private actionsSubject: ActionsSubject | null) {
-    this.actionsSubject = actionsSubject;
-  }
-
   protected dispatchAction(action: Actions<TStateValue>) {
-    if (this.actionsSubject !== null) {
-      this.actionsSubject.next(action);
-    } else {
-      throw new Error('ActionsSubject must be present in order to dispatch actions!');
+    if (this.store == null) {
+      throw new Error('Store must be present in order to dispatch actions!');
     }
+
+    this.store.dispatch(action);
   }
 
   ngOnInit() {

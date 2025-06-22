@@ -1,7 +1,7 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import {
-  FormGroupState,
   NgrxCheckboxViewAdapter,
   NgrxDefaultViewAdapter,
   NgrxFallbackSelectOption,
@@ -15,12 +15,10 @@ import {
   ResetAction,
   SetValueAction,
 } from 'ngrx-form-state';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
-import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './simple-form.reducer';
+import { INITIAL_STATE, SetSubmittedValueAction, State } from './simple-form.reducer';
 
 @Component({
   selector: 'ngf-simple-form',
@@ -45,20 +43,18 @@ import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './simp
   ],
 })
 export class SimpleFormPageComponent {
-  formState$: Observable<FormGroupState<FormValue>>;
-  submittedValue$: Observable<FormValue | undefined>;
+  private readonly store = inject(Store<State>);
 
-  constructor(private store: Store<State>) {
-    this.formState$ = store.pipe(select((s) => s.simpleForm.formState));
-    this.submittedValue$ = store.pipe(select((s) => s.simpleForm.submittedValue));
-  }
+  public readonly formState$ = this.store.pipe(select((s) => s.simpleForm.formState));
 
-  reset() {
+  public readonly submittedValue$ = this.store.pipe(select((s) => s.simpleForm.submittedValue));
+
+  public reset() {
     this.store.dispatch(new SetValueAction(INITIAL_STATE.id, INITIAL_STATE.value));
     this.store.dispatch(new ResetAction(INITIAL_STATE.id));
   }
 
-  submit() {
+  public submit() {
     this.formState$
       .pipe(
         take(1),

@@ -1,6 +1,6 @@
 import { Component, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Action, ActionsSubject } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { MockInstance } from 'vitest';
 import { MarkAsSubmittedAction } from '../actions';
@@ -51,16 +51,16 @@ describe(NgrxFormDirective, () => {
     fixture.detectChanges();
   });
 
-  let next: MockInstance<(action: Action) => void>;
+  let dispatch: MockInstance<(action: Action) => void>;
   beforeEach(() => {
-    const actions = TestBed.inject(ActionsSubject);
-    next = vi.spyOn(actions, 'next');
+    const store = TestBed.inject(Store);
+    dispatch = vi.spyOn(store, 'dispatch');
   });
 
   it(`should dispatch a ${MarkAsSubmittedAction} if the form is submitted and the state is unsubmitted`, () => {
     component.submitForm();
 
-    expect(next).toHaveBeenCalledWith(new MarkAsSubmittedAction(INITIAL_STATE.id));
+    expect(dispatch).toHaveBeenCalledWith(new MarkAsSubmittedAction(INITIAL_STATE.id));
   });
 
   it(`should not dispatch a ${MarkAsSubmittedAction} if the form is submitted and the state is submitted`, () => {
@@ -69,6 +69,6 @@ describe(NgrxFormDirective, () => {
 
     component.submitForm();
 
-    expect(next).not.toHaveBeenCalledWith(new MarkAsSubmittedAction(INITIAL_STATE.id));
+    expect(dispatch).not.toHaveBeenCalledWith(new MarkAsSubmittedAction(INITIAL_STATE.id));
   });
 });

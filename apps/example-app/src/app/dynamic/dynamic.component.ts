@@ -1,19 +1,17 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import {
   AddArrayControlAction,
-  FormGroupState,
   NgrxCheckboxViewAdapter,
   NgrxFormControlDirective,
   NgrxStatusCssClassesDirective,
   RemoveArrayControlAction,
 } from 'ngrx-form-state';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
-import { CreateGroupElementAction, FormValue, RemoveGroupElementAction, State } from './dynamic.reducer';
+import { CreateGroupElementAction, RemoveGroupElementAction, State } from './dynamic.reducer';
 
 @Component({
   selector: 'ngf-dynamic',
@@ -30,15 +28,13 @@ import { CreateGroupElementAction, FormValue, RemoveGroupElementAction, State } 
   ],
 })
 export class DynamicPageComponent {
-  formState$: Observable<FormGroupState<FormValue>>;
-  arrayOptions$: Observable<number[]>;
-  groupOptions$: Observable<string[]>;
+  private readonly store = inject(Store<State>);
 
-  constructor(private store: Store<State>) {
-    this.formState$ = store.pipe(select((s) => s.dynamic.formState));
-    this.arrayOptions$ = store.pipe(select((s) => s.dynamic.array.options));
-    this.groupOptions$ = store.pipe(select((s) => s.dynamic.groupOptions));
-  }
+  public readonly arrayOptions$ = this.store.pipe(select((s) => s.dynamic.array.options));
+
+  public readonly formState$ = this.store.pipe(select((s) => s.dynamic.formState));
+
+  public readonly groupOptions$ = this.store.pipe(select((s) => s.dynamic.groupOptions));
 
   addGroupOption() {
     const name = Math.random().toString(36).substr(2, 3);

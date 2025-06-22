@@ -1,20 +1,6 @@
-import {
-  AfterViewInit,
-  booleanAttribute,
-  computed,
-  Directive,
-  effect,
-  ElementRef,
-  HostListener,
-  Inject,
-  input,
-  OnInit,
-  Optional,
-  Self,
-  untracked,
-} from '@angular/core';
+import { AfterViewInit, booleanAttribute, computed, Directive, effect, ElementRef, HostListener, inject, input, OnInit, untracked } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ActionsSubject } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, FocusAction, MarkAsDirtyAction, MarkAsTouchedAction, SetValueAction, UnfocusAction } from '../actions';
 import { FormControlState, FormControlValueTypes } from '../state';
 import { selectViewAdapter } from '../view-adapter/util';
@@ -57,6 +43,10 @@ export type NgrxFormControlValueType<TStateValue> = TStateValue extends FormCont
   selector: ':not([ngrxFormsAction])[ngrxFormControlState]',
 })
 export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> implements AfterViewInit, OnInit {
+  private readonly el = inject(ElementRef);
+
+  private readonly store = inject(Store, { optional: true });
+
   public readonly ngrxEnableFocusTracking = input(false, { transform: booleanAttribute });
 
   public readonly ngrxFormControlState = input.required<FormControlState<NgrxFormControlValueType<TStateValue>>>();
@@ -166,28 +156,22 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
   private viewValue: TViewValue;
   private stateValue: TStateValue;
 
-  constructor(
-    private el: ElementRef,
-    @Optional() @Inject(ActionsSubject) private actionsSubject: ActionsSubject | null,
-    @Self() @Optional() @Inject(NGRX_FORM_VIEW_ADAPTER) viewAdapters: FormViewAdapter[],
-    @Self() @Optional() @Inject(NG_VALUE_ACCESSOR) valueAccessors: ControlValueAccessor[]
-  ) {
-    viewAdapters = viewAdapters || [];
-    valueAccessors = valueAccessors || [];
-
+  constructor() {
+    const valueAccessors = inject<ControlValueAccessor[]>(NG_VALUE_ACCESSOR, { self: true, optional: true }) ?? [];
     if (valueAccessors.length > 1) {
       throw new Error('More than one custom control value accessor matches!');
     }
 
+    const viewAdapters = inject<FormViewAdapter[]>(NGRX_FORM_VIEW_ADAPTER, { self: true, optional: true }) ?? [];
     this.viewAdapter = valueAccessors.length > 0 ? new ControlValueAccessorAdapter(valueAccessors[0]) : selectViewAdapter(viewAdapters);
   }
 
   protected dispatchAction(action: Actions<NgrxFormControlValueType<TStateValue>>) {
-    if (this.actionsSubject !== null) {
-      this.actionsSubject.next(action);
-    } else {
-      throw new Error('ActionsSubject must be present in order to dispatch actions!');
+    if (this.store == null) {
+      throw new Error('Store must be present in order to dispatch actions!');
     }
+
+    this.store.dispatch(action);
   }
 
   private dispatchMarkAsDirtyAction() {

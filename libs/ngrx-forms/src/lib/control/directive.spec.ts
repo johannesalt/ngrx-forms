@@ -1,7 +1,7 @@
 import { Component, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Action, ActionsSubject } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { Mock, MockInstance } from 'vitest';
 import { FocusAction, MarkAsDirtyAction, MarkAsTouchedAction, SetValueAction, UnfocusAction } from '../actions';
@@ -102,10 +102,10 @@ describe(NgrxFormControlDirective, () => {
       setViewValue.mockClear();
     });
 
-    let next: MockInstance<(action: Action) => void>;
+    let dispatch: MockInstance<(action: Action) => void>;
     beforeEach(() => {
-      const actions = TestBed.inject(ActionsSubject);
-      next = vi.spyOn(actions, 'next');
+      const store = TestBed.inject(Store);
+      dispatch = vi.spyOn(store, 'dispatch');
     });
 
     test('should throw if the provided state is not defined', () => {
@@ -188,20 +188,20 @@ describe(NgrxFormControlDirective, () => {
         const newValue = 'new value';
         onChange(newValue);
 
-        expect(next).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, newValue));
+        expect(dispatch).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, newValue));
       });
 
       test(`should not dispatch a ${SetValueAction} if the view value is the same as the state`, () => {
         onChange(INITIAL_STATE.value);
 
-        expect(next).not.toHaveBeenCalled();
+        expect(dispatch).not.toHaveBeenCalled();
       });
 
       test(`should dispatch a ${MarkAsDirtyAction} if the view value changes when the state is not marked as dirty`, () => {
         const newValue = 'new value';
         onChange(newValue);
 
-        expect(next).toHaveBeenCalledWith(new MarkAsDirtyAction(INITIAL_STATE.id));
+        expect(dispatch).toHaveBeenCalledWith(new MarkAsDirtyAction(INITIAL_STATE.id));
       });
 
       test(`should not dispatch a ${MarkAsDirtyAction} if the view value changes when the state is marked as dirty`, () => {
@@ -211,7 +211,7 @@ describe(NgrxFormControlDirective, () => {
         const newValue = 'new value';
         onChange(newValue);
 
-        expect(next).not.toHaveBeenCalledWith(new MarkAsDirtyAction(INITIAL_STATE.id));
+        expect(dispatch).not.toHaveBeenCalledWith(new MarkAsDirtyAction(INITIAL_STATE.id));
       });
 
       test('should write the value when the state changes to the same value that was reported from the view before', () => {
@@ -252,7 +252,7 @@ describe(NgrxFormControlDirective, () => {
       test(`should dispatch a ${MarkAsTouchedAction} if the view adapter notifies and the state is not touched`, () => {
         onTouched();
 
-        expect(next).toHaveBeenCalledWith(new MarkAsTouchedAction(INITIAL_STATE.id));
+        expect(dispatch).toHaveBeenCalledWith(new MarkAsTouchedAction(INITIAL_STATE.id));
       });
 
       test(`should not dispatch a ${MarkAsTouchedAction} if the view adapter notifies and the state is touched`, () => {
@@ -261,7 +261,7 @@ describe(NgrxFormControlDirective, () => {
 
         onTouched();
 
-        expect(next).not.toHaveBeenCalledWith(new MarkAsTouchedAction(INITIAL_STATE.id));
+        expect(dispatch).not.toHaveBeenCalledWith(new MarkAsTouchedAction(INITIAL_STATE.id));
       });
     });
 
@@ -277,20 +277,20 @@ describe(NgrxFormControlDirective, () => {
         onChange(newValue);
         onTouched();
 
-        expect(next).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, newValue));
+        expect(dispatch).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, newValue));
       });
 
       test('should not dispatch an action on blur if the view value has not changed with ngrxUpdateOn "blur"', () => {
         onTouched();
 
-        expect(next).not.toHaveBeenCalled();
+        expect(dispatch).not.toHaveBeenCalled();
       });
 
       test('should not dispatch an action if the view value changes with ngrxUpdateOn "blur"', () => {
         const newValue = 'new value';
         onChange(newValue);
 
-        expect(next).not.toHaveBeenCalled();
+        expect(dispatch).not.toHaveBeenCalled();
       });
 
       test('should not write the value when the state value does not change', () => {
@@ -317,7 +317,7 @@ describe(NgrxFormControlDirective, () => {
         onChange(newValue);
         onTouched();
 
-        expect(next).not.toHaveBeenCalled();
+        expect(dispatch).not.toHaveBeenCalled();
       });
     });
 
@@ -392,7 +392,7 @@ describe(NgrxFormControlDirective, () => {
       test('should convert the view value if it changes', () => {
         onChange(VIEW_VALUE);
 
-        expect(next).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, STATE_VALUE));
+        expect(dispatch).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, STATE_VALUE));
       });
 
       test('should not write the value when the state value does not change with conversion', () => {
@@ -413,7 +413,7 @@ describe(NgrxFormControlDirective, () => {
 
         onChange(VIEW_VALUE);
 
-        expect(next).not.toHaveBeenCalled();
+        expect(dispatch).not.toHaveBeenCalled();
       });
     });
 
@@ -494,7 +494,7 @@ describe(NgrxFormControlDirective, () => {
         test(`should dispatch a ${FocusAction} when element becomes focused and state is not focused`, () => {
           nativeElement.focus();
 
-          expect(next).toHaveBeenCalledWith(new FocusAction(INITIAL_STATE.id));
+          expect(dispatch).toHaveBeenCalledWith(new FocusAction(INITIAL_STATE.id));
         });
 
         test('should not dispatch an action when element becomes focused and state is focused', () => {
@@ -503,7 +503,7 @@ describe(NgrxFormControlDirective, () => {
 
           nativeElement.focus();
 
-          expect(next).not.toHaveBeenCalled();
+          expect(dispatch).not.toHaveBeenCalled();
         });
 
         test(`should dispatch an ${UnfocusAction} when element becomes unfocused and state is focused`, () => {
@@ -513,14 +513,14 @@ describe(NgrxFormControlDirective, () => {
           nativeElement.focus();
           nativeElement.blur();
 
-          expect(next).toHaveBeenCalledWith(new UnfocusAction(INITIAL_STATE.id));
+          expect(dispatch).toHaveBeenCalledWith(new UnfocusAction(INITIAL_STATE.id));
         });
 
         test('should not dispatch an action when element becomes unfocused and state is unfocused', () => {
           nativeElement.focus();
           nativeElement.blur();
 
-          expect(next).not.toHaveBeenCalledWith(new UnfocusAction(INITIAL_STATE.id));
+          expect(dispatch).not.toHaveBeenCalledWith(new UnfocusAction(INITIAL_STATE.id));
         });
 
         test('should add the cdk focus attribute if state is focused', () => {
@@ -574,7 +574,7 @@ describe(NgrxFormControlDirective, () => {
         test(`should not dispatch an action when element becomes focused and state is not focused`, () => {
           nativeElement.focus();
 
-          expect(next).not.toHaveBeenCalled();
+          expect(dispatch).not.toHaveBeenCalled();
         });
 
         test('should not dispatch an action when element becomes focused and state is focused', () => {
@@ -583,7 +583,7 @@ describe(NgrxFormControlDirective, () => {
 
           nativeElement.focus();
 
-          expect(next).not.toHaveBeenCalled();
+          expect(dispatch).not.toHaveBeenCalled();
         });
 
         test(`should not dispatch an action when element becomes unfocused and state is focused`, () => {
@@ -593,14 +593,14 @@ describe(NgrxFormControlDirective, () => {
           nativeElement.focus();
           nativeElement.blur();
 
-          expect(next).not.toHaveBeenCalled();
+          expect(dispatch).not.toHaveBeenCalled();
         });
 
         test('should not dispatch an action when element becomes unfocused and state is unfocused', () => {
           nativeElement.focus();
           nativeElement.blur();
 
-          expect(next).not.toHaveBeenCalled();
+          expect(dispatch).not.toHaveBeenCalled();
         });
       });
     });
@@ -626,7 +626,7 @@ describe(NgrxFormControlDirective, () => {
       fixture.detectChanges();
     });
 
-    test('should throw while trying to emit actions if no ActionsSubject was provided', () => {
+    test('should throw while trying to emit actions if no Store was provided', () => {
       const newValue = 'new value';
       expect(() => onChange(newValue)).toThrowError();
     });

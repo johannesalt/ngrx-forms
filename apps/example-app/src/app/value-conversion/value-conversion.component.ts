@@ -1,13 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import { MatFormField, MatInput, MatSuffix } from '@angular/material/input';
-import { FormGroupState, NgrxDefaultViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective, NgrxValueConverters } from 'ngrx-form-state';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { NgrxDefaultViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective, NgrxValueConverters } from 'ngrx-form-state';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
-import { FormValue, State } from './value-conversion.reducer';
+import { State } from './value-conversion.reducer';
 
 @Component({
   selector: 'ngf-value-conversion',
@@ -30,11 +29,9 @@ import { FormValue, State } from './value-conversion.reducer';
   ],
 })
 export class ValueConversionPageComponent {
-  formState$: Observable<FormGroupState<FormValue>>;
+  private readonly store = inject(Store<State>);
 
-  constructor(store: Store<State>) {
-    this.formState$ = store.pipe(select((s) => s.valueConversion.formState));
-  }
+  public readonly formState$ = this.store.pipe(select((s) => s.valueConversion.formState));
 
-  dateToISOString = NgrxValueConverters.dateToISOString;
+  public readonly dateToISOString = NgrxValueConverters.dateToISOString;
 }

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Action, ActionsSubject } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { count } from 'rxjs/operators';
+import { Action, Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { MockInstance } from 'vitest';
 import { MarkAsDirtyAction } from '../../actions';
 import { NgrxFormsModule } from '../../module';
 import { createFormControlState, FormControlState } from '../../state';
@@ -32,22 +32,15 @@ export class NumberSelectComponentLocalStateComponent {
 describe(NumberSelectComponentLocalStateComponent.name, () => {
   let component: NumberSelectComponentLocalStateComponent;
   let fixture: ComponentFixture<NumberSelectComponentLocalStateComponent>;
-  let actionsSubject: ActionsSubject;
-  let actions$: Observable<Action>;
   let element: HTMLSelectElement;
   const FORM_CONTROL_ID = 'test ID';
   const INITIAL_FORM_CONTROL_VALUE = SELECT_NUMBER_OPTIONS[1];
   const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  beforeEach(() => {
-    actionsSubject = new Subject<Action>() as ActionsSubject;
-    actions$ = actionsSubject as Observable<Action>; // cast required due to mismatch of lift() function signature
-  });
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [NumberSelectComponentLocalStateComponent],
-      providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
+      providers: [provideMockStore()],
     }).compileComponents();
   }));
 
@@ -60,17 +53,18 @@ describe(NumberSelectComponentLocalStateComponent.name, () => {
     element = nativeElement.querySelector('select')!;
   });
 
-  it(`should not trigger a ${MarkAsDirtyAction.name} to the global store when an option is selected`, () =>
-    new Promise<void>((done) => {
-      actions$.pipe(count()).subscribe((c) => {
-        expect(c).toEqual(0);
-        done();
-      });
+  let dispatch: MockInstance<(action: Action) => void>;
+  beforeEach(() => {
+    const store = TestBed.inject(Store);
+    dispatch = vi.spyOn(store, 'dispatch');
+  });
 
-      element.selectedIndex = 0;
-      element.dispatchEvent(new Event('change'));
-      actionsSubject.complete();
-    }));
+  it(`should not trigger a ${MarkAsDirtyAction.name} to the global store when an option is selected`, () => {
+    element.selectedIndex = 0;
+    element.dispatchEvent(new Event('change'));
+
+    expect(dispatch).not.toHaveBeenCalled();
+  });
 
   it(`should trigger a ${MarkAsDirtyAction.name} to the event emitter when an option is selected`, () => {
     element.selectedIndex = 0;

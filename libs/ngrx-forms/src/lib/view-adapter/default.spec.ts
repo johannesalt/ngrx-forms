@@ -1,7 +1,7 @@
 import { Component, getDebugNode, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControlState } from '../state';
-import { NgrxDefaultViewAdapter } from './default';
+import { NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, NgrxDefaultViewAdapter } from './default';
 
 const TEST_ID = 'test ID';
 
@@ -25,22 +25,11 @@ describe(NgrxDefaultViewAdapter, () => {
   let viewAdapter: NgrxDefaultViewAdapter;
   let element: HTMLInputElement;
 
-  describe('Android device', () => {
-    let userAgent: string;
-    beforeEach(() => {
-      userAgent =
-        'Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36';
-    });
-
-    let navigator: Partial<Navigator>;
-    beforeEach(() => {
-      navigator = { userAgent: userAgent };
-    });
-
+  describe('Composition events not supported', () => {
     beforeEach(() => {
       TestBed.overrideDirective(NgrxDefaultViewAdapter, {
         set: {
-          providers: [{ provide: 'ngrx-forms/never', useValue: navigator }],
+          providers: [{ provide: NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, useValue: false }],
         },
       });
     });
@@ -93,7 +82,15 @@ describe(NgrxDefaultViewAdapter, () => {
     });
   });
 
-  describe('Any device', () => {
+  describe('Composition events supported', () => {
+    beforeEach(() => {
+      TestBed.overrideDirective(NgrxDefaultViewAdapter, {
+        set: {
+          providers: [{ provide: NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, useValue: true }],
+        },
+      });
+    });
+
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [DefaultInputTestComponent],

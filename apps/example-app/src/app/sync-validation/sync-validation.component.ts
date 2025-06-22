@@ -1,7 +1,7 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import {
-  FormGroupState,
   NgrxCheckboxViewAdapter,
   NgrxDefaultViewAdapter,
   NgrxFallbackSelectOption,
@@ -14,12 +14,10 @@ import {
   ResetAction,
   SetValueAction,
 } from 'ngrx-form-state';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
-import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './sync-validation.reducer';
+import { INITIAL_STATE, SetSubmittedValueAction, State } from './sync-validation.reducer';
 
 @Component({
   selector: 'ngf-sync-validation',
@@ -43,24 +41,22 @@ import { FormValue, INITIAL_STATE, SetSubmittedValueAction, State } from './sync
   ],
 })
 export class SyncValidationPageComponent {
-  formState$: Observable<FormGroupState<FormValue>>;
-  submittedValue$: Observable<FormValue | undefined>;
+  private readonly store = inject(Store<State>);
 
-  days = Array.from(Array(31).keys());
-  months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  years = Array.from(Array(115).keys()).map((i) => i + 1910);
+  public readonly formState$ = this.store.pipe(select((s) => s.syncValidation.formState));
 
-  constructor(private store: Store<State>) {
-    this.formState$ = store.pipe(select((s) => s.syncValidation.formState));
-    this.submittedValue$ = store.pipe(select((s) => s.syncValidation.submittedValue));
-  }
+  public readonly submittedValue$ = this.store.pipe(select((s) => s.syncValidation.submittedValue));
 
-  reset() {
+  public days = Array.from(Array(31).keys());
+  public months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  public years = Array.from(Array(115).keys()).map((i) => i + 1910);
+
+  public reset() {
     this.store.dispatch(new SetValueAction(INITIAL_STATE.id, INITIAL_STATE.value));
     this.store.dispatch(new ResetAction(INITIAL_STATE.id));
   }
 
-  submit() {
+  public submit() {
     this.formState$
       .pipe(
         take(1),

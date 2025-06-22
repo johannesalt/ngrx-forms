@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Action, ActionsSubject } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { first, skip } from 'rxjs/operators';
+import { Action, Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { MockInstance } from 'vitest';
 import { MarkAsDirtyAction, SetValueAction } from '../../actions';
 import { NgrxFormsModule } from '../../module';
 import { createFormControlState, FormControlState } from '../../state';
@@ -37,8 +37,6 @@ export class SelectFallbackComponent {
 describe(SelectComponent.name, () => {
   let component: SelectComponent;
   let fixture: ComponentFixture<SelectComponent>;
-  let actionsSubject: ActionsSubject;
-  let actions$: Observable<Action>;
   let element: HTMLSelectElement;
   let option1: HTMLOptionElement;
   let option2: HTMLOptionElement;
@@ -46,15 +44,10 @@ describe(SelectComponent.name, () => {
   const INITIAL_FORM_CONTROL_VALUE = SELECT_OPTIONS[1];
   const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  beforeEach(() => {
-    actionsSubject = new Subject<Action>() as ActionsSubject;
-    actions$ = actionsSubject as Observable<Action>; // cast required due to mismatch of lift() function signature
-  });
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [SelectComponent, SelectFallbackComponent],
-      providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
+      providers: [provideMockStore()],
     }).compileComponents();
   }));
 
@@ -68,32 +61,29 @@ describe(SelectComponent.name, () => {
     option2 = nativeElement.querySelectorAll('option')[1];
   });
 
+  let dispatch: MockInstance<(action: Action) => void>;
+  beforeEach(() => {
+    const store = TestBed.inject(Store);
+    dispatch = vi.spyOn(store, 'dispatch');
+  });
+
   it('should select the correct option initially', () => {
     expect(option2.selected).toBe(true);
   });
 
-  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, () =>
-    new Promise<void>((done) => {
-      actions$.pipe(first()).subscribe((a) => {
-        expect(a.type).toBe(SetValueAction.TYPE);
-        expect((a as SetValueAction<string>).value).toBe(SELECT_OPTIONS[0]);
-        done();
-      });
+  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, () => {
+    element.selectedIndex = 0;
+    element.dispatchEvent(new Event('change'));
 
-      element.selectedIndex = 0;
-      element.dispatchEvent(new Event('change'));
-    }));
+    expect(dispatch).toHaveBeenCalledWith(new SetValueAction(FORM_CONTROL_ID, SELECT_OPTIONS[0]));
+  });
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () =>
-    new Promise<void>((done) => {
-      actions$.pipe(skip(1), first()).subscribe((a) => {
-        expect(a.type).toBe(MarkAsDirtyAction.TYPE);
-        done();
-      });
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () => {
+    element.selectedIndex = 0;
+    element.dispatchEvent(new Event('change'));
 
-      element.selectedIndex = 0;
-      element.dispatchEvent(new Event('change'));
-    }));
+    expect(dispatch).toHaveBeenCalledWith(new MarkAsDirtyAction(FORM_CONTROL_ID));
+  });
 
   it('should set the value attribute for options without associated form state', () => {
     const fallbackFixture = TestBed.createComponent(SelectFallbackComponent);
@@ -129,23 +119,16 @@ export class NumberSelectComponent {
 describe(NumberSelectComponent.name, () => {
   let component: NumberSelectComponent;
   let fixture: ComponentFixture<NumberSelectComponent>;
-  let actionsSubject: ActionsSubject;
-  let actions$: Observable<Action>;
   let element: HTMLSelectElement;
   let option2: HTMLOptionElement;
   const FORM_CONTROL_ID = 'test ID';
   const INITIAL_FORM_CONTROL_VALUE = SELECT_NUMBER_OPTIONS[1];
   const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  beforeEach(() => {
-    actionsSubject = new Subject<Action>() as ActionsSubject;
-    actions$ = actionsSubject as Observable<Action>; // cast required due to mismatch of lift() function signature
-  });
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [NumberSelectComponent],
-      providers: [{ provide: ActionsSubject, useValue: actionsSubject }],
+      providers: [provideMockStore()],
     }).compileComponents();
   }));
 
@@ -159,30 +142,27 @@ describe(NumberSelectComponent.name, () => {
     option2 = element.querySelectorAll('option')[1];
   });
 
+  let dispatch: MockInstance<(action: Action) => void>;
+  beforeEach(() => {
+    const store = TestBed.inject(Store);
+    dispatch = vi.spyOn(store, 'dispatch');
+  });
+
   it('should select the correct option initially', () => {
     expect(option2.selected).toBe(true);
   });
 
-  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, () =>
-    new Promise<void>((done) => {
-      actions$.pipe(first()).subscribe((a) => {
-        expect(a.type).toBe(SetValueAction.TYPE);
-        expect((a as SetValueAction<number>).value).toBe(SELECT_NUMBER_OPTIONS[0]);
-        done();
-      });
+  it(`should trigger a ${SetValueAction.name} with the selected value when an option is selected`, () => {
+    element.selectedIndex = 0;
+    element.dispatchEvent(new Event('change'));
 
-      element.selectedIndex = 0;
-      element.dispatchEvent(new Event('change'));
-    }));
+    expect(dispatch).toHaveBeenCalledWith(new SetValueAction(FORM_CONTROL_ID, SELECT_NUMBER_OPTIONS[0]));
+  });
 
-  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () =>
-    new Promise<void>((done) => {
-      actions$.pipe(skip(1), first()).subscribe((a) => {
-        expect(a.type).toBe(MarkAsDirtyAction.TYPE);
-        done();
-      });
+  it(`should trigger a ${MarkAsDirtyAction.name} when an option is selected`, () => {
+    element.selectedIndex = 0;
+    element.dispatchEvent(new Event('change'));
 
-      element.selectedIndex = 0;
-      element.dispatchEvent(new Event('change'));
-    }));
+    expect(dispatch).toHaveBeenCalledWith(new MarkAsDirtyAction(FORM_CONTROL_ID));
+  });
 });

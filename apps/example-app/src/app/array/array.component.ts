@@ -1,11 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormGroupState, NgrxCheckboxViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective } from 'ngrx-form-state';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { NgrxCheckboxViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective } from 'ngrx-form-state';
 import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
-import { FormValue, State } from './array.reducer';
+import { State } from './array.reducer';
 
 @Component({
   selector: 'ngf-array',
@@ -22,9 +21,7 @@ import { FormValue, State } from './array.reducer';
   ],
 })
 export class ArrayPageComponent {
-  formState$: Observable<FormGroupState<FormValue>>;
+  private readonly store = inject(Store<State>);
 
-  constructor(store: Store<State>) {
-    this.formState$ = store.pipe(select((s) => s.array.formState));
-  }
+  public readonly formState$ = this.store.pipe(select((s) => s.array.formState));
 }
