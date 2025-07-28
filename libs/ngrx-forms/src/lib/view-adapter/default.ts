@@ -1,5 +1,5 @@
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Directive, forwardRef, HostListener, inject, InjectionToken, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { AfterViewInit, Directive, forwardRef, HostListener, inject, InjectionToken, PLATFORM_ID, DOCUMENT } from '@angular/core';
 import { SetNativeId } from './set-native-id';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
