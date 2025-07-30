@@ -148,7 +148,7 @@ describe(updateArray.name, () => {
 
   it('should not modify state if no update function is provided', () => {
     const state = createFormArrayState(FORM_CONTROL_ID, ['A', 'B', 'C']);
-    const resultState = updateArray<(typeof state.value)[0]>([])(state);
+    const resultState = updateArray<typeof state.value[0]>([])(state);
     expect(resultState).toBe(state);
   });
 
@@ -160,7 +160,7 @@ describe(updateArray.name, () => {
 
   it('should pass the parent array as the second parameter', () => {
     const state = createFormArrayState(FORM_CONTROL_ID, ['', '']);
-    updateArray<(typeof state.value)[0]>((c, p) => {
+    updateArray<typeof state.value[0]>((c, p) => {
       expect(p).toBe(state);
       return c;
     })(state);
@@ -362,7 +362,7 @@ describe(updateArrayWithFilter.name, () => {
 
   it('should not modify state if no update function is provided', () => {
     const state = createFormArrayState(FORM_CONTROL_ID, ['A', 'B', 'C']);
-    const resultState = updateArrayWithFilter<(typeof state.value)[0]>(() => true, [])(state);
+    const resultState = updateArrayWithFilter<typeof state.value[0]>(() => true, [])(state);
     expect(resultState).toBe(state);
   });
 
@@ -398,7 +398,7 @@ describe(updateArrayWithFilter.name, () => {
   it('should pass the state as the first parameter', () => {
     const state = createFormArrayState(FORM_CONTROL_ID, ['', '']);
     let idx = -1;
-    updateArrayWithFilter<(typeof state.value)[0]>(
+    updateArrayWithFilter<typeof state.value[0]>(
       (c) => {
         expect(c).toBe(state.controls[(idx += 1)]);
         return true;
@@ -410,7 +410,7 @@ describe(updateArrayWithFilter.name, () => {
   it('should pass the index as the second parameter', () => {
     const state = createFormArrayState(FORM_CONTROL_ID, ['', '']);
     let idx = -1;
-    updateArrayWithFilter<(typeof state.value)[0]>(
+    updateArrayWithFilter<typeof state.value[0]>(
       (_, i) => {
         expect(i).toBe((idx += 1));
         return true;
@@ -421,7 +421,7 @@ describe(updateArrayWithFilter.name, () => {
 
   it('should not modify state if no child matches the filter', () => {
     const state = createFormArrayState(FORM_CONTROL_ID, ['A', 'B', 'C']);
-    const resultState = updateArrayWithFilter<(typeof state.value)[0]>(
+    const resultState = updateArrayWithFilter<typeof state.value[0]>(
       (_, idx) => idx === -1,
       (s) => ({ ...s })
     )(state);
@@ -440,7 +440,7 @@ describe(updateArrayWithFilter.name, () => {
 
   it('should pass the parent array as the second parameter', () => {
     const state = createFormArrayState(FORM_CONTROL_ID, ['', '']);
-    updateArrayWithFilter<(typeof state.value)[0]>(
+    updateArrayWithFilter<typeof state.value[0]>(
       () => true,
       (c, p) => {
         expect(p).toBe(state);
