@@ -39,8 +39,13 @@ export class NgrxSelectViewAdapter extends SetNativeId implements SelectViewAdap
   }
 
   @HostListener('change', ['$event'])
-  onChange({ target }: { target: HTMLOptionElement }) {
-    this.selectedId = target.value;
+  onChange({ target }: Event) {
+    const option = target as HTMLOptionElement;
+    if (!option) {
+      return;
+    }
+
+    this.selectedId = option.value;
     const value = this.optionMap[this.selectedId];
     this.value = value;
     this.onChangeFn(value);

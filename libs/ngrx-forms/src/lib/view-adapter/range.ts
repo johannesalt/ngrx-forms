@@ -36,8 +36,13 @@ export class NgrxRangeViewAdapter extends SetNativeId implements FormViewAdapter
 
   @HostListener('change', ['$event'])
   @HostListener('input', ['$event'])
-  handleInput({ target }: { target: HTMLInputElement }): void {
-    const value = target.value;
+  handleInput({ target }: Event): void {
+    const input = target as HTMLInputElement;
+    if (!input) {
+      return;
+    }
+
+    const value = input.value;
     this.onChange(value === '' ? null : parseFloat(value));
   }
 }
