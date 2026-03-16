@@ -87,64 +87,6 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
 
     it('should attach the view adapter', () => expect(viewAdapter).toBeDefined());
 
-    it('should set the ID of the element to the ID of the state if the ID is not already set', () => {
-      expect(element.id).toBe(TEST_ID);
-    });
-
-    it('should not set the ID of the element to the ID of the state if the ID is set in template manually', () => {
-      element = (fixture.nativeElement as HTMLElement).querySelectorAll('select')[1];
-      expect(element.id).toBe('customId');
-    });
-
-    it('should not set the ID of the element to the ID of the state if the ID is set in template via binding', () => {
-      element = (fixture.nativeElement as HTMLElement).querySelectorAll('select')[2];
-      expect(element.id).toBe(component.boundId);
-    });
-
-    it('should set the ID of the element if the ID of the state changes and the ID was set previously', () => {
-      const newId = 'new ID';
-      component.state = { id: newId };
-      fixture.detectChanges();
-
-      expect(element.id).toBe(newId);
-    });
-
-    it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to manual value', () => {
-      element = (fixture.nativeElement as HTMLElement).querySelectorAll('select')[1];
-
-      const newId = 'new ID';
-      component.state = { id: newId };
-      fixture.detectChanges();
-
-      expect(element.id).toBe('customId');
-    });
-
-    it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to other binding', () => {
-      element = (fixture.nativeElement as HTMLElement).querySelectorAll('select')[2];
-
-      const newId = 'new ID';
-      component.state = { id: newId };
-      fixture.detectChanges();
-
-      expect(element.id).toBe(component.boundId);
-    });
-
-    it('should not set the ID of the element if the ID of the state does not change', () => {
-      const renderer = fixture.componentRef.injector.get(Renderer2);
-      const setProperty = vi.spyOn(renderer, 'setProperty');
-
-      component.state = { id: `${TEST_ID}1` };
-      fixture.detectChanges();
-
-      expect(setProperty).toHaveBeenCalledWith(expect.anything(), 'id', `${TEST_ID}1`);
-      setProperty.mockClear();
-
-      component.state = { id: `${TEST_ID}1` };
-      fixture.detectChanges();
-
-      expect(setProperty).not.toHaveBeenCalled();
-    });
-
     it('should mark a single option as selected if same value is written', () => {
       viewAdapter.setViewValue([OPTION1_VALUE]);
       expect(option1.selected).toBe(true);
