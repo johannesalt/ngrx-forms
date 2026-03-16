@@ -99,7 +99,7 @@ describe(NgrxRangeViewAdapter.name, () => {
   });
 
   it('should not throw if calling callbacks before they are registered', () => {
-    expect(() => viewAdapter.onChange(undefined)).not.toThrowError();
-    expect(() => viewAdapter.onTouched()).not.toThrowError();
+    expect(() => viewAdapter.onChange(undefined)).not.toThrow();
+    expect(() => viewAdapter.onTouched()).not.toThrow();
   });
 });

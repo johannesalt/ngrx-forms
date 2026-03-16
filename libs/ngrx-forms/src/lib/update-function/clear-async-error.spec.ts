@@ -101,7 +101,7 @@ describe(clearAsyncError.name, () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => clearAsyncError('error')(undefined as any)).toThrowError();
+    expect(() => clearAsyncError('error')(undefined as any)).toThrow();
   });
 
   it('should work inside an updateGroup', () => {

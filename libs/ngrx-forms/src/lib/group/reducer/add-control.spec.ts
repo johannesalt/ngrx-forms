@@ -41,7 +41,7 @@ describe(`form group ${addControlReducer.name}`, () => {
 
   it('should throw if trying to add existing control', () => {
     const action = new AddGroupControlAction<FormGroupValue>(FORM_CONTROL_ID, 'inner', '');
-    expect(() => addControlReducer<FormGroupValue>(INITIAL_STATE, action)).toThrowError();
+    expect(() => addControlReducer<FormGroupValue>(INITIAL_STATE, action)).toThrow();
   });
 
   it('should forward actions to children', () => {

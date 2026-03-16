@@ -86,7 +86,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
 
   it('should throw if trying to remove non-existing control', () => {
     const action = new RemoveGroupControlAction<FormGroupValue>(FORM_CONTROL_ID, 'inner2');
-    expect(() => removeControlReducer<FormGroupValue>(INITIAL_STATE, action)).toThrowError();
+    expect(() => removeControlReducer<FormGroupValue>(INITIAL_STATE, action)).toThrow();
   });
 
   it('should forward actions to children', () => {

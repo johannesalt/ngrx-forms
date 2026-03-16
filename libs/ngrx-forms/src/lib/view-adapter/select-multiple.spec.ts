@@ -147,7 +147,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
     });
 
     it('should throw if value is not an array', () => {
-      expect(() => viewAdapter.setViewValue({})).toThrowError();
+      expect(() => viewAdapter.setViewValue({})).toThrow();
     });
   });
 
@@ -375,7 +375,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
   });
 
   it('should not throw if calling callbacks before they are registered', () => {
-    expect(() => viewAdapter.onChange()).not.toThrowError();
-    expect(() => viewAdapter.onTouched()).not.toThrowError();
+    expect(() => viewAdapter.onChange()).not.toThrow();
+    expect(() => viewAdapter.onTouched()).not.toThrow();
   });
 });

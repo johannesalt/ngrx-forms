@@ -18,6 +18,6 @@ describe('moveArrayControl', () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => moveArrayControl(0, 1)(undefined as any)).toThrowError();
+    expect(() => moveArrayControl(0, 1)(undefined as any)).toThrow();
   });
 });

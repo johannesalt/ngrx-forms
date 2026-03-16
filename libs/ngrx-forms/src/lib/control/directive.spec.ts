@@ -157,7 +157,7 @@ describe(NgrxFormControlDirective, () => {
           component.state = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, isDisabled: true, isEnabled: false };
           fixture.detectChanges();
         };
-        expect(fn).not.toThrowError();
+        expect(fn).not.toThrow();
       });
 
       test('should write the value when the state value does not change but the id does after a new view value was reported', () => {
@@ -628,7 +628,7 @@ describe(NgrxFormControlDirective, () => {
 
     test('should throw while trying to emit actions if no Store was provided', () => {
       const newValue = 'new value';
-      expect(() => onChange(newValue)).toThrowError();
+      expect(() => onChange(newValue)).toThrow();
     });
   });
 
@@ -749,7 +749,7 @@ describe(NgrxFormControlDirective, () => {
         const fixture = TestBed.createComponent(TestComponent);
         fixture.detectChanges();
       };
-      expect(fn).toThrowError();
+      expect(fn).toThrow();
     });
   });
 });

@@ -169,8 +169,8 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should not throw if calling callbacks before they are registered', () => {
-      expect(() => viewAdapter1.onChange()).not.toThrowError();
-      expect(() => viewAdapter1.onTouched()).not.toThrowError();
+      expect(() => viewAdapter1.onChange()).not.toThrow();
+      expect(() => viewAdapter1.onTouched()).not.toThrow();
     });
   });
 

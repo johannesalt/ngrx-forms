@@ -25,11 +25,11 @@ describe(formStateReducer.name, () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => formStateReducer(undefined, { type: '' })).toThrowError();
+    expect(() => formStateReducer(undefined, { type: '' })).toThrow();
   });
 
   it('should throw if state is not a form state', () => {
-    expect(() => formStateReducer({} as any, { type: '' })).toThrowError();
+    expect(() => formStateReducer({} as any, { type: '' })).toThrow();
   });
 });
 
@@ -117,7 +117,7 @@ describe(createFormStateReducerWithUpdate.name, () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => createFormStateReducerWithUpdate<any>((s) => s)(undefined, { type: '' })).toThrowError();
+    expect(() => createFormStateReducerWithUpdate<any>((s) => s)(undefined, { type: '' })).toThrow();
   });
 });
 

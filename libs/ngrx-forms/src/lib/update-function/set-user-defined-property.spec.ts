@@ -34,7 +34,7 @@ describe(setUserDefinedProperty.name, () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => setUserDefinedProperty('prop', 12)(undefined as any)).toThrowError();
+    expect(() => setUserDefinedProperty('prop', 12)(undefined as any)).toThrow();
   });
 
   it('should work inside an updateGroup', () => {

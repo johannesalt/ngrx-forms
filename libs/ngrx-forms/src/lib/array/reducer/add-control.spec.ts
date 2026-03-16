@@ -70,12 +70,12 @@ describe(`form array ${addControlReducer.name}`, () => {
 
   it('should throw if trying to add control at out of bounds index', () => {
     const action = new AddArrayControlAction(FORM_CONTROL_ID, '', 3);
-    expect(() => addControlReducer(INITIAL_STATE, action)).toThrowError();
+    expect(() => addControlReducer(INITIAL_STATE, action)).toThrow();
   });
 
   it('should throw if trying to add control at negative index', () => {
     const action = new AddArrayControlAction(FORM_CONTROL_ID, '', -1);
-    expect(() => addControlReducer(INITIAL_STATE, action)).toThrowError();
+    expect(() => addControlReducer(INITIAL_STATE, action)).toThrow();
   });
 
   it('should forward actions to children', () => {

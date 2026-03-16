@@ -38,11 +38,11 @@ describe('form control reducer', () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => formControlReducer(undefined, { type: '' })).toThrowError();
+    expect(() => formControlReducer(undefined, { type: '' })).toThrow();
   });
 
   it('should throw if state is not a control state', () => {
-    expect(() => formControlReducer({ ...INITIAL_STATE, value: [], controls: [] } as any, new MarkAsDirtyAction(FORM_CONTROL_ID))).toThrowError();
+    expect(() => formControlReducer({ ...INITIAL_STATE, value: [], controls: [] } as any, new MarkAsDirtyAction(FORM_CONTROL_ID))).toThrow();
   });
 
   describe(SetValueAction.name, () => {

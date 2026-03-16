@@ -117,7 +117,7 @@ describe(validate.name, () => {
 
   it('should throw if curried and no state', () => {
     const errors = { required: { actual: true } };
-    expect(() => validate<string>(() => errors)(undefined as any)).toThrowError();
+    expect(() => validate<string>(() => errors)(undefined as any)).toThrow();
   });
 
   it('should work inside an updateGroup', () => {

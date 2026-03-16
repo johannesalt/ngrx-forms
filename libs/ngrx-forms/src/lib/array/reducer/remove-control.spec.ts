@@ -112,12 +112,12 @@ describe(`form group ${removeControlReducer.name}`, () => {
 
   it('should throw if trying to remove non-existing control', () => {
     const action = new RemoveArrayControlAction(FORM_CONTROL_ID, 2);
-    expect(() => removeControlReducer(INITIAL_STATE, action)).toThrowError();
+    expect(() => removeControlReducer(INITIAL_STATE, action)).toThrow();
   });
 
   it('should throw if trying to remove control at negative index', () => {
     const action = new RemoveArrayControlAction(FORM_CONTROL_ID, -1);
-    expect(() => removeControlReducer(INITIAL_STATE, action)).toThrowError();
+    expect(() => removeControlReducer(INITIAL_STATE, action)).toThrow();
   });
 
   it('should forward actions to children', () => {

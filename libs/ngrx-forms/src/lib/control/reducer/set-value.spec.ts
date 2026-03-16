@@ -32,12 +32,12 @@ describe('form control setValueReducer', () => {
   it('should throw for date values', () => {
     const value = new Date(1970, 0, 1);
     const state = createFormControlState(FORM_CONTROL_ID, null);
-    expect(() => setValueReducer<any>(state, new SetValueAction(FORM_CONTROL_ID, value))).toThrowError();
+    expect(() => setValueReducer<any>(state, new SetValueAction(FORM_CONTROL_ID, value))).toThrow();
   });
 
   it('should throw if value is not supported', () => {
     const value = {};
-    expect(() => setValueReducer<any>(INITIAL_STATE, new SetValueAction(FORM_CONTROL_ID, value))).toThrowError();
+    expect(() => setValueReducer<any>(INITIAL_STATE, new SetValueAction(FORM_CONTROL_ID, value))).toThrow();
   });
 
   it('should allow setting boxed object values', () => {
@@ -56,6 +56,6 @@ describe('form control setValueReducer', () => {
 
   it('should throw if boxed value is not serializable', () => {
     const value = box({ inner: () => void 0 });
-    expect(() => setValueReducer(INITIAL_STATE, new SetValueAction(FORM_CONTROL_ID, value as any))).toThrowError();
+    expect(() => setValueReducer(INITIAL_STATE, new SetValueAction(FORM_CONTROL_ID, value as any))).toThrow();
   });
 });
