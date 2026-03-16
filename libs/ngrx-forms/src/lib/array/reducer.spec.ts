@@ -155,7 +155,7 @@ describe('form array reducer', () => {
 
   describe(SetErrorsAction.name, () => {
     it('should update state', () => {
-      const errors = { required: true };
+      const errors = { required: { actual: true } };
       const resultState = formArrayReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, errors));
       expect(resultState).not.toBe(INITIAL_STATE);
     });

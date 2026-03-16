@@ -111,7 +111,7 @@ describe(`form array ${setValueReducer.name}`, () => {
   });
 
   it('should remove child errors on demand when value is empty', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const state = {
       ...INITIAL_STATE,
       errors: {
@@ -132,7 +132,7 @@ describe(`form array ${setValueReducer.name}`, () => {
   });
 
   it('should remove child errors and keep own errors on demand when value is empty', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const state = {
       ...INITIAL_STATE,
       errors: {

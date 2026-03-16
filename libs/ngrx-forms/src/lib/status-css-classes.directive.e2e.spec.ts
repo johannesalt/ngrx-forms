@@ -67,7 +67,7 @@ describe(NgrxStatusCssClassesDirective.name, () => {
         ...component.state,
         errors: {
           _inner: {
-            required: true,
+            required: { actual: true },
           },
         },
         isValid: false,
@@ -77,7 +77,7 @@ describe(NgrxStatusCssClassesDirective.name, () => {
           inner: {
             ...component.state.controls.inner,
             errors: {
-              required: true,
+              required: { actual: true },
             },
             isValid: false,
             isInvalid: true,

@@ -530,7 +530,7 @@ describe('state', () => {
     });
 
     it('should aggregate child errors', () => {
-      const childError = { required: true };
+      const childError = { required: { actual: true } };
       const controlWithError = {
         ...CONTROL_1,
         errors: childError,
@@ -542,7 +542,7 @@ describe('state', () => {
     });
 
     it('should merge own errors with child errors', () => {
-      const childError = { required: true };
+      const childError = { required: { actual: true } };
       const ownError = { max: true };
       const controlWithError = {
         ...CONTROL_1,
@@ -771,7 +771,7 @@ describe('state', () => {
     });
 
     it('should aggregate child errors', () => {
-      const childError = { required: true };
+      const childError = { required: { actual: true } };
       const controlWithError = {
         ...CONTROL_1,
         errors: childError,
@@ -783,7 +783,7 @@ describe('state', () => {
     });
 
     it('should merge own errors with child errors', () => {
-      const childError = { required: true };
+      const childError = { required: { actual: true } };
       const ownError = { max: true };
       const controlWithError = {
         ...CONTROL_1,

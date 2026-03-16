@@ -36,7 +36,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
       inner?: number;
     }
     const id = 'ID';
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     let state = createFormGroupState<FormValue>(id, { inner: 5 });
     state = {
       ...state,
@@ -62,7 +62,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
       inner?: number;
     }
     const id = 'ID';
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     let state = createFormGroupState<FormValue>(id, { inner: 5 });
     state = {
       ...state,

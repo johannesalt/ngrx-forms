@@ -65,7 +65,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
 
   it('should remove child errors for removed child', () => {
     const id = 'ID';
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     let state = createFormArrayState(id, [5]);
     state = {
       ...state,
@@ -88,7 +88,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
 
   it('should remove child errors for removed child and keep own errors', () => {
     const id = 'ID';
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     let state = createFormArrayState<number>(id, [5]);
     state = {
       ...state,
