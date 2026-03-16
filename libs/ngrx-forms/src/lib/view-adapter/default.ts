@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, Directive, forwardRef, HostListener, inject, InjectionToken, PLATFORM_ID, DOCUMENT } from '@angular/core';
-import { SetNativeId } from './set-native-id';
+import { ControlIdDirective } from './control-id.directive';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
 export const NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED = new InjectionToken<boolean>('NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED');
@@ -35,7 +35,7 @@ function isAndroid(navigator: Navigator | null | undefined): boolean {
     },
   ],
 })
-export class NgrxDefaultViewAdapter extends SetNativeId implements FormViewAdapter, AfterViewInit {
+export class NgrxDefaultViewAdapter extends ControlIdDirective implements FormViewAdapter, AfterViewInit {
   private readonly isCompositionSupported = inject(NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED);
 
   onChange: (value: any) => void = () => void 0;

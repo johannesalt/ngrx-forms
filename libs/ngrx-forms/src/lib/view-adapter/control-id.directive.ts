@@ -2,7 +2,7 @@ import { AfterViewInit, Directive, ElementRef, Injector, Renderer2, computed, ef
 import { FormControlState } from '../state';
 
 @Directive()
-export abstract class SetNativeId implements AfterViewInit {
+export abstract class ControlIdDirective implements AfterViewInit {
   /** Form control state. */
   public readonly ngrxFormControlState = input.required<FormControlState<any>>();
 

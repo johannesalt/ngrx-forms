@@ -1,6 +1,6 @@
 import { Directive, forwardRef, HostListener } from '@angular/core';
 import { NGRX_SELECT_VIEW_ADAPTER, NgrxSelectOption, SelectViewAdapter } from './option';
-import { SetNativeId } from './set-native-id';
+import { ControlIdDirective } from './control-id.directive';
 import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
 @Directive({
@@ -17,7 +17,7 @@ import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
     },
   ],
 })
-export class NgrxSelectMultipleViewAdapter extends SetNativeId implements SelectViewAdapter {
+export class NgrxSelectMultipleViewAdapter extends ControlIdDirective implements SelectViewAdapter {
   private options: { [id: string]: NgrxSelectOption } = {};
   private optionValues: { [id: string]: any } = {};
   private idCounter = 0;

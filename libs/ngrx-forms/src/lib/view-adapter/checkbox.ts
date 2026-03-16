@@ -1,5 +1,5 @@
 import { Directive, forwardRef, HostListener } from '@angular/core';
-import { SetNativeId } from './set-native-id';
+import { ControlIdDirective } from './control-id.directive';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
 @Directive({
@@ -12,7 +12,7 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
     },
   ],
 })
-export class NgrxCheckboxViewAdapter extends SetNativeId implements FormViewAdapter {
+export class NgrxCheckboxViewAdapter extends ControlIdDirective implements FormViewAdapter {
   onChange: (value: any) => void = () => void 0;
 
   @HostListener('blur')
