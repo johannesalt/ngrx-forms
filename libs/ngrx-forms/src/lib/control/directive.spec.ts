@@ -1,14 +1,14 @@
-import { Component, ElementRef, viewChild } from '@angular/core';
+import { Component, ElementRef, input, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Action, Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { Mock, MockInstance } from 'vitest';
 import { FocusAction, MarkAsDirtyAction, MarkAsTouchedAction, SetValueAction, UnfocusAction } from '../actions';
-import { FormControlState, createFormControlState } from '../state';
+import { createFormControlState } from '../state';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '../view-adapter/view-adapter';
 import { NGRX_UPDATE_ON_TYPE, NgrxFormControlDirective } from './directive';
-import { NgrxValueConverters } from './value-converter';
+import { NgrxValueConverter, NgrxValueConverters } from './value-converter';
 
 const FORM_CONTROL_ID = 'test ID';
 const INITIAL_FORM_CONTROL_VALUE = 'value';
@@ -20,23 +20,23 @@ const INITIAL_STATE = createFormControlState<string>(FORM_CONTROL_ID, INITIAL_FO
     <input
       #el
       type="text"
-      [ngrxEnableFocusTracking]="enableFocusTracking"
-      [ngrxFormControlState]="state"
-      [ngrxUpdateOn]="updateOn"
-      [ngrxValueConverter]="valueConverter"
+      [ngrxEnableFocusTracking]="enableFocusTracking()"
+      [ngrxFormControlState]="state()"
+      [ngrxUpdateOn]="updateOn()"
+      [ngrxValueConverter]="valueConverter()"
     />
   `,
 })
 export class TestComponent {
   public readonly element = viewChild<ElementRef<HTMLInputElement>>('el');
 
-  public enableFocusTracking = false;
+  public readonly state = input(INITIAL_STATE);
 
-  public state: Partial<FormControlState<string>> | null | undefined = INITIAL_STATE;
+  public readonly enableFocusTracking = input<boolean>(false);
 
-  public updateOn = NGRX_UPDATE_ON_TYPE.CHANGE;
+  public readonly updateOn = input(NGRX_UPDATE_ON_TYPE.CHANGE);
 
-  public valueConverter = NgrxValueConverters.default<any>();
+  public readonly valueConverter = input(NgrxValueConverters.default<any>());
 }
 
 describe(NgrxFormControlDirective, () => {
@@ -108,26 +108,18 @@ describe(NgrxFormControlDirective, () => {
       dispatch = vi.spyOn(store, 'dispatch');
     });
 
-    test('should throw if the provided state is not defined', () => {
-      const fn = () => {
-        component.state = undefined;
-        fixture.detectChanges();
-      };
-      expect(fn).toThrowError();
-    });
-
     describe('writing values and dispatching value and dirty actions', () => {
       test('should write the value when the state changes', () => {
         const newValue = 'new value';
-
-        component.state = { ...INITIAL_STATE, value: newValue };
+        
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: newValue });
         fixture.detectChanges();
 
         expect(setViewValue).toHaveBeenCalledWith(newValue);
       });
 
       test('should not write the value when the state value does not change', () => {
-        component.state = INITIAL_STATE;
+        fixture.componentRef.setInput('state', INITIAL_STATE);
         fixture.detectChanges();
 
         expect(setViewValue).not.toHaveBeenCalled();
@@ -139,14 +131,14 @@ describe(NgrxFormControlDirective, () => {
 
         setViewValue.mockClear();
 
-        component.state = { ...INITIAL_STATE, value: newValue };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: newValue });
         fixture.detectChanges();
 
         expect(setViewValue).not.toHaveBeenCalled();
       });
 
       test('should write the value when the state value does not change but the id does', () => {
-        component.state = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1` };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1` });
         fixture.detectChanges();
 
         expect(setViewValue).toHaveBeenCalledWith(INITIAL_STATE.value);
@@ -154,7 +146,7 @@ describe(NgrxFormControlDirective, () => {
 
       test('should not throw if id changes and new state is disabled but adapter does not support disabling', () => {
         const fn = () => {
-          component.state = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, isDisabled: true, isEnabled: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, isDisabled: true, isEnabled: false });
           fixture.detectChanges();
         };
         expect(fn).not.toThrow();
@@ -166,7 +158,7 @@ describe(NgrxFormControlDirective, () => {
 
         setViewValue.mockClear();
 
-        component.state = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, value: newValue };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, value: newValue });
         fixture.detectChanges();
 
         expect(setViewValue).toHaveBeenCalledWith(newValue);
@@ -178,7 +170,7 @@ describe(NgrxFormControlDirective, () => {
 
         setViewValue.mockClear();
 
-        component.state = { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, value: newValue };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: `${FORM_CONTROL_ID}1`, value: newValue });
         fixture.detectChanges();
 
         expect(setViewValue).toHaveBeenCalledWith(newValue);
@@ -205,7 +197,7 @@ describe(NgrxFormControlDirective, () => {
       });
 
       test(`should not dispatch a ${MarkAsDirtyAction} if the view value changes when the state is marked as dirty`, () => {
-        component.state = { ...INITIAL_STATE, isDirty: true, isPristine: false };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, isDirty: true, isPristine: false });
         fixture.detectChanges();
 
         const newValue = 'new value';
@@ -218,15 +210,15 @@ describe(NgrxFormControlDirective, () => {
         const newValue = 'new value';
         onChange(newValue);
 
-        component.state = { ...INITIAL_STATE, value: newValue };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: newValue });
         fixture.detectChanges();
 
-        component.state = INITIAL_STATE;
+        fixture.componentRef.setInput('state', INITIAL_STATE);
         fixture.detectChanges();
 
         setViewValue.mockClear();
 
-        component.state = { ...INITIAL_STATE, value: newValue };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: newValue });
         fixture.detectChanges();
 
         expect(setViewValue).toHaveBeenCalledWith(newValue);
@@ -235,13 +227,13 @@ describe(NgrxFormControlDirective, () => {
       test('should correctly set the initial values if a value converter is set after the initial state', () => {
         const convertedValue = ['A'];
 
-        component.valueConverter = {
+        fixture.componentRef.setInput('valueConverter', <NgrxValueConverter<any, any>>{
           convertStateToViewValue: () => convertedValue,
           convertViewToStateValue: (s) => s,
-        };
+        });
         fixture.detectChanges();
 
-        component.state = { ...INITIAL_STATE, value: 'new value' };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: 'new value' });
         fixture.detectChanges();
 
         expect(setViewValue).toHaveBeenCalledWith(convertedValue);
@@ -256,7 +248,7 @@ describe(NgrxFormControlDirective, () => {
       });
 
       test(`should not dispatch a ${MarkAsTouchedAction} if the view adapter notifies and the state is touched`, () => {
-        component.state = { ...INITIAL_STATE, isTouched: true, isUntouched: false };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, isTouched: true, isUntouched: false });
         fixture.detectChanges();
 
         onTouched();
@@ -267,8 +259,8 @@ describe(NgrxFormControlDirective, () => {
 
     describe('ngrxUpdateOn "blur"', () => {
       beforeEach(() => {
-        component.state = { ...INITIAL_STATE, isTouched: true, isUntouched: false };
-        component.updateOn = NGRX_UPDATE_ON_TYPE.BLUR;
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, isTouched: true, isUntouched: false });
+        fixture.componentRef.setInput('updateOn', NGRX_UPDATE_ON_TYPE.BLUR);
         fixture.detectChanges();
       });
 
@@ -299,7 +291,7 @@ describe(NgrxFormControlDirective, () => {
 
         setViewValue.mockClear();
 
-        component.state = { ...INITIAL_STATE };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE });
         fixture.detectChanges();
 
         expect(setViewValue).not.toHaveBeenCalled();
@@ -308,7 +300,7 @@ describe(NgrxFormControlDirective, () => {
 
     describe('ngrxUpdateOn "never"', () => {
       beforeEach(() => {
-        component.updateOn = NGRX_UPDATE_ON_TYPE.NEVER;
+        fixture.componentRef.setInput('updateOn', NGRX_UPDATE_ON_TYPE.NEVER);
         fixture.detectChanges();
       });
 
@@ -323,12 +315,12 @@ describe(NgrxFormControlDirective, () => {
 
     describe('enabling/disabling', () => {
       test('should enable the state if disabled', () => {
-        component.state = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, isEnabled: false, isDisabled: true });
         fixture.detectChanges();
 
         viewAdapter.setIsDisabled = setIsDisabled;
 
-        component.state = { ...INITIAL_STATE };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE });
         fixture.detectChanges();
 
         expect(setIsDisabled).toHaveBeenCalledWith(false);
@@ -337,7 +329,7 @@ describe(NgrxFormControlDirective, () => {
       test('should not enable the state if enabled', () => {
         viewAdapter.setIsDisabled = setIsDisabled;
 
-        component.state = { ...INITIAL_STATE };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE });
         fixture.detectChanges();
 
         expect(setIsDisabled).not.toHaveBeenCalled();
@@ -346,19 +338,19 @@ describe(NgrxFormControlDirective, () => {
       test('should disable the state if enabled', () => {
         viewAdapter.setIsDisabled = setIsDisabled;
 
-        component.state = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, isEnabled: false, isDisabled: true });
         fixture.detectChanges();
 
         expect(setIsDisabled).toHaveBeenCalledWith(true);
       });
 
       test('should not disable the state if disabled', () => {
-        component.state = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, isEnabled: false, isDisabled: true });
         fixture.detectChanges();
 
         viewAdapter.setIsDisabled = setIsDisabled;
 
-        component.state = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, isEnabled: false, isDisabled: true });
         fixture.detectChanges();
 
         expect(setIsDisabled).not.toHaveBeenCalled();
@@ -366,7 +358,7 @@ describe(NgrxFormControlDirective, () => {
 
       test('should not throw if setIsDisabled is not defined', () => {
         const fn = () => {
-          component.state = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isEnabled: false, isDisabled: true });
           fixture.detectChanges();
         };
         expect(fn).not.toThrow();
@@ -378,12 +370,12 @@ describe(NgrxFormControlDirective, () => {
       const STATE_VALUE = '1970-01-01T00:00:00.000Z';
 
       beforeEach(() => {
-        component.valueConverter = NgrxValueConverters.dateToISOString;
+        fixture.componentRef.setInput('valueConverter', NgrxValueConverters.dateToISOString);
         fixture.detectChanges();
       });
 
       test('should convert the state value when the state changes', () => {
-        component.state = { ...INITIAL_STATE, value: STATE_VALUE };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: STATE_VALUE });
         fixture.detectChanges();
 
         expect(setViewValue).toHaveBeenCalledWith(VIEW_VALUE);
@@ -396,19 +388,19 @@ describe(NgrxFormControlDirective, () => {
       });
 
       test('should not write the value when the state value does not change with conversion', () => {
-        component.state = { ...INITIAL_STATE, value: STATE_VALUE };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: STATE_VALUE });
         fixture.detectChanges();
 
         setViewValue.mockClear();
 
-        component.state = { ...INITIAL_STATE, value: STATE_VALUE };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: STATE_VALUE });
         fixture.detectChanges();
 
         expect(setViewValue).not.toHaveBeenCalled();
       });
 
       test('should not dispatch an action if the view value is the same as the state with conversion', () => {
-        component.state = { ...INITIAL_STATE, value: STATE_VALUE };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: STATE_VALUE });
         fixture.detectChanges();
 
         onChange(VIEW_VALUE);
@@ -432,7 +424,7 @@ describe(NgrxFormControlDirective, () => {
 
       describe('is enabled', () => {
         beforeEach(() => {
-          component.enableFocusTracking = true;
+          fixture.componentRef.setInput('enableFocusTracking', true);
           fixture.detectChanges();
         });
 
@@ -442,17 +434,17 @@ describe(NgrxFormControlDirective, () => {
         });
 
         test('should focus the element if state is focused initially', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           expect(focus).toHaveBeenCalled();
         });
 
         test('should blur the element if state is unfocused initially', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
-          component.state = { ...INITIAL_STATE, id: `${INITIAL_STATE.id}1` };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: `${INITIAL_STATE.id}1` });
           fixture.detectChanges();
 
           expect(blur).toHaveBeenCalled();
@@ -461,31 +453,31 @@ describe(NgrxFormControlDirective, () => {
         test('should focus the element if state becomes focused', () => {
           expect(focus).not.toHaveBeenCalled();
 
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           expect(focus).toHaveBeenCalled();
         });
 
         test('should blur the element if state becomes unfocused', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           expect(blur).not.toHaveBeenCalled();
 
-          component.state = INITIAL_STATE;
+          fixture.componentRef.setInput('state', INITIAL_STATE);
           fixture.detectChanges();
 
           expect(blur).toHaveBeenCalled();
         });
 
         test('should not focus the element if state is and was focused', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           expect(focus).toHaveBeenCalledTimes(1);
 
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           expect(focus).toHaveBeenCalledTimes(1);
@@ -498,7 +490,7 @@ describe(NgrxFormControlDirective, () => {
         });
 
         test('should not dispatch an action when element becomes focused and state is focused', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           nativeElement.focus();
@@ -507,7 +499,7 @@ describe(NgrxFormControlDirective, () => {
         });
 
         test(`should dispatch an ${UnfocusAction} when element becomes unfocused and state is focused`, () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           nativeElement.focus();
@@ -524,7 +516,7 @@ describe(NgrxFormControlDirective, () => {
         });
 
         test('should add the cdk focus attribute if state is focused', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           const focusRegionStart = nativeElement.getAttribute('cdk-focus-region-start');
@@ -544,7 +536,7 @@ describe(NgrxFormControlDirective, () => {
         });
 
         test('should not focus the element initially', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           expect(focus).not.toHaveBeenCalled();
@@ -555,17 +547,17 @@ describe(NgrxFormControlDirective, () => {
         });
 
         test('should not focus the element if state becomes focused', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           expect(focus).not.toHaveBeenCalled();
         });
 
         test('should not blur the element if state becomes unfocused', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
-          component.state = INITIAL_STATE;
+          fixture.componentRef.setInput('state', INITIAL_STATE);
           fixture.detectChanges();
 
           expect(blur).not.toHaveBeenCalled();
@@ -578,7 +570,7 @@ describe(NgrxFormControlDirective, () => {
         });
 
         test('should not dispatch an action when element becomes focused and state is focused', () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           nativeElement.focus();
@@ -587,7 +579,7 @@ describe(NgrxFormControlDirective, () => {
         });
 
         test(`should not dispatch an action when element becomes unfocused and state is focused`, () => {
-          component.state = { ...INITIAL_STATE, isFocused: true, isUnfocused: false };
+          fixture.componentRef.setInput('state', { ...INITIAL_STATE, isFocused: true, isUnfocused: false });
           fixture.detectChanges();
 
           nativeElement.focus();
@@ -687,7 +679,7 @@ describe(NgrxFormControlDirective, () => {
     test('should adapt a control value accessor to a form view adapter if no form view adapter is provided', () => {
       controlValueAccessor.setDisabledState = setDisabledState;
 
-      component.state = { ...INITIAL_STATE, isDisabled: true, isEnabled: false };
+      fixture.componentRef.setInput('state', { ...INITIAL_STATE, isDisabled: true, isEnabled: false });
       fixture.detectChanges();
 
       expect(registerOnChange).toHaveBeenCalled();
@@ -698,7 +690,7 @@ describe(NgrxFormControlDirective, () => {
 
     test('should adapt a control value accessor without disabling support', () => {
       const fn = () => {
-        component.state = { ...INITIAL_STATE, isDisabled: true, isEnabled: false };
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, isDisabled: true, isEnabled: false });
         fixture.detectChanges();
       };
       expect(fn).not.toThrow();

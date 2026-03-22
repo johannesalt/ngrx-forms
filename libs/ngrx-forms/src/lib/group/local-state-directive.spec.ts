@@ -1,4 +1,4 @@
-import { Component, ElementRef, viewChild } from '@angular/core';
+import { Component, ElementRef, input, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Action, Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -14,7 +14,7 @@ const INITIAL_STATE = createFormGroupState(FORM_GROUP_ID, INITIAL_FORM_CONTROL_V
 @Component({
   imports: [NgrxLocalFormDirective],
   template: `
-    <form (ngrxFormsAction)="formsAction($event)" [ngrxFormState]="state">
+    <form (ngrxFormsAction)="formsAction($event)" [ngrxFormState]="state()">
       <button #btn type="submit">Click me</button>
     </form>
   `,
@@ -24,7 +24,7 @@ export class TestComponent {
 
   public readonly formsAction = vi.fn();
 
-  public state: Partial<FormGroupState<any>> | null | undefined = INITIAL_STATE;
+  public readonly state = input<FormGroupState<any>>(INITIAL_STATE);
 
   public submitForm() {
     const button = this.button();
@@ -73,7 +73,7 @@ describe(NgrxLocalFormDirective, () => {
     });
 
     it(`should not dispatch a ${MarkAsSubmittedAction.name} to the global store if the form is submitted and the state is submitted`, () => {
-      component.state = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
+      fixture.componentRef.setInput('state', { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false });
       fixture.detectChanges();
 
       component.submitForm();
@@ -82,7 +82,7 @@ describe(NgrxLocalFormDirective, () => {
     });
 
     it(`should not dispatch a ${MarkAsSubmittedAction.name} to the event emitter if the form is submitted and the state is submitted`, () => {
-      component.state = { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false };
+      fixture.componentRef.setInput('state', { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false });
       fixture.detectChanges();
 
       component.submitForm();

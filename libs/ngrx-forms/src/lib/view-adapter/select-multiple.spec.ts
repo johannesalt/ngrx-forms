@@ -1,10 +1,11 @@
-import { Component, getDebugNode } from '@angular/core';
+import { Component, getDebugNode, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControlState } from '../state';
+import { createFormControlState, FormControlState } from '../state';
 import { NgrxSelectOption } from './option';
 import { NgrxSelectMultipleViewAdapter } from './select-multiple';
 
 const TEST_ID = 'test ID';
+const INITIAL_STATE = createFormControlState<any>(TEST_ID, undefined);
 
 const OPTION1_VALUE = 'op1';
 const OPTION2_VALUE = 'op2';
@@ -13,37 +14,37 @@ const OPTION3_VALUE = 'op3';
 @Component({
   imports: [NgrxSelectMultipleViewAdapter, NgrxSelectOption],
   template: `
-    <select multiple [ngrxFormControlState]="state">
+    <select multiple [ngrxFormControlState]="state()">
       <option value="op1">op1</option>
       <option value="op2" selected>op2</option>
       <option value="op3" selected>op2</option>
     </select>
 
-    <select multiple [ngrxFormControlState]="state" id="customId">
+    <select multiple [ngrxFormControlState]="state()" id="customId">
       <option value="op1">op1</option>
       <option value="op2" selected>op2</option>
       <option value="op3" selected>op2</option>
     </select>
 
-    <select multiple [ngrxFormControlState]="state" [id]="boundId">
+    <select multiple [ngrxFormControlState]="state()" [id]="boundId">
       <option value="op1">op1</option>
       <option value="op2" selected>op2</option>
       <option value="op3" selected>op2</option>
     </select>
 
-    <select multiple [ngrxFormControlState]="state">
+    <select multiple [ngrxFormControlState]="state()">
       @for (o of stringOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
 
-    <select multiple [ngrxFormControlState]="state">
+    <select multiple [ngrxFormControlState]="state()">
       @for (o of numberOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
 
-    <select multiple [ngrxFormControlState]="state">
+    <select multiple [ngrxFormControlState]="state()">
       @for (o of booleanOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
@@ -56,7 +57,7 @@ export class SelectTestComponent {
   numberOptions = [1, 2, 3];
   booleanOptions = [true, false];
 
-  public state: Partial<FormControlState<any>> | null | undefined = { id: TEST_ID };
+  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
 }
 
 describe(NgrxSelectMultipleViewAdapter.name, () => {
@@ -140,10 +141,10 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
 
     it('should throw if state is undefined', () => {
       const fn = () => {
-        component.state = undefined;
+        fixture.componentRef.setInput('state', undefined);
         fixture.detectChanges();
       };
-      expect(fn).toThrowError();
+      expect(fn).toThrow();
     });
 
     it('should throw if value is not an array', () => {
@@ -170,7 +171,7 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
 
     it('should set the ID of the element if the ID of the state changes', () => {
       const newId = 'new ID';
-      component.state = { id: newId };
+      fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: newId });
       fixture.detectChanges();
 
       expect(element.id).toBe(newId);

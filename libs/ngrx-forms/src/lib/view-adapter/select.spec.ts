@@ -1,44 +1,45 @@
-import { Component, getDebugNode } from '@angular/core';
+import { Component, getDebugNode, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControlState } from '../state';
+import { createFormControlState, FormControlState } from '../state';
 import { NgrxSelectOption } from './option';
 import { NgrxSelectViewAdapter } from './select';
 
 const TEST_ID = 'test ID';
+const INITIAL_STATE = createFormControlState<any>(TEST_ID, undefined);
 
 const OPTION1_VALUE = 'op1';
 
 @Component({
   imports: [NgrxSelectViewAdapter, NgrxSelectOption],
   template: `
-    <select [ngrxFormControlState]="state">
+    <select [ngrxFormControlState]="state()">
       <option value="op1">op1</option>
       <option value="op2" selected>op2</option>
     </select>
 
-    <select [ngrxFormControlState]="state" id="customId">
+    <select [ngrxFormControlState]="state()" id="customId">
       <option value="op1">op1</option>
       <option value="op2" selected>op2</option>
     </select>
 
-    <select [ngrxFormControlState]="state" [id]="boundId">
+    <select [ngrxFormControlState]="state()" [id]="boundId">
       <option value="op1">op1</option>
       <option value="op2" selected>op2</option>
     </select>
 
-    <select [ngrxFormControlState]="state">
+    <select [ngrxFormControlState]="state()">
       @for (o of stringOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
 
-    <select [ngrxFormControlState]="state">
+    <select [ngrxFormControlState]="state()">
       @for (o of numberOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
 
-    <select [ngrxFormControlState]="state">
+    <select [ngrxFormControlState]="state()">
       @for (o of booleanOptions; track $index) {
       <option [value]="o">{{ o }}</option>
       }
@@ -51,7 +52,7 @@ export class SelectTestComponent {
   numberOptions = [1, 2];
   booleanOptions = [true, false];
 
-  public state: Partial<FormControlState<any>> | null | undefined = { id: TEST_ID };
+  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
 }
 
 describe(NgrxSelectViewAdapter.name, () => {
@@ -122,10 +123,10 @@ describe(NgrxSelectViewAdapter.name, () => {
 
     it('should throw if state is undefined', () => {
       const fn = () => {
-        component.state = undefined;
+        fixture.componentRef.setInput('state', undefined);
         fixture.detectChanges();
       };
-      expect(fn).toThrowError();
+      expect(fn).toThrow();
     });
   });
 
@@ -148,7 +149,7 @@ describe(NgrxSelectViewAdapter.name, () => {
 
     it('should set the ID of the element if the ID of the state changes', () => {
       const newId = 'new ID';
-      component.state = { id: newId } as any;
+      fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: newId });
       fixture.detectChanges();
 
       expect(element.id).toBe(newId);

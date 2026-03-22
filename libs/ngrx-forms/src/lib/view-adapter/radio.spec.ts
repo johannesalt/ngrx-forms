@@ -1,9 +1,10 @@
-import { Component, getDebugNode } from '@angular/core';
+import { Component, getDebugNode, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControlState } from '../state';
+import { createFormControlState, FormControlState } from '../state';
 import { NgrxRadioViewAdapter } from './radio';
 
 const TEST_ID = 'test ID';
+const INITIAL_STATE = createFormControlState<any>(TEST_ID, undefined);
 
 const OPTION1_VALUE = 'op1';
 const OPTION2_VALUE = 'op2';
@@ -11,18 +12,18 @@ const OPTION2_VALUE = 'op2';
 @Component({
   imports: [NgrxRadioViewAdapter],
   template: `
-    <input type="radio" value="op1" [ngrxFormControlState]="state" />
-    <input type="radio" value="op2" checked="checked" [ngrxFormControlState]="state" />
+    <input type="radio" value="op1" [ngrxFormControlState]="state()" />
+    <input type="radio" value="op2" checked="checked" [ngrxFormControlState]="state()" />
 
-    <input type="radio" value="op1" [ngrxFormControlState]="state" name="customName" />
-    <input type="radio" value="op1" [ngrxFormControlState]="state" [name]="boundName" />
+    <input type="radio" value="op1" [ngrxFormControlState]="state()" name="customName" />
+    <input type="radio" value="op1" [ngrxFormControlState]="state()" [name]="boundName" />
 
     @for (o of stringOptions; track $index) {
-    <input type="radio" [value]="o" [ngrxFormControlState]="state" />
+    <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
     } @for (o of numberOptions; track $index) {
-    <input type="radio" [value]="o" [ngrxFormControlState]="state" />
+    <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
     } @for (o of booleanOptions; track $index) {
-    <input type="radio" [value]="o" [ngrxFormControlState]="state" />
+    <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
     }
   `,
 })
@@ -32,7 +33,7 @@ export class RadioTestComponent {
   numberOptions = [1, 2];
   booleanOptions = [true, false];
 
-  public state: Partial<FormControlState<any>> | null | undefined = { id: TEST_ID };
+  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
 }
 
 describe(NgrxRadioViewAdapter.name, () => {
@@ -101,10 +102,10 @@ describe(NgrxRadioViewAdapter.name, () => {
 
     it('should throw if state is undefined', () => {
       const fn = () => {
-        component.state = undefined;
+        fixture.componentRef.setInput('state', undefined);
         fixture.detectChanges();
       };
-      expect(fn).toThrowError();
+      expect(fn).toThrow();
     });
 
     it('should not throw if calling callbacks before they are registered', () => {

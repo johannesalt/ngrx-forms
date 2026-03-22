@@ -1,26 +1,26 @@
-import { Component, getDebugNode } from '@angular/core';
+import { Component, getDebugNode, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControlState } from '../state';
+import { createFormControlState, FormControlState } from '../state';
 import { NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, NgrxDefaultViewAdapter } from './default';
 
 const TEST_ID = 'test ID';
+const INITIAL_STATE = createFormControlState<any>(TEST_ID, undefined);
 
 @Component({
   imports: [NgrxDefaultViewAdapter],
   template: `
-    <input type="text" [ngrxFormControlState]="state" />
-    <input type="text" [ngrxFormControlState]="state" id="customId" />
-    <input type="text" [ngrxFormControlState]="state" [id]="boundId" />
+    <input type="text" [ngrxFormControlState]="state()" />
+    <input type="text" [ngrxFormControlState]="state()" id="customId" />
+    <input type="text" [ngrxFormControlState]="state()" [id]="boundId" />
   `,
 })
 export class DefaultInputTestComponent {
   public readonly boundId = 'boundId';
 
-  public state: Partial<FormControlState<any>> | null | undefined = { id: TEST_ID };
+  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
 }
 
 describe(NgrxDefaultViewAdapter, () => {
-  let component: DefaultInputTestComponent;
   let fixture: ComponentFixture<DefaultInputTestComponent>;
   let viewAdapter: NgrxDefaultViewAdapter;
   let element: HTMLInputElement;
@@ -42,7 +42,6 @@ describe(NgrxDefaultViewAdapter, () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(DefaultInputTestComponent);
-      component = fixture.componentInstance;
       fixture.detectChanges();
     });
 
@@ -99,7 +98,6 @@ describe(NgrxDefaultViewAdapter, () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(DefaultInputTestComponent);
-      component = fixture.componentInstance;
       fixture.detectChanges();
     });
 
@@ -172,10 +170,10 @@ describe(NgrxDefaultViewAdapter, () => {
 
     it('should throw if state is undefined', () => {
       const fn = () => {
-        component.state = undefined;
+        fixture.componentRef.setInput('state', undefined);
         fixture.detectChanges();
       };
-      expect(fn).toThrowError();
+      expect(fn).toThrow();
     });
 
     it('should not throw if calling callbacks before they are registered', () => {

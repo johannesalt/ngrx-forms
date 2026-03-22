@@ -1,26 +1,26 @@
-import { Component, getDebugNode } from '@angular/core';
+import { Component, getDebugNode, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControlState } from '../state';
+import { createFormControlState, FormControlState } from '../state';
 import { NgrxNumberViewAdapter } from './number';
 
 const TEST_ID = 'test ID';
+const INITIAL_STATE = createFormControlState<any>(TEST_ID, undefined);
 
 @Component({
   imports: [NgrxNumberViewAdapter],
   template: `
-    <input type="number" [ngrxFormControlState]="state" />
-    <input type="number" [ngrxFormControlState]="state" id="customId" />
-    <input type="number" [ngrxFormControlState]="state" [id]="boundId" />
+    <input type="number" [ngrxFormControlState]="state()" />
+    <input type="number" [ngrxFormControlState]="state()" id="customId" />
+    <input type="number" [ngrxFormControlState]="state()" [id]="boundId" />
   `,
 })
 export class NumberTestComponent {
   public readonly boundId = 'boundId';
 
-  public state: Partial<FormControlState<any>> | null | undefined = { id: TEST_ID };
+  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
 }
 
 describe(NgrxNumberViewAdapter.name, () => {
-  let component: NumberTestComponent;
   let fixture: ComponentFixture<NumberTestComponent>;
   let viewAdapter: NgrxNumberViewAdapter;
   let element: HTMLInputElement;
@@ -33,7 +33,6 @@ describe(NgrxNumberViewAdapter.name, () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NumberTestComponent);
-    component = fixture.componentInstance;
     fixture.detectChanges();
     element = (fixture.nativeElement as HTMLElement).querySelector('input') as HTMLInputElement;
     viewAdapter = getDebugNode(element)!.injector.get<NgrxNumberViewAdapter>(NgrxNumberViewAdapter);
@@ -98,10 +97,10 @@ describe(NgrxNumberViewAdapter.name, () => {
 
   it('should throw if state is undefined', () => {
     const fn = () => {
-      component.state = undefined;
+      fixture.componentRef.setInput('state', undefined);
       fixture.detectChanges();
     };
-    expect(fn).toThrowError();
+    expect(fn).toThrow();
   });
 
   it('should not throw if calling callbacks before they are registered', () => {
