@@ -21,7 +21,8 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZoneChangeDetection(),{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { float: 'always' } },
+    provideZoneChangeDetection(),
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { float: 'always' } },
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     provideEffects([]),
