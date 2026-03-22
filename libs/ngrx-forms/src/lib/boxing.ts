@@ -12,22 +12,22 @@ export type Unboxed<T> =
   T extends Boxed<symbol>
     ? any
     : T extends Boxed<infer U>
-    ? U
-    : T extends symbol[]
-    ? any
-    : T extends symbol
-    ? any
-    : T extends undefined
-    ? undefined
-    : T extends null
-    ? null
-    : T extends string
-    ? string
-    : T extends number
-    ? number
-    : T extends boolean
-    ? boolean
-    : UnboxedObject<T>;
+      ? U
+      : T extends symbol[]
+        ? any
+        : T extends symbol
+          ? any
+          : T extends undefined
+            ? undefined
+            : T extends null
+              ? null
+              : T extends string
+                ? string
+                : T extends number
+                  ? number
+                  : T extends boolean
+                    ? boolean
+                    : UnboxedObject<T>;
 
 export function isBoxed<T = any>(value: any): value is Boxed<T> {
   return !!value && (value as Boxed<any>).__boxed === '';

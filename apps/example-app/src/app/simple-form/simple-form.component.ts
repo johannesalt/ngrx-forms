@@ -58,7 +58,7 @@ export class SimpleFormPageComponent {
     this.formState$
       .pipe(
         take(1),
-        map((fs) => new SetSubmittedValueAction(fs.value))
+        map((fs) => new SetSubmittedValueAction(fs.value)),
       )
       .subscribe(this.store);
   }

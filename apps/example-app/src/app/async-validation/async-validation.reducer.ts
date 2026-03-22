@@ -33,7 +33,7 @@ const formGroupReducerWithUpdate = createFormStateReducerWithUpdate<FormValue>(
   updateGroup<FormValue>({
     searchTerm: validate(required),
     numberOfResultsToShow: validate(required, greaterThan(0)),
-  })
+  }),
 );
 
 const reducers = combineReducers<State['asyncValidation']>({

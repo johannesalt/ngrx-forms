@@ -11,7 +11,7 @@ function updateRecursiveSingle(parent: AbstractControlState<any>, updateFn: Proj
           Object.assign(agg, {
             [key]: (s: AbstractControlState<any>, p: AbstractControlState<any>) => updateRecursiveSingle(p, updateFn)(s),
           }),
-        {} as StateUpdateFns<any>
+        {} as StateUpdateFns<any>,
       );
       state = updateGroup<any>(updateFunctions)(state);
       return updateFn(state, parent);
@@ -66,7 +66,7 @@ const updatedState = updateRecursive(
  */
 export function updateRecursive<TValue>(
   state: AbstractControlState<TValue>,
-  updateFnArr: ProjectFn2<AbstractControlState<any>, AbstractControlState<any>>[]
+  updateFnArr: ProjectFn2<AbstractControlState<any>, AbstractControlState<any>>[],
 ): FormState<TValue>;
 
 /**
@@ -101,7 +101,7 @@ const updatedState = updateFn(state);
 ```
  */
 export function updateRecursive(
-  updateFnArr: ProjectFn2<AbstractControlState<any>, AbstractControlState<any>>[]
+  updateFnArr: ProjectFn2<AbstractControlState<any>, AbstractControlState<any>>[],
 ): <TValue>(state: AbstractControlState<TValue>) => FormState<TValue>;
 
 export function updateRecursive<TValue>(

@@ -14,10 +14,10 @@ const SELECT_NUMBER_OPTIONS = [1, 2];
   template: ` @if (state) {
     <select [ngrxFormControlState]="state" (ngrxFormsAction)="handleAction($event)">
       @for (o of options; track o) {
-      <option [value]="o">{{ o }}</option>
+        <option [value]="o">{{ o }}</option>
       }
     </select>
-    }`,
+  }`,
 })
 export class NumberSelectComponentLocalStateComponent {
   state: FormControlState<number> | undefined;

@@ -38,7 +38,7 @@ export class ControlNameDirective implements AfterViewInit {
           const id = this.id();
           this.renderer.setProperty(this.elementRef.nativeElement, 'name', id);
         },
-        { injector: this.injector }
+        { injector: this.injector },
       );
     }
   }

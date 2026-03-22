@@ -38,19 +38,19 @@ const STRING_OPTIONS = [OPTION1_VALUE, OPTION2_VALUE, OPTION3_VALUE];
 
     <select multiple [ngrxFormControlState]="state()">
       @for (o of stringOptions(); track $index) {
-      <option [value]="o">{{ o }}</option>
+        <option [value]="o">{{ o }}</option>
       }
     </select>
 
     <select multiple [ngrxFormControlState]="state()">
       @for (o of numberOptions(); track $index) {
-      <option [value]="o">{{ o }}</option>
+        <option [value]="o">{{ o }}</option>
       }
     </select>
 
     <select multiple [ngrxFormControlState]="state()">
       @for (o of booleanOptions(); track $index) {
-      <option [value]="o">{{ o }}</option>
+        <option [value]="o">{{ o }}</option>
       }
     </select>
   `,

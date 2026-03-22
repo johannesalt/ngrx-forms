@@ -81,7 +81,7 @@ import { onNgrxForms } from 'ngrx-form-state';
 
 export const appReducer = createReducer(
   initialState,
-  onNgrxForms()
+  onNgrxForms(),
   // your other reducers...
 );
 ```

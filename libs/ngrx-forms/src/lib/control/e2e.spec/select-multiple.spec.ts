@@ -15,11 +15,11 @@ const SELECT_OPTIONS = ['op1', 'op2'];
   imports: [NgrxFormsModule],
   template: `
     @if (state) {
-    <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
-      @for (o of options; track o) {
-      <option [value]="o">{{ o }}</option>
-      }
-    </select>
+      <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
+        @for (o of options; track o) {
+          <option [value]="o">{{ o }}</option>
+        }
+      </select>
     }
   `,
 })
@@ -86,11 +86,11 @@ describe(SelectMultipleComponent.name, () => {
   imports: [NgrxFormsModule],
   template: `
     @if (state) {
-    <select multiple [ngrxFormControlState]="state">
-      @for (o of options; track o) {
-      <option [value]="o">{{ o }}</option>
-      }
-    </select>
+      <select multiple [ngrxFormControlState]="state">
+        @for (o of options; track o) {
+          <option [value]="o">{{ o }}</option>
+        }
+      </select>
     }
   `,
 })

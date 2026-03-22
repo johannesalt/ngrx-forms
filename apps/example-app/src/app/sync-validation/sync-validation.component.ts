@@ -61,7 +61,7 @@ export class SyncValidationPageComponent {
       .pipe(
         take(1),
         filter((s) => s.isValid),
-        map((fs) => new SetSubmittedValueAction(fs.value))
+        map((fs) => new SetSubmittedValueAction(fs.value)),
       )
       .subscribe(this.store);
   }

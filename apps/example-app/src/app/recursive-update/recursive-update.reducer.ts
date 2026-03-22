@@ -45,7 +45,7 @@ export const INITIAL_STATE = updateGroup<FormValue>(
     employed: disable,
     notes: disable,
     sex: disable,
-  }
+  },
 );
 
 export function formStateReducer(state = INITIAL_STATE, a: BlockUIAction | UnblockUIAction) {

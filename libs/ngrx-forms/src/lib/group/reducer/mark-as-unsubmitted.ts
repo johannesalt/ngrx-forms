@@ -27,6 +27,6 @@ export function markAsUnsubmittedReducer<TValue extends KeyValue>(state: FormGro
       wasOrShouldBeEnabled: state.isEnabled,
       wasOrShouldBeTouched: state.isTouched,
       wasOrShouldBeSubmitted: false,
-    }
+    },
   );
 }

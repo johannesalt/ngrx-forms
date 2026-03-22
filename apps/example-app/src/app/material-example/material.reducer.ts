@@ -64,7 +64,7 @@ const validationFormGroupReducer = createFormStateReducerWithUpdate<FormValue>(
       });
     },
     agreeToTermsOfUse: validate(requiredTrue),
-  })
+  }),
 );
 
 const reducers = combineReducers<State['material'], any>({

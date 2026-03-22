@@ -58,7 +58,7 @@ export class SimpleFormNgrx8PageComponent {
     this.formState$
       .pipe(
         take(1),
-        map((fs) => setSubmittedValue({ submittedValue: fs.value }))
+        map((fs) => setSubmittedValue({ submittedValue: fs.value })),
       )
       .subscribe(this.store);
   }

@@ -23,11 +23,13 @@ const STRING_OPTIONS = ['op1', 'op2'];
     <input type="radio" value="op1" [ngrxFormControlState]="state()" [name]="boundName" />
 
     @for (o of stringOptions(); track $index) {
-    <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
-    } @for (o of numberOptions(); track $index) {
-    <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
-    } @for (o of booleanOptions(); track $index) {
-    <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
+      <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
+    }
+    @for (o of numberOptions(); track $index) {
+      <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
+    }
+    @for (o of booleanOptions(); track $index) {
+      <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
     }
   `,
 })

@@ -27,6 +27,6 @@ export function disableReducer<TValue>(state: FormArrayState<TValue>, action: Ac
       wasOrShouldBeEnabled: false,
       wasOrShouldBeTouched: state.isTouched,
       wasOrShouldBeSubmitted: state.isSubmitted,
-    }
+    },
   );
 }

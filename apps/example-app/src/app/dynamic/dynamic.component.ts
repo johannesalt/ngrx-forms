@@ -50,7 +50,7 @@ export class DynamicPageComponent {
       .pipe(
         take(1),
         map((s) => s.controls.array.id),
-        map((id) => new AddArrayControlAction(id, false, index))
+        map((id) => new AddArrayControlAction(id, false, index)),
       )
       .subscribe(this.store);
   }
@@ -60,7 +60,7 @@ export class DynamicPageComponent {
       .pipe(
         take(1),
         map((s) => s.controls.array.id),
-        map((id) => new RemoveArrayControlAction(id, index))
+        map((id) => new RemoveArrayControlAction(id, index)),
       )
       .subscribe(this.store);
   }

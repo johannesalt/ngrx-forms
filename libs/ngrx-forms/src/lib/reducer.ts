@@ -119,7 +119,7 @@ export type CreatedAction<TActionCons> = TActionCons extends new (...args: any[]
  */
 export function onNgrxFormsAction<TActionCons extends ActionConstructor, TState>(
   actionCons: TActionCons,
-  reducer: (state: TState, action: CreatedAction<TActionCons>) => TState
+  reducer: (state: TState, action: CreatedAction<TActionCons>) => TState,
 ): { reducer: ActionReducer<TState>; types: string[] } {
   return {
     reducer: (state, action) => reducer(reduceNestedFormStates(state!, action), action as any),
@@ -138,7 +138,7 @@ export function onNgrxFormsAction<TActionCons extends ActionConstructor, TState>
 export function wrapReducerWithFormStateUpdate<TState extends KeyValue, TFormState extends AbstractControlState<any>>(
   reducer: ActionReducer<TState>,
   formStateLocator: (state: TState) => TFormState,
-  updateFn: (formState: TFormState, state: TState) => TFormState
+  updateFn: (formState: TFormState, state: TState) => TFormState,
 ): ActionReducer<TState> {
   return (state, action) => {
     const updatedState = reducer(state, action);

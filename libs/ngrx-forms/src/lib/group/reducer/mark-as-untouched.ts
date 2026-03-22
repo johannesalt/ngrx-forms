@@ -27,6 +27,6 @@ export function markAsUntouchedReducer<TValue extends KeyValue>(state: FormGroup
       wasOrShouldBeEnabled: state.isEnabled,
       wasOrShouldBeTouched: false,
       wasOrShouldBeSubmitted: state.isSubmitted,
-    }
+    },
   );
 }

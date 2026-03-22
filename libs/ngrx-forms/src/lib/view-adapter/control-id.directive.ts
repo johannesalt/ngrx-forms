@@ -2,7 +2,7 @@ import { AfterViewInit, Directive, ElementRef, Injector, Renderer2, computed, ef
 import { FormControlState } from '../state';
 
 @Directive({
-  selector: 'input[ngrxFormControlState]'
+  selector: 'input[ngrxFormControlState]',
 })
 export class ControlIdDirective implements AfterViewInit {
   /** Form control state. */
@@ -38,7 +38,7 @@ export class ControlIdDirective implements AfterViewInit {
           const id = this.id();
           this.renderer.setProperty(this.elementRef.nativeElement, 'id', id);
         },
-        { injector: this.injector }
+        { injector: this.injector },
       );
     }
   }

@@ -27,6 +27,6 @@ export function markAsPristineReducer<TValue>(state: FormArrayState<TValue>, act
       wasOrShouldBeEnabled: state.isEnabled,
       wasOrShouldBeTouched: state.isTouched,
       wasOrShouldBeSubmitted: state.isSubmitted,
-    }
+    },
   );
 }

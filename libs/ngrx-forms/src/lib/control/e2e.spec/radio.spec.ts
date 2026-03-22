@@ -14,7 +14,7 @@ const INITIAL_STATE = createFormControlState<string>('test ID', RADIO_OPTIONS[1]
   imports: [NgrxFormsModule],
   template: `
     @for (o of options(); track $index) {
-    <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
+      <input type="radio" [value]="o" [ngrxFormControlState]="state()" />
     }
   `,
 })

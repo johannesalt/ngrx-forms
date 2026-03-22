@@ -45,7 +45,7 @@ describe(validate.name, () => {
     const mergedErrors = { required: { actual: true }, min: 1 };
     const resultState = validate<string>(
       () => errors1,
-      () => errors2
+      () => errors2,
     )(INITIAL_STATE.controls.inner);
     expect(resultState.errors).toEqual(mergedErrors);
   });
@@ -56,7 +56,7 @@ describe(validate.name, () => {
     const mergedErrors = { required: { actual: true }, min: 2 };
     const resultState = validate<string>(
       () => errors1,
-      () => errors2
+      () => errors2,
     )(INITIAL_STATE.controls.inner);
     expect(resultState.errors).toEqual(mergedErrors);
   });
@@ -84,7 +84,7 @@ describe(validate.name, () => {
     const resultState = validate(
       INITIAL_STATE.controls.inner,
       () => errors1,
-      () => errors2
+      () => errors2,
     );
     expect(resultState.errors).toEqual(mergedErrors);
   });

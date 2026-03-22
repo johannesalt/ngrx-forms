@@ -33,19 +33,19 @@ const STRING_OPTIONS = ['op1', 'op2'];
 
     <select [ngrxFormControlState]="state()">
       @for (o of stringOptions(); track $index) {
-      <option [value]="o">{{ o }}</option>
+        <option [value]="o">{{ o }}</option>
       }
     </select>
 
     <select [ngrxFormControlState]="state()">
       @for (o of numberOptions(); track $index) {
-      <option [value]="o">{{ o }}</option>
+        <option [value]="o">{{ o }}</option>
       }
     </select>
 
     <select [ngrxFormControlState]="state()">
       @for (o of booleanOptions(); track $index) {
-      <option [value]="o">{{ o }}</option>
+        <option [value]="o">{{ o }}</option>
       }
     </select>
   `,

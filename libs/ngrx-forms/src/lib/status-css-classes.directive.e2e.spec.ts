@@ -10,12 +10,12 @@ const INITIAL_STATE = createFormGroupState(FORM_CONTROL_ID, { inner: 'A' });
   imports: [NgrxStatusCssClassesDirective],
   template: `
     @if (state(); as state) {
-    <form [ngrxFormState]="state">
-      <input type="text" [ngrxFormControlState]="state.controls.inner" />
-      <select [ngrxFormControlState]="state.controls.inner">
-        <option value="A">A</option>
-      </select>
-    </form>
+      <form [ngrxFormState]="state">
+        <input type="text" [ngrxFormControlState]="state.controls.inner" />
+        <select [ngrxFormControlState]="state.controls.inner">
+          <option value="A">A</option>
+        </select>
+      </form>
     }
   `,
 })

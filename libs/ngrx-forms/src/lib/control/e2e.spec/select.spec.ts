@@ -18,7 +18,7 @@ const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTR
   template: `
     <select [ngrxFormControlState]="state()">
       @for (o of options(); track o) {
-      <option [value]="o">{{ o }}</option>
+        <option [value]="o">{{ o }}</option>
       }
     </select>
   `,
@@ -99,11 +99,11 @@ const SELECT_NUMBER_OPTIONS = [1, 2];
   imports: [NgrxFormsModule],
   template: `
     @if (state) {
-    <select [ngrxFormControlState]="state">
-      @for (o of options; track o) {
-      <option [value]="o">{{ o }}</option>
-      }
-    </select>
+      <select [ngrxFormControlState]="state">
+        @for (o of options; track o) {
+          <option [value]="o">{{ o }}</option>
+        }
+      </select>
     }
   `,
 })

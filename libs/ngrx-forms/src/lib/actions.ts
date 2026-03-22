@@ -9,35 +9,51 @@ export class SetValueAction<TValue> implements Action {
   static readonly TYPE = 'ngrx/forms/SET_VALUE';
   readonly type = SetValueAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly value: TValue) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly value: TValue,
+  ) {}
 }
 
 export class SetErrorsAction implements Action {
   static readonly TYPE = 'ngrx/forms/SET_ERRORS';
   readonly type = SetErrorsAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly errors: ValidationErrors) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly errors: ValidationErrors,
+  ) {}
 }
 
 export class SetAsyncErrorAction implements Action {
   static readonly TYPE = 'ngrx/forms/SET_ASYNC_ERROR';
   readonly type = SetAsyncErrorAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly name: string, public readonly value: any) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly name: string,
+    public readonly value: any,
+  ) {}
 }
 
 export class ClearAsyncErrorAction implements Action {
   static readonly TYPE = 'ngrx/forms/CLEAR_ASYNC_ERROR';
   readonly type = ClearAsyncErrorAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly name: string) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly name: string,
+  ) {}
 }
 
 export class StartAsyncValidationAction implements Action {
   static readonly TYPE = 'ngrx/forms/START_ASYNC_VALIDATION';
   readonly type = StartAsyncValidationAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly name: string) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly name: string,
+  ) {}
 }
 
 export class MarkAsDirtyAction implements Action {
@@ -114,49 +130,75 @@ export class AddArrayControlAction<TValue> implements Action {
   static readonly TYPE = 'ngrx/forms/ADD_ARRAY_CONTROL';
   readonly type = AddArrayControlAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly value: TValue, public readonly index?: number) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly value: TValue,
+    public readonly index?: number,
+  ) {}
 }
 
 export class AddGroupControlAction<TValue extends KeyValue, TControlKey extends keyof TValue = keyof TValue> implements Action {
   static readonly TYPE = 'ngrx/forms/ADD_GROUP_CONTROL';
   readonly type = AddGroupControlAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly name: keyof TValue, public readonly value: TValue[TControlKey]) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly name: keyof TValue,
+    public readonly value: TValue[TControlKey],
+  ) {}
 }
 
 export class RemoveArrayControlAction implements Action {
   static readonly TYPE = 'ngrx/forms/REMOVE_ARRAY_CONTROL';
   readonly type = RemoveArrayControlAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly index: number) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly index: number,
+  ) {}
 }
 
 export class SwapArrayControlAction implements Action {
   static readonly TYPE = 'ngrx/forms/SWAP_ARRAY_CONTROL';
   readonly type = SwapArrayControlAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly fromIndex: number, public readonly toIndex: number) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly fromIndex: number,
+    public readonly toIndex: number,
+  ) {}
 }
 
 export class MoveArrayControlAction implements Action {
   static readonly TYPE = 'ngrx/forms/MOVE_ARRAY_CONTROL';
   readonly type = MoveArrayControlAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly fromIndex: number, public readonly toIndex: number) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly fromIndex: number,
+    public readonly toIndex: number,
+  ) {}
 }
 
 export class RemoveGroupControlAction<TValue> implements Action {
   static readonly TYPE = 'ngrx/forms/REMOVE_CONTROL';
   readonly type = RemoveGroupControlAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly name: keyof TValue) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly name: keyof TValue,
+  ) {}
 }
 
 export class SetUserDefinedPropertyAction implements Action {
   static readonly TYPE = 'ngrx/forms/SET_USER_DEFINED_PROPERTY';
   readonly type = SetUserDefinedPropertyAction.TYPE;
 
-  constructor(public readonly controlId: NgrxFormControlId, public readonly name: string, public readonly value: any) {}
+  constructor(
+    public readonly controlId: NgrxFormControlId,
+    public readonly name: string,
+    public readonly value: any,
+  ) {}
 }
 
 export class ResetAction implements Action {
