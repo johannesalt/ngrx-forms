@@ -79,7 +79,7 @@ const updatedState = arrayUpdateFn(state);
  */
 export function updateArrayWithFilter<TValue>(
   filterFn: FilterFn<TValue>,
-  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[]
+  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[],
 ): (state: FormArrayState<TValue>) => FormArrayState<TValue>;
 
 /**
@@ -128,7 +128,7 @@ const updatedState = updateArray<string>(
 export function updateArrayWithFilter<TValue>(
   state: FormArrayState<TValue>,
   filterFn: FilterFn<TValue>,
-  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[]
+  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[],
 ): FormArrayState<TValue>;
 
 export function updateArrayWithFilter<TValue>(
@@ -191,7 +191,7 @@ const updatedState = arrayUpdateFn(state);
 ```
  */
 export function updateArray<TValue>(
-  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[]
+  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[],
 ): (state: FormArrayState<TValue>) => FormArrayState<TValue>;
 
 /**
@@ -236,7 +236,7 @@ const updatedState = updateArray<string>(
  */
 export function updateArray<TValue>(
   state: FormArrayState<TValue>,
-  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[]
+  updateFnArr: ProjectFn2<FormState<TValue>, FormArrayState<TValue>>[],
 ): FormArrayState<TValue>;
 
 export function updateArray<TValue>(

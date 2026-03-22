@@ -59,7 +59,7 @@ describe(startAsyncValidation.name, () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => startAsyncValidation('error')(undefined as any)).toThrowError();
+    expect(() => startAsyncValidation('error')(undefined as any)).toThrow();
   });
 
   it('should work inside an updateGroup', () => {

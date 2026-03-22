@@ -23,7 +23,7 @@ export class LocalStateAdvancedEffects {
         } else {
           return new SetManufacturersAction([]);
         }
-      })
-    )
+      }),
+    ),
   );
 }

@@ -74,7 +74,7 @@ describe(deepEquals.name, () => {
   });
 
   it('should throw if called with less than 2 arguments', () => {
-    expect(() => (deepEquals as any)()).toThrowError();
-    expect(() => (deepEquals as any)(1)).toThrowError();
+    expect(() => (deepEquals as any)()).toThrow();
+    expect(() => (deepEquals as any)(1)).toThrow();
   });
 });

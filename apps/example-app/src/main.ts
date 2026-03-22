@@ -1,5 +1,5 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, provideZoneChangeDetection } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -21,6 +21,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideZoneChangeDetection(),
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { float: 'always' } },
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),

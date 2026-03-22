@@ -71,7 +71,7 @@ const rawReducer = createReducer(
     }
 
     return state;
-  })
+  }),
   // your other reducers...
 );
 
@@ -83,7 +83,7 @@ export const reducer = wrapReducerWithFormStateUpdate(
   // point to the form state to update
   (s) => s.loginForm,
   // this function is always called after the reducer
-  validateLoginForm
+  validateLoginForm,
 );
 ```
 
@@ -104,7 +104,7 @@ export const reducer = createReducer(
 
   // this function automatically calls the appropriate reducer
   // for the form state
-  onNgrxForms()
+  onNgrxForms(),
 
   // your other reducers...
 );
@@ -431,7 +431,7 @@ const updateMyFormGroup = updateGroup<MyFormValue>(
           return someNumber;
         },
       }),
-  }
+  },
 );
 ```
 
@@ -543,7 +543,7 @@ const validateAndUpdateFormState = updateGroup<MyFormValue>(
           return someNumber;
         },
       }),
-  }
+  },
 );
 
 const myFormReducer = createFormStateReducerWithUpdate<MyFormValue>(validateAndUpdateFormState);

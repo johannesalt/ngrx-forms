@@ -65,7 +65,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
 
   it('should remove child errors for removed child', () => {
     const id = 'ID';
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     let state = createFormArrayState(id, [5]);
     state = {
       ...state,
@@ -88,7 +88,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
 
   it('should remove child errors for removed child and keep own errors', () => {
     const id = 'ID';
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     let state = createFormArrayState<number>(id, [5]);
     state = {
       ...state,
@@ -112,12 +112,12 @@ describe(`form group ${removeControlReducer.name}`, () => {
 
   it('should throw if trying to remove non-existing control', () => {
     const action = new RemoveArrayControlAction(FORM_CONTROL_ID, 2);
-    expect(() => removeControlReducer(INITIAL_STATE, action)).toThrowError();
+    expect(() => removeControlReducer(INITIAL_STATE, action)).toThrow();
   });
 
   it('should throw if trying to remove control at negative index', () => {
     const action = new RemoveArrayControlAction(FORM_CONTROL_ID, -1);
-    expect(() => removeControlReducer(INITIAL_STATE, action)).toThrowError();
+    expect(() => removeControlReducer(INITIAL_STATE, action)).toThrow();
   });
 
   it('should forward actions to children', () => {

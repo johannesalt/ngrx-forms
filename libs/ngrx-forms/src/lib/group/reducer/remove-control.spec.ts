@@ -36,7 +36,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
       inner?: number;
     }
     const id = 'ID';
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     let state = createFormGroupState<FormValue>(id, { inner: 5 });
     state = {
       ...state,
@@ -62,7 +62,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
       inner?: number;
     }
     const id = 'ID';
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     let state = createFormGroupState<FormValue>(id, { inner: 5 });
     state = {
       ...state,
@@ -86,7 +86,7 @@ describe(`form group ${removeControlReducer.name}`, () => {
 
   it('should throw if trying to remove non-existing control', () => {
     const action = new RemoveGroupControlAction<FormGroupValue>(FORM_CONTROL_ID, 'inner2');
-    expect(() => removeControlReducer<FormGroupValue>(INITIAL_STATE, action)).toThrowError();
+    expect(() => removeControlReducer<FormGroupValue>(INITIAL_STATE, action)).toThrow();
   });
 
   it('should forward actions to children', () => {

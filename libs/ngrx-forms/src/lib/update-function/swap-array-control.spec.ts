@@ -18,6 +18,6 @@ describe('swapArrayControl', () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => swapArrayControl(0, 1)(undefined as any)).toThrowError();
+    expect(() => swapArrayControl(0, 1)(undefined as any)).toThrow();
   });
 });

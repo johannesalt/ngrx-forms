@@ -27,6 +27,6 @@ export function disableReducer<TValue extends KeyValue>(state: FormGroupState<TV
       wasOrShouldBeEnabled: false,
       wasOrShouldBeTouched: state.isTouched,
       wasOrShouldBeSubmitted: state.isSubmitted,
-    }
+    },
   );
 }

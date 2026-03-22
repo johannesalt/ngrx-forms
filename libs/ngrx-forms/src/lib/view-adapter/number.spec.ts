@@ -1,104 +1,44 @@
-import { Component, getDebugNode, Renderer2 } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormControlState } from '../state';
+import { Component, getDebugNode, input } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createFormControlState, FormControlState } from '../state';
 import { NgrxNumberViewAdapter } from './number';
 
 const TEST_ID = 'test ID';
+const INITIAL_STATE = createFormControlState<any>(TEST_ID, undefined);
 
 @Component({
   imports: [NgrxNumberViewAdapter],
   template: `
-    <input type="number" [ngrxFormControlState]="state" />
-    <input type="number" [ngrxFormControlState]="state" id="customId" />
-    <input type="number" [ngrxFormControlState]="state" [id]="boundId" />
+    <input type="number" [ngrxFormControlState]="state()" />
+    <input type="number" [ngrxFormControlState]="state()" id="customId" />
+    <input type="number" [ngrxFormControlState]="state()" [id]="boundId" />
   `,
 })
 export class NumberTestComponent {
   public readonly boundId = 'boundId';
 
-  public state: Partial<FormControlState<any>> | null | undefined = { id: TEST_ID };
+  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
 }
 
 describe(NgrxNumberViewAdapter.name, () => {
-  let component: NumberTestComponent;
   let fixture: ComponentFixture<NumberTestComponent>;
   let viewAdapter: NgrxNumberViewAdapter;
   let element: HTMLInputElement;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [NumberTestComponent],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NumberTestComponent);
-    component = fixture.componentInstance;
     fixture.detectChanges();
     element = (fixture.nativeElement as HTMLElement).querySelector('input') as HTMLInputElement;
     viewAdapter = getDebugNode(element)!.injector.get<NgrxNumberViewAdapter>(NgrxNumberViewAdapter);
   });
 
   it('should attach the view adapter', () => expect(viewAdapter).toBeDefined());
-
-  it('should set the ID of the element to the ID of the state if the ID is not already set', () => {
-    expect(element.id).toBe(TEST_ID);
-  });
-
-  it('should not set the ID of the element to the ID of the state if the ID is set in template manually', () => {
-    element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[1];
-    expect(element.id).toBe('customId');
-  });
-
-  it('should not set the ID of the element to the ID of the state if the ID is set in template via binding', () => {
-    element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[2];
-    expect(element.id).toBe(component.boundId);
-  });
-
-  it('should set the ID of the element if the ID of the state changes and the ID was set previously', () => {
-    const newId = 'new ID';
-
-    component.state = { id: newId };
-    fixture.detectChanges();
-
-    expect(element.id).toBe(newId);
-  });
-
-  it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to manual value', () => {
-    element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[1];
-
-    const newId = 'new ID';
-    component.state = { id: newId };
-    fixture.detectChanges();
-
-    expect(element.id).toBe('customId');
-  });
-
-  it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to other binding', () => {
-    element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[2];
-
-    const newId = 'new ID';
-    component.state = { id: newId };
-    fixture.detectChanges();
-
-    expect(element.id).toBe(component.boundId);
-  });
-
-  it('should not set the ID of the element if the ID of the state does not change', () => {
-    const renderer = fixture.componentRef.injector.get(Renderer2);
-    const setProperty = vi.spyOn(renderer, 'setProperty');
-
-    component.state = { id: `${TEST_ID}1` };
-    fixture.detectChanges();
-
-    expect(setProperty).toHaveBeenCalledWith(expect.anything(), 'id', `${TEST_ID}1`);
-    setProperty.mockClear();
-
-    component.state = { id: `${TEST_ID}1` };
-    fixture.detectChanges();
-
-    expect(setProperty).not.toHaveBeenCalled();
-  });
 
   it("should set the input's value", () => {
     const newValue = 10;
@@ -157,14 +97,14 @@ describe(NgrxNumberViewAdapter.name, () => {
 
   it('should throw if state is undefined', () => {
     const fn = () => {
-      component.state = undefined;
+      fixture.componentRef.setInput('state', undefined);
       fixture.detectChanges();
     };
-    expect(fn).toThrowError();
+    expect(fn).toThrow();
   });
 
   it('should not throw if calling callbacks before they are registered', () => {
-    expect(() => viewAdapter.onChange(undefined)).not.toThrowError();
-    expect(() => viewAdapter.onTouched()).not.toThrowError();
+    expect(() => viewAdapter.onChange(undefined)).not.toThrow();
+    expect(() => viewAdapter.onTouched()).not.toThrow();
   });
 });

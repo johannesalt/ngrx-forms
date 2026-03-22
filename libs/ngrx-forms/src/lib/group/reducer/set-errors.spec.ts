@@ -14,7 +14,7 @@ import {
 
 describe(`form group ${setErrorsReducer.name}`, () => {
   it('should update state if there are errors', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const resultState = setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, errors));
     expect(resultState.errors).toEqual(errors);
     expect(resultState.isValid).toBe(false);
@@ -22,7 +22,7 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should update state if there are no errors', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const state = { ...INITIAL_STATE, isValid: false, isInvalid: true, errors };
     const resultState = setErrorsReducer(state, new SetErrorsAction(FORM_CONTROL_ID, {}));
     expect(resultState.errors).toEqual({});
@@ -31,19 +31,19 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should not update state if errors are same', () => {
-    const state = { ...INITIAL_STATE, isValid: false, isInvalid: true, errors: { required: true } };
+    const state = { ...INITIAL_STATE, isValid: false, isInvalid: true, errors: { required: { actual: true } } };
     const resultState = setErrorsReducer(state, new SetErrorsAction(FORM_CONTROL_ID, state.errors));
     expect(resultState).toBe(state);
   });
 
   it('should not update state if errors are equal', () => {
-    const state = { ...INITIAL_STATE, isValid: false, isInvalid: true, errors: { required: true } };
-    const resultState = setErrorsReducer(state, new SetErrorsAction(FORM_CONTROL_ID, { required: true }));
+    const state = { ...INITIAL_STATE, isValid: false, isInvalid: true, errors: { required: { actual: true } } };
+    const resultState = setErrorsReducer(state, new SetErrorsAction(FORM_CONTROL_ID, { required: { actual: true } }));
     expect(resultState).toBe(state);
   });
 
   it('should not update state if control is disabled', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const state = { ...INITIAL_STATE, isEnabled: false, isDisabled: true };
     const resultState = setErrorsReducer(state, new SetErrorsAction(FORM_CONTROL_ID, errors));
     expect(resultState).toBe(state);
@@ -55,7 +55,7 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should update state if group is empty', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const state = createFormGroupState('test ID', {});
     const resultState = setErrorsReducer(state, new SetErrorsAction(FORM_CONTROL_ID, errors));
     expect(resultState.errors).toEqual(errors);
@@ -64,23 +64,23 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should keep async errors', () => {
-    const syncErrors = { required: true };
-    const asyncErrors = { $required: true };
+    const syncErrors = { required: { actual: true } };
+    const asyncErrors = { $required: { actual: true } };
     const state = { ...INITIAL_STATE, isValid: false, isInvalid: true, errors: asyncErrors };
     const resultState = setErrorsReducer(state, new SetErrorsAction(FORM_CONTROL_ID, syncErrors));
     expect(resultState.errors).toEqual({ ...asyncErrors, ...syncErrors });
   });
 
   it('should throw if trying to set invalid error value', () => {
-    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, null as any))).toThrowError();
-    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, 1 as any))).toThrowError();
-    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, [] as any))).toThrowError();
-    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, { $required: true }))).toThrowError();
-    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, { _inner: true }))).toThrowError();
+    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, null as any))).toThrow();
+    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, 1 as any))).toThrow();
+    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, [] as any))).toThrow();
+    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, { $required: { actual: true } }))).toThrow();
+    expect(() => setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, { _inner: true }))).toThrow();
   });
 
   it('should aggregate child errors', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const resultState = setErrorsReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_INNER_ID, errors));
     expect(resultState.errors).toEqual({ _inner: errors });
     expect(resultState.isValid).toEqual(false);
@@ -88,7 +88,7 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should aggregate child errors for group children', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const resultState = setErrorsReducer(INITIAL_STATE_FULL, new SetErrorsAction(FORM_CONTROL_INNER3_ID, errors));
     expect(resultState.errors).toEqual({ _inner3: errors });
     expect(resultState.isValid).toEqual(false);
@@ -96,7 +96,7 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should aggregate child errors for array children', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const resultState = setErrorsReducer(INITIAL_STATE_FULL, new SetErrorsAction(FORM_CONTROL_INNER5_ID, errors));
     expect(resultState.errors).toEqual({ _inner5: errors });
     expect(resultState.isValid).toEqual(false);
@@ -104,7 +104,7 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should aggregate nested child errors for group', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const resultState = setErrorsReducer(INITIAL_STATE_FULL, new SetErrorsAction(FORM_CONTROL_INNER4_ID, errors));
     expect(resultState.errors).toEqual({ _inner3: { _inner4: errors } });
     expect(resultState.isValid).toEqual(false);
@@ -112,7 +112,7 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should aggregate nested child errors for array', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const resultState = setErrorsReducer(INITIAL_STATE_FULL, new SetErrorsAction(FORM_CONTROL_INNER5_0_ID, errors));
     expect(resultState.errors).toEqual({ _inner5: { _0: errors } });
     expect(resultState.isValid).toEqual(false);
@@ -120,7 +120,7 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should aggregate multiple child errors', () => {
-    const errors1 = { required: true };
+    const errors1 = { required: { actual: true } };
     const errors2 = { min: 0 };
     let resultState = setErrorsReducer(INITIAL_STATE_FULL, new SetErrorsAction(FORM_CONTROL_INNER_ID, errors1));
     resultState = setErrorsReducer(resultState, new SetErrorsAction(FORM_CONTROL_INNER3_ID, errors2));
@@ -130,7 +130,7 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should track child errors and own errors when own errors are changed', () => {
-    const errors1 = { required: true };
+    const errors1 = { required: { actual: true } };
     const errors2 = { min: 0 };
     const state = {
       ...INITIAL_STATE,
@@ -153,7 +153,7 @@ describe(`form group ${setErrorsReducer.name}`, () => {
   });
 
   it('should track own errors and child errors when child errors are changed', () => {
-    const errors1 = { required: true };
+    const errors1 = { required: { actual: true } };
     const state = {
       ...INITIAL_STATE,
       isValid: false,

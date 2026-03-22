@@ -25,11 +25,11 @@ describe(formStateReducer.name, () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => formStateReducer(undefined, { type: '' })).toThrowError();
+    expect(() => formStateReducer(undefined, { type: '' })).toThrow();
   });
 
   it('should throw if state is not a form state', () => {
-    expect(() => formStateReducer({} as any, { type: '' })).toThrowError();
+    expect(() => formStateReducer({} as any, { type: '' })).toThrow();
   });
 });
 
@@ -38,7 +38,7 @@ describe(createFormStateReducerWithUpdate.name, () => {
     const value = 'A';
     const resultState = createFormStateReducerWithUpdate<FormGroupValue['inner']>((s) => ({ ...s, value }))(
       INITIAL_STATE.controls.inner,
-      new MarkAsTouchedAction(FORM_CONTROL_INNER_ID)
+      new MarkAsTouchedAction(FORM_CONTROL_INNER_ID),
     );
     expect(resultState.isTouched).toBe(true);
     expect(resultState.value).toBe(value);
@@ -48,7 +48,7 @@ describe(createFormStateReducerWithUpdate.name, () => {
     const userDefinedProperties = { value: 'A' };
     const resultState = createFormStateReducerWithUpdate<FormGroupValue>((s) => ({ ...s, userDefinedProperties }))(
       INITIAL_STATE,
-      new MarkAsTouchedAction(FORM_CONTROL_ID)
+      new MarkAsTouchedAction(FORM_CONTROL_ID),
     );
     expect(resultState.isTouched).toBe(true);
     expect(resultState.userDefinedProperties).toEqual(userDefinedProperties);
@@ -58,7 +58,7 @@ describe(createFormStateReducerWithUpdate.name, () => {
     const userDefinedProperties = { value: 'A' };
     const resultState = createFormStateReducerWithUpdate<FormGroupValue['inner5']>((s) => ({ ...s, userDefinedProperties }))(
       INITIAL_STATE.controls.inner5,
-      new MarkAsTouchedAction(FORM_CONTROL_INNER5_ID)
+      new MarkAsTouchedAction(FORM_CONTROL_INNER5_ID),
     );
     expect(resultState.isTouched).toBe(true);
     expect(resultState.userDefinedProperties).toEqual(userDefinedProperties);
@@ -68,7 +68,7 @@ describe(createFormStateReducerWithUpdate.name, () => {
     const value = 'A';
     const resultState = createFormStateReducerWithUpdate<FormGroupValue['inner']>(
       (s) => ({ ...s, value: `${s.value}${value}` }),
-      (s) => ({ ...s, value: `${s.value}${value}` })
+      (s) => ({ ...s, value: `${s.value}${value}` }),
     )(INITIAL_STATE.controls.inner, new MarkAsTouchedAction(FORM_CONTROL_INNER_ID));
     expect(resultState.isTouched).toBe(true);
     expect(resultState.value).toBe(`${value}${value}`);
@@ -88,7 +88,7 @@ describe(createFormStateReducerWithUpdate.name, () => {
     const expected = { ...INITIAL_STATE.controls.inner, value: 'A' };
     const resultState = createFormStateReducerWithUpdate<FormGroupValue['inner']>(() => expected)(
       INITIAL_STATE.controls.inner,
-      new MarkAsTouchedAction(FORM_CONTROL_INNER_ID)
+      new MarkAsTouchedAction(FORM_CONTROL_INNER_ID),
     );
     expect(resultState).toBe(expected);
   });
@@ -104,7 +104,7 @@ describe(createFormStateReducerWithUpdate.name, () => {
       }),
       updateGroup<FormGroupValue>({
         inner: () => expectedInner1,
-      })
+      }),
     )(INITIAL_STATE, new SetValueAction(FORM_CONTROL_INNER_ID, 'D'));
     expect(resultState.controls.inner).toBe(expectedInner1);
     expect(resultState.controls.inner3).toBe(expectedInner3);
@@ -117,7 +117,7 @@ describe(createFormStateReducerWithUpdate.name, () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => createFormStateReducerWithUpdate<any>((s) => s)(undefined, { type: '' })).toThrowError();
+    expect(() => createFormStateReducerWithUpdate<any>((s) => s)(undefined, { type: '' })).toThrow();
   });
 });
 
@@ -218,7 +218,7 @@ describe(onNgrxFormsAction.name, () => {
 
   const reducer = createReducer(
     state,
-    onNgrxFormsAction(MarkAsTouchedAction, (s) => ({ ...s }))
+    onNgrxFormsAction(MarkAsTouchedAction, (s) => ({ ...s })),
   );
 
   it('should call the reducer for the correct action type', () => {
@@ -238,7 +238,7 @@ describe(onNgrxFormsAction.name, () => {
         expect(action instanceof MarkAsTouchedAction).toBe(true);
         expect(action.controlId).toBe(FORM_CONTROL_INNER_ID);
         return state;
-      })
+      }),
     );
 
     reducer(state, new MarkAsTouchedAction(FORM_CONTROL_INNER_ID));
@@ -252,7 +252,7 @@ describe(onNgrxFormsAction.name, () => {
         expect(action instanceof MarkAsTouchedAction).toBe(true);
         expect(action.controlId).toBe(FORM_CONTROL_INNER_ID);
         return state;
-      })
+      }),
     );
 
     const resultState = reducer(state, new MarkAsTouchedAction(FORM_CONTROL_INNER_ID));
@@ -279,7 +279,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
       (s) => {
         expect(s).toBe(INITIAL_STATE.controls.inner);
         return { ...s };
-      }
+      },
     );
 
     const resultState = wrappedReducer(undefined, { type: '' });
@@ -293,7 +293,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
       (s) => {
         expect(s).toBe(INITIAL_STATE.controls.inner);
         return { ...s };
-      }
+      },
     );
 
     const resultState = wrappedReducer(initialState.control, { type: '' });
@@ -307,7 +307,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
       (s) => {
         expect(s).toBe(INITIAL_STATE);
         return { ...s };
-      }
+      },
     );
 
     const resultState = wrappedReducer(undefined, { type: '' });
@@ -321,7 +321,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
       (s) => {
         expect(s).toBe(INITIAL_STATE);
         return { ...s };
-      }
+      },
     );
 
     const resultState = wrappedReducer(initialState.group, { type: '' });
@@ -335,7 +335,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
       (s) => {
         expect(s).toBe(INITIAL_STATE.controls.inner5);
         return { ...s };
-      }
+      },
     );
 
     const resultState = wrappedReducer(undefined, { type: '' });
@@ -349,7 +349,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
       (s) => {
         expect(s).toBe(INITIAL_STATE.controls.inner5);
         return { ...s };
-      }
+      },
     );
 
     const resultState = wrappedReducer(initialState.array, { type: '' });
@@ -361,7 +361,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
     const wrappedReducer = wrapReducerWithFormStateUpdate(
       reducer,
       (s) => s.control,
-      () => updatedControl
+      () => updatedControl,
     );
     const resultState = wrappedReducer(undefined, { type: '' });
     expect(resultState.control).toBe(updatedControl);
@@ -371,7 +371,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
     const wrappedReducer = wrapReducerWithFormStateUpdate(
       reducer,
       (s) => s.control,
-      (s) => s
+      (s) => s,
     );
     const resultState = wrappedReducer(undefined, { type: '' });
     expect(resultState).toBe(initialState);
@@ -384,7 +384,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
       (s, state) => {
         expect(state).toBe(initialState);
         return s;
-      }
+      },
     );
 
     wrappedReducer(undefined, { type: '' });
@@ -403,7 +403,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
       (s) => {
         expect(reducerWasCalled).toBe(true);
         return s;
-      }
+      },
     );
 
     wrappedReducer(undefined, { type: '' });
@@ -422,7 +422,7 @@ describe(wrapReducerWithFormStateUpdate.name, () => {
     const wrappedReducer = wrapReducerWithFormStateUpdate(
       reducer,
       (s) => s.control,
-      (s) => ({ ...s })
+      (s) => ({ ...s }),
     );
 
     let resultState = wrappedReducer(state, new MarkAsTouchedAction(FORM_CONTROL_INNER_ID));

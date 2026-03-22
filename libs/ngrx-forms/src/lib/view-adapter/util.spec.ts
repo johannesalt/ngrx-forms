@@ -1,24 +1,27 @@
-import { Component, ElementRef, getDebugNode, inject, ProviderToken } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormControlState } from '../state';
+import { Component, ElementRef, getDebugNode, inject, input, ProviderToken } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createFormControlState, FormControlState } from '../state';
 import { NgrxDefaultViewAdapter } from './default';
 import { NgrxNumberViewAdapter } from './number';
 import { NgrxRangeViewAdapter } from './range';
 import { selectViewAdapter } from './util';
 import { FormViewAdapter } from './view-adapter';
 
+const TEST_ID = 'test ID';
+const INITIAL_STATE = createFormControlState<any>(TEST_ID, undefined);
+
 @Component({
   imports: [NgrxDefaultViewAdapter, NgrxNumberViewAdapter, NgrxRangeViewAdapter],
   template: `
-    <input type="number" [ngrxFormControlState]="state" />
-    <input type="range" [ngrxFormControlState]="state" />
-    <input type="text" [ngrxFormControlState]="state" />
+    <input type="number" [ngrxFormControlState]="state()" />
+    <input type="range" [ngrxFormControlState]="state()" />
+    <input type="text" [ngrxFormControlState]="state()" />
   `,
 })
 class TestComponent {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
-  public readonly state: Partial<FormControlState<any>> = { id: 'test ID' };
+  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
 
   public get defaultViewAdapter(): NgrxDefaultViewAdapter {
     return this.getViewAdapterAtIndex(2, NgrxDefaultViewAdapter);
@@ -60,11 +63,11 @@ describe(selectViewAdapter, () => {
   let component: TestComponent;
   let fixture: ComponentFixture<TestComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [TestComponent],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);

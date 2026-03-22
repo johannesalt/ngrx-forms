@@ -27,6 +27,6 @@ export function markAsUnsubmittedReducer<TValue>(state: FormArrayState<TValue>, 
       wasOrShouldBeEnabled: state.isEnabled,
       wasOrShouldBeTouched: state.isTouched,
       wasOrShouldBeSubmitted: false,
-    }
+    },
   );
 }

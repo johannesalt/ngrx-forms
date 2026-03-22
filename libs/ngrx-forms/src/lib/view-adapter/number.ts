@@ -1,5 +1,5 @@
 import { Directive, forwardRef, HostListener } from '@angular/core';
-import { SetNativeId } from './set-native-id';
+import { ControlIdDirective } from './control-id.directive';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
 @Directive({
@@ -12,7 +12,7 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
     },
   ],
 })
-export class NgrxNumberViewAdapter extends SetNativeId implements FormViewAdapter {
+export class NgrxNumberViewAdapter extends ControlIdDirective implements FormViewAdapter {
   onChange: (value: any) => void = () => void 0;
 
   @HostListener('blur')
@@ -38,8 +38,13 @@ export class NgrxNumberViewAdapter extends SetNativeId implements FormViewAdapte
 
   @HostListener('change', ['$event'])
   @HostListener('input', ['$event'])
-  handleInput({ target }: { target: HTMLInputElement }): void {
-    const value = target.value;
+  handleInput({ target }: Event): void {
+    const input = target as HTMLInputElement;
+    if (!input) {
+      return;
+    }
+
+    const value = input.value;
     this.onChange(value === '' ? null : parseFloat(value));
   }
 }

@@ -27,6 +27,6 @@ export function markAsUntouchedReducer<TValue>(state: FormArrayState<TValue>, ac
       wasOrShouldBeEnabled: state.isEnabled,
       wasOrShouldBeTouched: false,
       wasOrShouldBeSubmitted: state.isSubmitted,
-    }
+    },
   );
 }

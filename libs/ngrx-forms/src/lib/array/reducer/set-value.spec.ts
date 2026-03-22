@@ -38,14 +38,14 @@ describe(`form array ${setValueReducer.name}`, () => {
 
   it('should create child states on demand for group children', () => {
     const value = [{ inner: '' }, { inner: '' }, { inner: '' }];
-    const resultState = setValueReducer<typeof value[0]>(INITIAL_STATE_NESTED_GROUP, new SetValueAction(FORM_CONTROL_ID, value));
+    const resultState = setValueReducer<(typeof value)[0]>(INITIAL_STATE_NESTED_GROUP, new SetValueAction(FORM_CONTROL_ID, value));
     expect(resultState.value).toEqual(value);
     expect(resultState.controls[2].value).toEqual(value[2]);
   });
 
   it('should create child states on demand for array children', () => {
     const value = [[''], [''], ['']];
-    const resultState = setValueReducer<typeof value[0]>(INITIAL_STATE_NESTED_ARRAY, new SetValueAction(FORM_CONTROL_ID, value));
+    const resultState = setValueReducer<(typeof value)[0]>(INITIAL_STATE_NESTED_ARRAY, new SetValueAction(FORM_CONTROL_ID, value));
     expect(resultState.value).toEqual(value);
     expect(resultState.controls[2].value).toEqual(value[2]);
   });
@@ -111,7 +111,7 @@ describe(`form array ${setValueReducer.name}`, () => {
   });
 
   it('should remove child errors on demand when value is empty', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const state = {
       ...INITIAL_STATE,
       errors: {
@@ -132,7 +132,7 @@ describe(`form array ${setValueReducer.name}`, () => {
   });
 
   it('should remove child errors and keep own errors on demand when value is empty', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const state = {
       ...INITIAL_STATE,
       errors: {
@@ -155,6 +155,6 @@ describe(`form array ${setValueReducer.name}`, () => {
 
   it('should throw if trying to set date as value', () => {
     const action = new SetValueAction(FORM_CONTROL_ID, new Date() as any);
-    expect(() => setValueReducer(INITIAL_STATE, action)).toThrowError();
+    expect(() => setValueReducer(INITIAL_STATE, action)).toThrow();
   });
 });

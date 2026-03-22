@@ -71,7 +71,7 @@ describe(updateGroup.name, () => {
       },
       {
         inner: () => expectedInner1,
-      }
+      },
     )(INITIAL_STATE);
     expect(resultState.controls.inner).toBe(expectedInner1);
     expect(resultState.controls.inner3).toBe(expectedInner3);
@@ -91,7 +91,7 @@ describe(updateGroup.name, () => {
         inner: () => updatedInner1,
         inner3: () => expectedInner3,
       },
-      updateFnArr as any
+      updateFnArr as any,
     )(INITIAL_STATE);
     expect(resultState.controls.inner).toBe(expectedInner1);
     expect(resultState.controls.inner3).toBe(expectedInner3);
@@ -127,7 +127,7 @@ describe(updateGroup.name, () => {
       },
       {
         inner: () => expectedInner1,
-      }
+      },
     );
     expect(resultState.controls.inner).toBe(expectedInner1);
     expect(resultState.controls.inner3).toBe(expectedInner3);
@@ -148,7 +148,7 @@ describe(updateGroup.name, () => {
         inner: () => updatedInner1,
         inner3: () => expectedInner3,
       },
-      updateFnArr as any
+      updateFnArr as any,
     );
     expect(resultState.controls.inner).toBe(expectedInner1);
     expect(resultState.controls.inner3).toBe(expectedInner3);

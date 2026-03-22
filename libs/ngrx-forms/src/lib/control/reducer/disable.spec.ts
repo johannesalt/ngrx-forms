@@ -22,7 +22,7 @@ describe('form control disableReducer', () => {
   });
 
   it('should mark the state as valid and clear all errors', () => {
-    const errors = { required: true };
+    const errors = { required: { actual: true } };
     const state = { ...INITIAL_STATE, isValid: false, isInvalid: true, errors };
     const resultState = disableReducer(state, new DisableAction(FORM_CONTROL_ID));
     expect(resultState.isValid).toEqual(true);

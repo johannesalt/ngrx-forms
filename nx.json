@@ -22,14 +22,14 @@
       "cache": true,
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore", "{workspaceRoot}/eslint.config.mjs"]
     },
-    "@nx/vite:test": {
-      "cache": true,
-      "inputs": ["default", "^production"]
-    },
     "@nx/angular:package": {
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    },
+    "@nx/vitest:test": {
+      "cache": true,
+      "inputs": ["default", "^production"]
     }
   },
   "generators": {
@@ -37,11 +37,11 @@
       "e2eTestRunner": "none",
       "linter": "eslint",
       "style": "scss",
-      "unitTestRunner": "vitest"
+      "unitTestRunner": "vitest-analog"
     },
     "@nx/angular:library": {
       "linter": "eslint",
-      "unitTestRunner": "vitest"
+      "unitTestRunner": "vitest-analog"
     },
     "@nx/angular:component": {
       "style": "css",
@@ -110,5 +110,6 @@
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build"
     }
-  }
+  },
+  "analytics": false
 }

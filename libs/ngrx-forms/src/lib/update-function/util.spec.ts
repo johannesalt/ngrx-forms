@@ -12,7 +12,7 @@ describe(compose.name, () => {
       (i) => {
         secondCalled = true;
         return i + 1;
-      }
+      },
     )(0);
 
     expect(result).toBe(2);

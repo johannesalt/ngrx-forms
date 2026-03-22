@@ -128,7 +128,7 @@ describe('form array reducer', () => {
 
   it('should not be stateful', () => {
     formArrayReducer(INITIAL_STATE, new SetValueAction(FORM_CONTROL_ID, []));
-    expect(() => formArrayReducer(INITIAL_STATE, new MarkAsDirtyAction(FORM_CONTROL_ID))).not.toThrowError();
+    expect(() => formArrayReducer(INITIAL_STATE, new MarkAsDirtyAction(FORM_CONTROL_ID))).not.toThrow();
   });
 
   it('should preserve the order of properties when stringified', () => {
@@ -139,11 +139,11 @@ describe('form array reducer', () => {
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => formArrayReducer(undefined, { type: '' })).toThrowError();
+    expect(() => formArrayReducer(undefined, { type: '' })).toThrow();
   });
 
   it('should throw if state is not an array state', () => {
-    expect(() => formArrayReducer(INITIAL_STATE.controls[0] as any, new MarkAsDirtyAction(FORM_CONTROL_ID))).toThrowError();
+    expect(() => formArrayReducer(INITIAL_STATE.controls[0] as any, new MarkAsDirtyAction(FORM_CONTROL_ID))).toThrow();
   });
 
   describe(SetValueAction.name, () => {
@@ -155,7 +155,7 @@ describe('form array reducer', () => {
 
   describe(SetErrorsAction.name, () => {
     it('should update state', () => {
-      const errors = { required: true };
+      const errors = { required: { actual: true } };
       const resultState = formArrayReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, errors));
       expect(resultState).not.toBe(INITIAL_STATE);
     });

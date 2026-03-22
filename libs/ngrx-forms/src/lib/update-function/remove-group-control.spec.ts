@@ -13,6 +13,6 @@ describe(removeGroupControl.name, () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => removeGroupControl<FormGroupValue>('inner3')(undefined as any)).toThrowError();
+    expect(() => removeGroupControl<FormGroupValue>('inner3')(undefined as any)).toThrow();
   });
 });

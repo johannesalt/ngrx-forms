@@ -20,10 +20,10 @@
   },
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0",
-    "@angular/forms": "^20.0.0",
-    "@ngrx/store": "^20.0.0"
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/forms": "^21.0.0",
+    "@ngrx/store": "^21.0.0"
   },
   "private": false,
   "sideEffects": false

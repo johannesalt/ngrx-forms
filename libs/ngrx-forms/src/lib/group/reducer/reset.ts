@@ -27,6 +27,6 @@ export function resetReducer<TValue extends KeyValue>(state: FormGroupState<TVal
       wasOrShouldBeEnabled: state.isEnabled,
       wasOrShouldBeTouched: false,
       wasOrShouldBeSubmitted: false,
-    }
+    },
   );
 }

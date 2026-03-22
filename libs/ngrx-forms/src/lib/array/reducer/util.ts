@@ -4,7 +4,7 @@ import { computeArrayState, FormArrayState, FormGroupControls, FormGroupState, F
 
 export function dispatchActionPerChild<TValue>(
   controls: readonly FormState<TValue>[],
-  actionCreator: (controlId: string) => Actions<TValue>
+  actionCreator: (controlId: string) => Actions<TValue>,
 ): readonly FormState<TValue>[] {
   let hasChanged = false;
   const newControls = controls.map((state) => {
@@ -48,7 +48,7 @@ export function updateIdRecursiveForGroup<TValue extends KeyValue = any>(state: 
       Object.assign(agg, {
         [key]: updateIdRecursive<TValue[keyof TValue]>(state.controls[key as keyof TValue], `${newId}.${key}`),
       }),
-    {} as FormGroupControls<TValue>
+    {} as FormGroupControls<TValue>,
   );
 
   return {

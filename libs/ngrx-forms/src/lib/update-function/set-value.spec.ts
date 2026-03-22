@@ -34,7 +34,7 @@ describe(setValue.name, () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => setValue<string>('')(undefined as any)).toThrowError();
+    expect(() => setValue<string>('')(undefined as any)).toThrow();
   });
 
   it('should work inside an updateGroup', () => {

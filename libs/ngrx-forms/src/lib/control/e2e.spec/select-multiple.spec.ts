@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Action, Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { MockInstance } from 'vitest';
@@ -15,11 +15,11 @@ const SELECT_OPTIONS = ['op1', 'op2'];
   imports: [NgrxFormsModule],
   template: `
     @if (state) {
-    <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
-      @for (o of options; track o) {
-      <option [value]="o">{{ o }}</option>
-      }
-    </select>
+      <select multiple [ngrxFormControlState]="state" [ngrxValueConverter]="valueConverter">
+        @for (o of options; track o) {
+          <option [value]="o">{{ o }}</option>
+        }
+      </select>
     }
   `,
 })
@@ -39,12 +39,12 @@ describe(SelectMultipleComponent.name, () => {
   const INITIAL_FORM_CONTROL_VALUE = `["${SELECT_OPTIONS[1]}"]`;
   const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [SelectMultipleComponent],
       providers: [provideMockStore()],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SelectMultipleComponent);
@@ -86,11 +86,11 @@ describe(SelectMultipleComponent.name, () => {
   imports: [NgrxFormsModule],
   template: `
     @if (state) {
-    <select multiple [ngrxFormControlState]="state">
-      @for (o of options; track o) {
-      <option [value]="o">{{ o }}</option>
-      }
-    </select>
+      <select multiple [ngrxFormControlState]="state">
+        @for (o of options; track o) {
+          <option [value]="o">{{ o }}</option>
+        }
+      </select>
     }
   `,
 })
@@ -109,12 +109,12 @@ describe(SelectMultipleWithoutConverterComponent.name, () => {
   const INITIAL_FORM_CONTROL_VALUE = box([SELECT_OPTIONS[1]]);
   const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [SelectMultipleWithoutConverterComponent],
       providers: [provideMockStore()],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SelectMultipleWithoutConverterComponent);

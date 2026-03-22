@@ -118,7 +118,7 @@ describe('form group reducer', () => {
 
   it('should not be stateful', () => {
     formGroupReducer(INITIAL_STATE_FULL, new SetValueAction(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE));
-    expect(() => formGroupReducer(INITIAL_STATE_FULL, new MarkAsDirtyAction(FORM_CONTROL_ID))).not.toThrowError();
+    expect(() => formGroupReducer(INITIAL_STATE_FULL, new MarkAsDirtyAction(FORM_CONTROL_ID))).not.toThrow();
   });
 
   it('should preserve the order of properties when stringified', () => {
@@ -130,20 +130,20 @@ describe('form group reducer', () => {
 
   it('should throw if trying to set a date as value', () => {
     const state = createFormGroupState<any>(FORM_CONTROL_ID, {});
-    expect(() => formGroupReducer(state, new SetValueAction(FORM_CONTROL_ID, new Date()))).toThrowError();
+    expect(() => formGroupReducer(state, new SetValueAction(FORM_CONTROL_ID, new Date()))).toThrow();
   });
 
   it('should throw if trying to set a date as a child value', () => {
     const state = createFormGroupState<any>(FORM_CONTROL_ID, { inner: null });
-    expect(() => formGroupReducer(state, new SetValueAction(FORM_CONTROL_INNER_ID, new Date()))).toThrowError();
+    expect(() => formGroupReducer(state, new SetValueAction(FORM_CONTROL_INNER_ID, new Date()))).toThrow();
   });
 
   it('should throw if state is undefined', () => {
-    expect(() => formGroupReducer(undefined, { type: '' })).toThrowError();
+    expect(() => formGroupReducer(undefined, { type: '' })).toThrow();
   });
 
   it('should throw if state is not a group state', () => {
-    expect(() => formGroupReducer(INITIAL_STATE.controls.inner as any, new MarkAsDirtyAction(FORM_CONTROL_ID))).toThrowError();
+    expect(() => formGroupReducer(INITIAL_STATE.controls.inner as any, new MarkAsDirtyAction(FORM_CONTROL_ID))).toThrow();
   });
 
   describe(SetValueAction.name, () => {
@@ -155,7 +155,7 @@ describe('form group reducer', () => {
 
   describe(SetErrorsAction.name, () => {
     it('should update state', () => {
-      const errors = { required: true };
+      const errors = { required: { actual: true } };
       const resultState = formGroupReducer(INITIAL_STATE, new SetErrorsAction(FORM_CONTROL_ID, errors));
       expect(resultState).not.toBe(INITIAL_STATE);
     });

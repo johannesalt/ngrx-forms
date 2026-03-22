@@ -81,7 +81,7 @@ describe(updateRecursive.name, () => {
     const expected3 = { ...state.controls[2], value: 'F' };
     const resultState = updateRecursive(
       (s) => (s.value === 'A' ? expected1 : s.value === 'B' ? expected3 : s),
-      (s) => (s.value === 'F' ? expected2 : s.value === 'C' ? expected3 : s)
+      (s) => (s.value === 'F' ? expected2 : s.value === 'C' ? expected3 : s),
     )(state);
     expect(resultState.controls[0]).toBe(expected1);
     expect(resultState.controls[1]).toBe(expected2);
@@ -125,7 +125,7 @@ describe(updateRecursive.name, () => {
     const resultState = updateRecursive<typeof state.value>(
       state,
       (s) => (s.value === 'A' ? expected1 : s.value === 'B' ? expected3 : s),
-      (s) => (s.value === 'F' ? expected2 : s.value === 'C' ? expected3 : s)
+      (s) => (s.value === 'F' ? expected2 : s.value === 'C' ? expected3 : s),
     );
     expect(resultState.controls[0]).toBe(expected1);
     expect(resultState.controls[1]).toBe(expected2);

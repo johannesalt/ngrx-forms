@@ -73,11 +73,11 @@ describe('state', () => {
     });
 
     it('createFormControlState should throw for non-serializable values', () => {
-      expect(() => createFormControlState('', (() => void 0) as any)).toThrowError();
+      expect(() => createFormControlState('', (() => void 0) as any)).toThrow();
     });
 
     it('createFormControlState should throw for non-serializable boxed values', () => {
-      expect(() => createFormControlState('', box({ f: () => void 0 }))).toThrowError();
+      expect(() => createFormControlState('', box({ f: () => void 0 }))).toThrow();
     });
   });
 
@@ -158,7 +158,7 @@ describe('state', () => {
         INITIAL_STATE.userDefinedProperties,
         {
           wasOrShouldBeEnabled: true,
-        }
+        },
       );
 
       expect(state.id).toBe(INITIAL_STATE.id);
@@ -189,7 +189,7 @@ describe('state', () => {
         initialState.userDefinedProperties,
         {
           wasOrShouldBeEnabled: true,
-        }
+        },
       );
 
       expect(state.id).toBe(initialState.id);
@@ -334,7 +334,7 @@ describe('state', () => {
         INITIAL_STATE.userDefinedProperties,
         {
           wasOrShouldBeEnabled: true,
-        }
+        },
       );
 
       expect(state.id).toBe(INITIAL_STATE.id);
@@ -365,7 +365,7 @@ describe('state', () => {
         initialState.userDefinedProperties,
         {
           wasOrShouldBeEnabled: true,
-        }
+        },
       );
 
       expect(state.id).toBe(initialState.id);
@@ -438,9 +438,9 @@ describe('state', () => {
       const objectValue = { v: 'A' };
       const arrayValue = ['A'];
       const functionValue = () => void 0;
-      expect(() => verifyFormControlValueIsValid(objectValue)).toThrowError();
-      expect(() => verifyFormControlValueIsValid(arrayValue)).toThrowError();
-      expect(() => verifyFormControlValueIsValid(functionValue)).toThrowError();
+      expect(() => verifyFormControlValueIsValid(objectValue)).toThrow();
+      expect(() => verifyFormControlValueIsValid(arrayValue)).toThrow();
+      expect(() => verifyFormControlValueIsValid(functionValue)).toThrow();
     });
 
     it('should return boxed serializable values unmodified', () => {
@@ -471,8 +471,8 @@ describe('state', () => {
     it('should throw for non-serializable boxed values', () => {
       const boxedFunctionValue = box(() => void 0);
       const boxedObjectWithFunctionValue = box({ f: () => void 0 });
-      expect(() => verifyFormControlValueIsValid(boxedFunctionValue)).toThrowError();
-      expect(() => verifyFormControlValueIsValid(boxedObjectWithFunctionValue)).toThrowError();
+      expect(() => verifyFormControlValueIsValid(boxedFunctionValue)).toThrow();
+      expect(() => verifyFormControlValueIsValid(boxedObjectWithFunctionValue)).toThrow();
     });
   });
 
@@ -530,7 +530,7 @@ describe('state', () => {
     });
 
     it('should aggregate child errors', () => {
-      const childError = { required: true };
+      const childError = { required: { actual: true } };
       const controlWithError = {
         ...CONTROL_1,
         errors: childError,
@@ -542,7 +542,7 @@ describe('state', () => {
     });
 
     it('should merge own errors with child errors', () => {
-      const childError = { required: true };
+      const childError = { required: { actual: true } };
       const ownError = { max: true };
       const controlWithError = {
         ...CONTROL_1,
@@ -771,7 +771,7 @@ describe('state', () => {
     });
 
     it('should aggregate child errors', () => {
-      const childError = { required: true };
+      const childError = { required: { actual: true } };
       const controlWithError = {
         ...CONTROL_1,
         errors: childError,
@@ -783,7 +783,7 @@ describe('state', () => {
     });
 
     it('should merge own errors with child errors', () => {
-      const childError = { required: true };
+      const childError = { required: { actual: true } };
       const ownError = { max: true };
       const controlWithError = {
         ...CONTROL_1,

@@ -29,9 +29,9 @@
         <select [ngrxFormControlState]="localState.formState.controls.manufacturer" (ngrxFormsAction)="handleFormAction($event)">
           <option [value]="''">None</option>
           @for (manufacturer of localState.manufacturers; track manufacturer) {
-          <option [value]="manufacturer">
-            {{ manufacturer }}
-          </option>
+            <option [value]="manufacturer">
+              {{ manufacturer }}
+            </option>
           }
         </select>
       </div>

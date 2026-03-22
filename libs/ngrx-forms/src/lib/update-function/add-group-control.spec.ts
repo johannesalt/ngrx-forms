@@ -13,6 +13,6 @@ describe(addGroupControl.name, () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => addGroupControl<FormGroupValue>('inner2', 'A')(undefined as any)).toThrowError();
+    expect(() => addGroupControl<FormGroupValue>('inner2', 'A')(undefined as any)).toThrow();
   });
 });

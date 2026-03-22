@@ -26,6 +26,6 @@ describe(addArrayControl.name, () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => addArrayControl('A', 1)(undefined as any)).toThrowError();
+    expect(() => addArrayControl('A', 1)(undefined as any)).toThrow();
   });
 });

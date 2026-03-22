@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Action, Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { MockInstance } from 'vitest';
@@ -14,10 +14,10 @@ const SELECT_NUMBER_OPTIONS = [1, 2];
   template: ` @if (state) {
     <select [ngrxFormControlState]="state" (ngrxFormsAction)="handleAction($event)">
       @for (o of options; track o) {
-      <option [value]="o">{{ o }}</option>
+        <option [value]="o">{{ o }}</option>
       }
     </select>
-    }`,
+  }`,
 })
 export class NumberSelectComponentLocalStateComponent {
   state: FormControlState<number> | undefined;
@@ -37,12 +37,12 @@ describe(NumberSelectComponentLocalStateComponent.name, () => {
   const INITIAL_FORM_CONTROL_VALUE = SELECT_NUMBER_OPTIONS[1];
   const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [NumberSelectComponentLocalStateComponent],
       providers: [provideMockStore()],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NumberSelectComponentLocalStateComponent);

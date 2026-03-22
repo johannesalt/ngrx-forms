@@ -25,7 +25,7 @@ export class NgrxMatSelectViewAdapter implements FormViewAdapter, AfterViewInit,
     this.subscriptions.push(
       this.matSelect.options.changes.subscribe(() => {
         Promise.resolve().then(() => this.matSelect.writeValue(this.value));
-      })
+      }),
     );
   }
 

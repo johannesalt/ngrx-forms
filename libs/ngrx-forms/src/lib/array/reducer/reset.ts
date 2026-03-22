@@ -27,6 +27,6 @@ export function resetReducer<TValue>(state: FormArrayState<TValue>, action: Acti
       wasOrShouldBeEnabled: state.isEnabled,
       wasOrShouldBeTouched: false,
       wasOrShouldBeSubmitted: false,
-    }
+    },
   );
 }

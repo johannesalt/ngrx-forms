@@ -30,7 +30,7 @@ const INITIAL_FORM_STATE = updateGroup<MyFormValue>(
     nested: updateGroup<MyFormValue['nested']>({
       someNumber: setUserDefinedProperty('maxValue', 10),
     }),
-  }
+  },
 );
 ```
 

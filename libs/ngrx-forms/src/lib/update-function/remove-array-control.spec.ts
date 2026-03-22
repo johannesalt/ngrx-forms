@@ -16,6 +16,6 @@ describe(removeArrayControl.name, () => {
   });
 
   it('should throw if curried and no state', () => {
-    expect(() => removeArrayControl(0)(undefined as any)).toThrowError();
+    expect(() => removeArrayControl(0)(undefined as any)).toThrow();
   });
 });
