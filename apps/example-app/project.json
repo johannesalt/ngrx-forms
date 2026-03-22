@@ -72,10 +72,10 @@
       "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "executor": "@nx/angular:unit-test",
       "options": {
-        "reportsDirectory": "../../coverage/apps/example-app"
+        "browsers": ["ChromiumHeadless"],
+        "coverage": true
       }
     },
     "serve-static": {
