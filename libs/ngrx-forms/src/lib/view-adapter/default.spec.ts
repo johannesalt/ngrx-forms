@@ -1,5 +1,5 @@
-import { Component, getDebugNode, Renderer2 } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, getDebugNode } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControlState } from '../state';
 import { NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, NgrxDefaultViewAdapter } from './default';
 
@@ -34,11 +34,11 @@ describe(NgrxDefaultViewAdapter, () => {
       });
     });
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
         imports: [DefaultInputTestComponent],
       }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(DefaultInputTestComponent);
@@ -91,11 +91,11 @@ describe(NgrxDefaultViewAdapter, () => {
       });
     });
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
         imports: [DefaultInputTestComponent],
       }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(DefaultInputTestComponent);

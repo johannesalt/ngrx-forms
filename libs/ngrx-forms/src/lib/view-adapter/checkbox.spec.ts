@@ -1,5 +1,5 @@
-import { Component, getDebugNode, Renderer2 } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, getDebugNode } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControlState } from '../state';
 import { NgrxCheckboxViewAdapter } from './checkbox';
 
@@ -25,11 +25,11 @@ describe(NgrxCheckboxViewAdapter.name, () => {
   let viewAdapter: NgrxCheckboxViewAdapter;
   let element: HTMLInputElement;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [CheckboxTestComponent],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CheckboxTestComponent);

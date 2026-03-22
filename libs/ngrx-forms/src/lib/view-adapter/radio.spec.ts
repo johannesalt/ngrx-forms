@@ -1,5 +1,5 @@
 import { Component, getDebugNode, Renderer2 } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControlState } from '../state';
 import { NgrxRadioViewAdapter } from './radio';
 
@@ -43,11 +43,11 @@ describe(NgrxRadioViewAdapter.name, () => {
   let element1: HTMLInputElement;
   let element2: HTMLInputElement;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [RadioTestComponent],
     }).compileComponents();
-  }));
+  });
 
   describe('static options', () => {
     beforeEach(() => {

@@ -1,5 +1,5 @@
-import { Component, getDebugNode, Renderer2 } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, getDebugNode } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControlState } from '../state';
 import { NgrxSelectOption } from './option';
 import { NgrxSelectViewAdapter } from './select';
@@ -62,11 +62,11 @@ describe(NgrxSelectViewAdapter.name, () => {
   let option1: HTMLOptionElement;
   let option2: HTMLOptionElement;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [SelectTestComponent],
     }).compileComponents();
-  }));
+  });
 
   describe('static options', () => {
     beforeEach(() => {

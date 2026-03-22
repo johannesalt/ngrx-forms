@@ -1,5 +1,5 @@
 import { Component, Renderer2 } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Mock, MockInstance } from 'vitest';
 import { NGRX_SELECT_VIEW_ADAPTER, NgrxSelectOption, SelectViewAdapter } from './option';
 
@@ -21,11 +21,11 @@ describe(NgrxSelectOption, () => {
   let fixture: ComponentFixture<TestComponent>;
 
   describe('Default behaviour of Angular', () => {
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
         imports: [TestComponent],
       }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TestComponent);
@@ -87,11 +87,11 @@ describe(NgrxSelectOption, () => {
       });
     });
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
         imports: [TestComponent],
       }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TestComponent);

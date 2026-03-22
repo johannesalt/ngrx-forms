@@ -1,5 +1,5 @@
 import { Component, ElementRef, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Action, Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -84,12 +84,12 @@ describe(NgrxFormControlDirective, () => {
       });
     });
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
         imports: [TestComponent],
         providers: [provideMockStore()],
       }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TestComponent);
@@ -615,11 +615,11 @@ describe(NgrxFormControlDirective, () => {
       });
     });
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
         imports: [TestComponent],
       }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TestComponent);
@@ -671,12 +671,12 @@ describe(NgrxFormControlDirective, () => {
       });
     });
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
         imports: [TestComponent],
         providers: [provideMockStore()],
       }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TestComponent);
@@ -737,12 +737,12 @@ describe(NgrxFormControlDirective, () => {
       });
     });
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
         imports: [TestComponent],
         providers: [provideMockStore()],
       }).compileComponents();
-    }));
+    });
 
     test('should throw if more than one control value accessor is provided', () => {
       const fn = () => {

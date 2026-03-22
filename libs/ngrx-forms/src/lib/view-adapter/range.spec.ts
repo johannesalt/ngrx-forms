@@ -1,5 +1,5 @@
-import { Component, getDebugNode, Renderer2 } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, getDebugNode } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControlState } from '../state';
 import { NgrxRangeViewAdapter } from './range';
 
@@ -25,11 +25,11 @@ describe(NgrxRangeViewAdapter.name, () => {
   let viewAdapter: NgrxRangeViewAdapter;
   let element: HTMLInputElement;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [RangeTestComponent],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RangeTestComponent);
