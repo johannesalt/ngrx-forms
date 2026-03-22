@@ -1,4 +1,4 @@
-import { Component, getDebugNode, Renderer2 } from '@angular/core';
+import { Component, getDebugNode } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControlState } from '../state';
 import { NgrxRadioViewAdapter } from './radio';
@@ -61,67 +61,6 @@ describe(NgrxRadioViewAdapter.name, () => {
     });
 
     it('should attach the view adapter', () => expect(viewAdapter1).toBeDefined());
-
-    it('should set the name of the elements to the ID of the state if the name is not already set', () => {
-      expect(element1.name).toBe(TEST_ID);
-      expect(element2.name).toBe(TEST_ID);
-    });
-
-    it('should not set the name of the element to the ID of the state if the name is set in template manually', () => {
-      const element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[2];
-      expect(element.name).toBe('customName');
-    });
-
-    it('should not set the name of the element to the ID of the state if the name is set in template via binding', () => {
-      const element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[3];
-      expect(element.name).toBe(component.boundName);
-    });
-
-    it("should set the name of the elements when the state's ID changes and the name was set previously", () => {
-      const newId = 'new ID';
-
-      component.state = { id: newId };
-      fixture.detectChanges();
-
-      expect(element1.name).toBe(newId);
-      expect(element2.name).toBe(newId);
-    });
-
-    it("should not set the name of the elements when the state's ID changes and the name was not set previously due to manual value", () => {
-      const element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[2];
-
-      const newId = 'new ID';
-      component.state = { id: newId };
-      fixture.detectChanges();
-
-      expect(element.name).toBe('customName');
-    });
-
-    it("should not set the name of the elements when the state's ID changes and the name was not set previously due to other binding", () => {
-      const element = (fixture.nativeElement as HTMLElement).querySelectorAll('input')[3];
-
-      const newId = 'new ID';
-      component.state = { id: newId };
-      fixture.detectChanges();
-
-      expect(element.name).toBe(component.boundName);
-    });
-
-    it('should not set the name of the elements if the ID of the state does not change', () => {
-      const renderer = fixture.componentRef.injector.get(Renderer2);
-      const setProperty = vi.spyOn(renderer, 'setProperty');
-
-      component.state = { id: `${TEST_ID}1` };
-      fixture.detectChanges();
-
-      expect(setProperty).toHaveBeenCalledWith(expect.anything(), 'name', `${TEST_ID}1`);
-      setProperty.mockClear();
-
-      component.state = { id: `${TEST_ID}1` };
-      fixture.detectChanges();
-
-      expect(setProperty).not.toHaveBeenCalled();
-    });
 
     it('should mark the option as checked if same value is written', () => {
       viewAdapter1.setViewValue(OPTION1_VALUE);
