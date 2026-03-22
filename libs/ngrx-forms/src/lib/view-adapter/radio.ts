@@ -1,5 +1,5 @@
 import { Directive, effect, forwardRef, HostListener, input, OnInit } from '@angular/core';
-import { SetNativeName } from './set-native-name';
+import { ControlNameDirective } from './control-name.directive';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
 
 @Directive({
@@ -12,7 +12,7 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
     },
   ],
 })
-export class NgrxRadioViewAdapter extends SetNativeName implements FormViewAdapter, OnInit {
+export class NgrxRadioViewAdapter extends ControlNameDirective implements FormViewAdapter, OnInit {
   public readonly value = input<any>();
 
   private readonly onValueChanged = effect(() => {

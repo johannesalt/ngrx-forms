@@ -1,8 +1,10 @@
 import { AfterViewInit, Directive, ElementRef, Injector, Renderer2, computed, effect, inject, input } from '@angular/core';
 import { FormControlState } from '../state';
 
-@Directive()
-export abstract class SetNativeName implements AfterViewInit {
+@Directive({
+  selector: 'input[ngrxFormControlState]',
+})
+export class ControlNameDirective implements AfterViewInit {
   /** Form control state. */
   public readonly ngrxFormControlState = input.required<FormControlState<any>>();
 
