@@ -34,10 +34,10 @@
       }
     },
     "test": {
-      "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "executor": "@nx/angular:unit-test",
       "options": {
-        "reportsDirectory": "../../coverage/libs/ngrx-forms"
+        "browsers": ["ChromiumHeadless"],
+        "coverage": true
       }
     },
     "lint": {
