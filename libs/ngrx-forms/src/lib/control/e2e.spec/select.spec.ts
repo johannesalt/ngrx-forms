@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Action, Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -9,21 +9,23 @@ import { createFormControlState, FormControlState } from '../../state';
 
 const SELECT_OPTIONS = ['op1', 'op2'];
 
+const FORM_CONTROL_ID = 'test ID';
+const INITIAL_FORM_CONTROL_VALUE = SELECT_OPTIONS[1];
+const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
+
 @Component({
   imports: [NgrxFormsModule],
   template: `
-    @if (state) {
-    <select [ngrxFormControlState]="state">
-      @for (o of options; track o) {
+    <select [ngrxFormControlState]="state()">
+      @for (o of options(); track o) {
       <option [value]="o">{{ o }}</option>
       }
     </select>
-    }
   `,
 })
 export class SelectComponent {
-  state: FormControlState<string> | undefined;
-  options = SELECT_OPTIONS;
+  public readonly options = input(SELECT_OPTIONS);
+  public readonly state = input(INITIAL_STATE);
 }
 
 @Component({
@@ -35,14 +37,10 @@ export class SelectFallbackComponent {
 }
 
 describe(SelectComponent.name, () => {
-  let component: SelectComponent;
   let fixture: ComponentFixture<SelectComponent>;
   let element: HTMLSelectElement;
   let option1: HTMLOptionElement;
   let option2: HTMLOptionElement;
-  const FORM_CONTROL_ID = 'test ID';
-  const INITIAL_FORM_CONTROL_VALUE = SELECT_OPTIONS[1];
-  const INITIAL_STATE = createFormControlState(FORM_CONTROL_ID, INITIAL_FORM_CONTROL_VALUE);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -53,8 +51,6 @@ describe(SelectComponent.name, () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SelectComponent);
-    component = fixture.componentInstance;
-    component.state = INITIAL_STATE;
     fixture.detectChanges();
     const nativeElement = fixture.nativeElement as HTMLElement;
     element = nativeElement.querySelector('select')!;

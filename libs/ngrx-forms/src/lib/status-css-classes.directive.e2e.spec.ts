@@ -1,31 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { createFormGroupState, FormGroupState } from './state';
+import { createFormGroupState } from './state';
 import { NGRX_STATUS_CLASS_NAMES, NgrxStatusCssClassesDirective } from './status-css-classes.directive';
+
+const FORM_CONTROL_ID = 'test ID';
+const INITIAL_STATE = createFormGroupState(FORM_CONTROL_ID, { inner: 'A' });
 
 @Component({
   imports: [NgrxStatusCssClassesDirective],
   template: `
+    @if (state(); as state) {
     <form [ngrxFormState]="state">
       <input type="text" [ngrxFormControlState]="state.controls.inner" />
       <select [ngrxFormControlState]="state.controls.inner">
         <option value="A">A</option>
       </select>
     </form>
+    }
   `,
 })
 export class TestComponent {
-  state: FormGroupState<{ inner: string }>;
+  public readonly state = input(INITIAL_STATE);
 }
 
 describe(NgrxStatusCssClassesDirective.name, () => {
-  let component: TestComponent;
   let fixture: ComponentFixture<TestComponent>;
   let formElement: HTMLFormElement;
   let inputElement: HTMLInputElement;
   let selectElement: HTMLSelectElement;
-  const FORM_CONTROL_ID = 'test ID';
-  const INITIAL_STATE = createFormGroupState(FORM_CONTROL_ID, { inner: 'A' });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -35,8 +37,6 @@ describe(NgrxStatusCssClassesDirective.name, () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
-    component = fixture.componentInstance;
-    component.state = INITIAL_STATE;
     fixture.detectChanges();
     const nativeElement = fixture.nativeElement as HTMLElement;
     formElement = nativeElement.querySelector('form')!;
@@ -63,8 +63,8 @@ describe(NgrxStatusCssClassesDirective.name, () => {
 
   describe('should select the correct classes for isInvalid', () => {
     beforeEach(() => {
-      component.state = {
-        ...component.state,
+      fixture.componentRef.setInput('state', {
+        ...INITIAL_STATE,
         errors: {
           _inner: {
             required: { actual: true },
@@ -73,9 +73,9 @@ describe(NgrxStatusCssClassesDirective.name, () => {
         isValid: false,
         isInvalid: true,
         controls: {
-          ...component.state.controls,
+          ...INITIAL_STATE.controls,
           inner: {
-            ...component.state.controls.inner,
+            ...INITIAL_STATE.controls.inner,
             errors: {
               required: { actual: true },
             },
@@ -83,8 +83,7 @@ describe(NgrxStatusCssClassesDirective.name, () => {
             isInvalid: true,
           },
         },
-      };
-
+      });
       fixture.detectChanges();
     });
 
@@ -106,20 +105,19 @@ describe(NgrxStatusCssClassesDirective.name, () => {
 
   describe('should select the correct classes for isDirty', () => {
     beforeEach(() => {
-      component.state = {
-        ...component.state,
+      fixture.componentRef.setInput('state', {
+        ...INITIAL_STATE,
         isDirty: true,
         isPristine: false,
         controls: {
-          ...component.state.controls,
+          ...INITIAL_STATE.controls,
           inner: {
-            ...component.state.controls.inner,
+            ...INITIAL_STATE.controls.inner,
             isDirty: true,
             isPristine: false,
           },
         },
-      };
-
+      });
       fixture.detectChanges();
     });
 
@@ -158,20 +156,19 @@ describe(NgrxStatusCssClassesDirective.name, () => {
 
   describe('should select the correct classes for isTouched', () => {
     beforeEach(() => {
-      component.state = {
-        ...component.state,
+      fixture.componentRef.setInput('state', {
+        ...INITIAL_STATE,
         isTouched: true,
         isUntouched: false,
         controls: {
-          ...component.state.controls,
+          ...INITIAL_STATE.controls,
           inner: {
-            ...component.state.controls.inner,
+            ...INITIAL_STATE.controls.inner,
             isTouched: true,
             isUntouched: false,
           },
         },
-      };
-
+      });
       fixture.detectChanges();
     });
 
@@ -210,20 +207,19 @@ describe(NgrxStatusCssClassesDirective.name, () => {
 
   describe('should select the correct classes for isSubmitted', () => {
     beforeEach(() => {
-      component.state = {
-        ...component.state,
+      fixture.componentRef.setInput('state', {
+        ...INITIAL_STATE,
         isSubmitted: true,
         isUnsubmitted: false,
         controls: {
-          ...component.state.controls,
+          ...INITIAL_STATE.controls,
           inner: {
-            ...component.state.controls.inner,
+            ...INITIAL_STATE.controls.inner,
             isSubmitted: true,
             isUnsubmitted: false,
           },
         },
-      };
-
+      });
       fixture.detectChanges();
     });
 
@@ -262,20 +258,19 @@ describe(NgrxStatusCssClassesDirective.name, () => {
 
   describe('should select the correct classes for isValidationPending', () => {
     const markAsValidationPending = () => {
-      component.state = {
-        ...component.state,
+      fixture.componentRef.setInput('state', {
+        ...INITIAL_STATE,
         pendingValidations: ['test'],
         isValidationPending: true,
         controls: {
-          ...component.state.controls,
+          ...INITIAL_STATE.controls,
           inner: {
-            ...component.state.controls.inner,
+            ...INITIAL_STATE.controls.inner,
             pendingValidations: ['test'],
             isValidationPending: true,
           },
         },
-      };
-
+      });
       fixture.detectChanges();
     };
 
