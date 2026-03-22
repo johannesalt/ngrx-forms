@@ -55,7 +55,7 @@ describe(ControlIdDirective.name, () => {
     const element = nativeElement.querySelectorAll('input')[2];
     expect(element.id).toBe(component.boundId);
   });
-  
+
   it('should set the ID of the element if the ID of the state changes and the ID was set previously', () => {
     const newId = 'new ID';
 
@@ -68,7 +68,7 @@ describe(ControlIdDirective.name, () => {
 
   it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to manual value', () => {
     const newId = 'new ID';
-    
+
     fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: newId });
     fixture.detectChanges();
 
@@ -78,7 +78,7 @@ describe(ControlIdDirective.name, () => {
 
   it('should not set the ID of the element if the ID of the state changes and the ID was not set previously due to other binding', () => {
     const newId = 'new ID';
-    
+
     fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: newId });
     fixture.detectChanges();
 

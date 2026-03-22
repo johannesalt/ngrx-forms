@@ -111,7 +111,7 @@ describe(NgrxFormControlDirective, () => {
     describe('writing values and dispatching value and dirty actions', () => {
       test('should write the value when the state changes', () => {
         const newValue = 'new value';
-        
+
         fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: newValue });
         fixture.detectChanges();
 
