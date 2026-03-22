@@ -37,7 +37,8 @@
       "executor": "@nx/angular:unit-test",
       "options": {
         "browsers": ["ChromiumHeadless"],
-        "coverage": true
+        "coverage": true,
+        "watch": false
       }
     },
     "lint": {
