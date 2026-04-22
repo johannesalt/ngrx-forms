@@ -1,10 +1,15 @@
-import { Directive, forwardRef, HostListener } from '@angular/core';
-import { NGRX_SELECT_VIEW_ADAPTER, SelectViewAdapter } from './option';
-import { ControlIdDirective } from './control-id.directive';
+import { computed, Directive, forwardRef, signal, untracked } from '@angular/core';
+import { NGRX_SELECT_VIEW_ADAPTER, NgrxSelectOption, SelectViewAdapter } from './option';
 import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { NgrxViewAdapter } from './view-adapter.directive';
 
 @Directive({
-  selector: 'select:not([multiple])[ngrxFormControlState]',
+  host: {
+    '[disabled]': 'disabled()',
+    '[id]': 'name()',
+    '[selectedIndex]': 'selectedIndex()',
+    '[value]': 'selectedId()',
+  },
   providers: [
     {
       provide: NGRX_FORM_VIEW_ADAPTER,
@@ -16,80 +21,106 @@ import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
       useExisting: forwardRef(() => NgrxSelectViewAdapter),
     },
   ],
+  selector: 'select:not([multiple])[ngrxFormControlState]',
 })
-export class NgrxSelectViewAdapter extends ControlIdDirective implements SelectViewAdapter {
-  private optionMap: { [id: string]: any } = {};
-  private idCounter = 0;
-  private selectedId: string | null = null;
-  private value: any = undefined;
+export class NgrxSelectViewAdapter extends NgrxViewAdapter<HTMLSelectElement, any, any> implements SelectViewAdapter {
+  private counter = 1;
+  private options: { readonly [id: string]: NgrxSelectOption } = {};
 
-  onChangeFn: (value: any) => void = () => void 0;
+  /**
+   * A signal containing the selected Id.
+   */
+  public readonly selectedId = signal<string | undefined>(undefined);
 
-  @HostListener('blur')
-  onTouched: () => void = () => void 0;
-
-  setViewValue(value: any) {
-    this.value = value;
-    this.selectedId = this.getOptionId(value);
-    if (this.selectedId === null) {
-      this.renderer.setProperty(this.elementRef.nativeElement, 'selectedIndex', -1);
-    }
-
-    this.renderer.setProperty(this.elementRef.nativeElement, 'value', this.selectedId);
-  }
-
-  @HostListener('change', ['$event'])
-  onChange({ target }: Event) {
-    const option = target as HTMLOptionElement;
-    if (!option) {
-      return;
-    }
-
-    this.selectedId = option.value;
-    const value = this.optionMap[this.selectedId];
-    this.value = value;
-    this.onChangeFn(value);
-  }
-
-  setOnChangeCallback(fn: (value: any) => void) {
-    this.onChangeFn = fn;
-  }
-
-  setOnTouchedCallback(fn: () => void) {
-    this.onTouched = fn;
-  }
-
-  setIsDisabled(isDisabled: boolean) {
-    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
-  }
-
-  registerOption(): string {
-    const id = this.idCounter.toString();
-    this.idCounter += 1;
-    return id;
-  }
-
-  updateOptionValue(id: string, value: any) {
-    this.optionMap[id] = value;
-
-    if (this.selectedId === id) {
-      this.onChangeFn(value);
-    } else if (value === this.value) {
-      this.setViewValue(value);
-    }
-  }
-
-  deregisterOption(id: string) {
-    delete this.optionMap[id];
-  }
-
-  private getOptionId(value: any) {
-    for (const id of Array.from(Object.keys(this.optionMap))) {
-      if (this.optionMap[id] === value) {
-        return id;
-      }
+  /**
+   * A signal containing the selected index.
+   */
+  public readonly selectedIndex = computed(() => {
+    const id = this.selectedId();
+    if (id === undefined) {
+      return -1;
     }
 
     return null;
+  });
+
+  /**
+   * A signal containing the selected values.
+   */
+  public readonly selectedValue = computed(() => {
+    const id = this.selectedId();
+    if (id) {
+      const option = this.options[id];
+      return option?.value();
+    }
+
+    return undefined;
+  });
+
+  /**
+   * @inheritdoc
+   */
+  public deregisterOption(id: string) {
+    this.options = Object.entries(this.options)
+      .filter(([key]) => key !== id)
+      .reduce((result, [key, option]) => ({ ...result, [key]: option }), {});
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public registerOption(option: NgrxSelectOption): string {
+    const id = this.counter.toString();
+
+    this.counter += 1;
+    this.options = { ...(this.options ?? {}), [id]: option };
+
+    return id;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public override setViewValue(value: any) {
+    const ids = Object.entries(this.options)
+      .filter(([, option]) => option.value() === value)
+      .map(([key]) => key);
+    this.selectedId.set([...ids].shift());
+
+    super.setViewValue(value);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public updateOptionValue(id: string, value: any) {
+    const controlValue = untracked(this.controlValue);
+    const selectedId = untracked(this.selectedId);
+
+    if (selectedId === id) {
+      return this.setValue();
+    }
+
+    if (value === controlValue) {
+      return this.selectedId.set(id);
+    }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  protected override getNativeControlValue() {
+    this.sync();
+
+    return this.selectedValue();
+  }
+
+  /**
+   * Updates the selected Id.
+   */
+  private sync(): void {
+    const el = this.element.nativeElement;
+    const value = el.value;
+    this.selectedId.set(value);
   }
 }
