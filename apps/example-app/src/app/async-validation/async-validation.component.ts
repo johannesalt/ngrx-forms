@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { NgrxDefaultViewAdapter, NgrxFormControlDirective, NgrxNumberViewAdapter, NgrxStatusCssClassesDirective } from 'ngrx-form-state';
-import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { State } from './async-validation.reducer';
 
@@ -13,7 +12,6 @@ import { State } from './async-validation.reducer';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
-    CustomErrorStateMatcherDirective,
     FormExampleComponent,
     NgrxDefaultViewAdapter,
     NgrxFormControlDirective,
