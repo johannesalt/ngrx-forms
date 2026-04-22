@@ -1,9 +1,14 @@
-import { Directive, effect, forwardRef, HostListener, input, OnInit } from '@angular/core';
-import { ControlNameDirective } from './control-name.directive';
-import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { computed, Directive, effect, forwardRef, input, untracked } from '@angular/core';
+import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { NgrxViewAdapter } from './view-adapter.directive';
 
 @Directive({
-  selector: 'input[type=radio][ngrxFormControlState]',
+  host: {
+    '[checked]': 'checked()',
+    '[disabled]': 'disabled()',
+    '[name]': 'name()',
+    '[value]': 'value()',
+  },
   providers: [
     {
       provide: NGRX_FORM_VIEW_ADAPTER,
@@ -11,44 +16,36 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
       multi: true,
     },
   ],
+  selector: 'input[type=radio][ngrxFormControlState]',
 })
-export class NgrxRadioViewAdapter extends ControlNameDirective implements FormViewAdapter, OnInit {
-  public readonly value = input<any>();
+export class NgrxRadioViewAdapter<TState> extends NgrxViewAdapter<HTMLInputElement, TState, TState | undefined> {
+  /**
+   * A signal indicating whether the radio button is checked.
+   */
+  public readonly checked = computed(() => this.controlValue() === this.value());
 
-  private readonly onValueChanged = effect(() => {
+  /**
+   * A signal containing the value to be submitted with the form.
+   */
+  public readonly value = input<TState>();
+
+  /**
+   * A side effect that will update the control state value if the value of the radio button changed.
+   */
+  private readonly valueChanged = effect(() => {
     this.value();
 
-    if (this.isChecked) {
-      this.onChange();
+    const el = this.element.nativeElement;
+    if (el.checked) {
+      this.setValue();
     }
   });
 
-  private isChecked = false;
-
-  @HostListener('change')
-  onChange: () => void = () => void 0;
-
-  @HostListener('blur')
-  onTouched: () => void = () => void 0;
-
-  ngOnInit() {
-    this.isChecked = (this.elementRef.nativeElement as HTMLInputElement).checked;
-  }
-
-  setViewValue(value: any): void {
-    this.isChecked = value === this.value();
-    this.renderer.setProperty(this.elementRef.nativeElement, 'checked', this.isChecked);
-  }
-
-  setOnChangeCallback(fn: (_: any) => void): void {
-    this.onChange = () => fn(this.value());
-  }
-
-  setOnTouchedCallback(fn: () => void): void {
-    this.onTouched = fn;
-  }
-
-  setIsDisabled(isDisabled: boolean): void {
-    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
+  /**
+   * @inheritdoc
+   */
+  protected override getNativeControlValue(): TState | undefined {
+    const value = untracked(this.value);
+    return value;
   }
 }
