@@ -4,7 +4,6 @@ import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular
 import { MatFormField, MatInput, MatSuffix } from '@angular/material/input';
 import { select, Store } from '@ngrx/store';
 import { NgrxDefaultViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective, NgrxValueConverters } from 'ngrx-form-state';
-import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { State } from './value-conversion.reducer';
 
@@ -15,7 +14,6 @@ import { State } from './value-conversion.reducer';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
-    CustomErrorStateMatcherDirective,
     FormExampleComponent,
     MatDatepicker,
     MatDatepickerInput,

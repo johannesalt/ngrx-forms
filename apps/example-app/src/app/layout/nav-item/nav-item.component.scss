@@ -1,25 +1,18 @@
-.hint {
-  color: rgba(0, 0, 0, 0.54);
-}
-
 :host {
-  a.mat-mdc-list-item {
-    height: auto;
+  [mat-list-item] {
+    height: unset;
     padding: 8px;
-
-    &.active-link {
-      background: rgba(0, 0, 0, 0.08);
-    }
   }
 
-  div.mat-line {
-    white-space: normal;
+  .active {
+    background: rgba(0, 0, 0, 0.15);
+  }
 
-    &.hint {
-      font-size: 0.6em;
-      line-height: normal !important;
-      padding-bottom: 4px;
-      padding-top: 4px;
-    }
+  .hint {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 0.6em;
+    line-height: normal;
+    margin-bottom: 8px;
+    white-space: normal;
   }
 }

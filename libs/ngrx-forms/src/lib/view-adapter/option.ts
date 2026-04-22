@@ -1,4 +1,4 @@
-import { Directive, effect, ElementRef, inject, InjectionToken, input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Directive, effect, ElementRef, inject, InjectionToken, input, OnDestroy, OnInit, Renderer2, Signal, signal, untracked } from '@angular/core';
 import { FormViewAdapter } from './view-adapter';
 
 export const NGRX_SELECT_VIEW_ADAPTER = new InjectionToken<SelectViewAdapter>('NGRX_SELECT_VIEW_ADAPTER');
@@ -26,27 +26,34 @@ export interface SelectViewAdapter extends FormViewAdapter {
 }
 
 @Directive({
+  host: {
+    '[value]': 'id()',
+  },
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'option',
 })
 export class NgrxSelectOption implements OnInit, OnDestroy {
+  /**
+   * A signal containing the value to be submitted with the form.
+   */
+  public readonly value = input<any>(undefined);
+
+  /**
+   * A signal containing the unique Id of the option or the value.
+   */
+  public id: Signal<any> = this.value;
+
   /** Reference to the HTML element. */
   private readonly elementRef = inject(ElementRef<HTMLOptionElement>);
 
   /** Used to make UI changes. */
   private readonly renderer = inject(Renderer2);
 
-  /** The value to be submitted with the form. */
-  public readonly value = input<any>(undefined);
-
   /** Used register and deregister option. */
   public readonly viewAdapter = inject(NGRX_SELECT_VIEW_ADAPTER, {
     host: true,
     optional: true,
   });
-
-  /** Unique ID of the option. */
-  private readonly id: string | null | undefined = this.viewAdapter?.registerOption(this);
 
   /** Returns a value indicating whether the option is selected or not. */
   public get selected(): boolean {
@@ -63,8 +70,9 @@ export class NgrxSelectOption implements OnInit, OnDestroy {
    * @inheritdoc
    */
   public ngOnInit(): void {
-    if (this.id) {
-      this.setProperty('value', this.id);
+    const viewAdapter = this.viewAdapter;
+    if (viewAdapter) {
+      this.id = signal(viewAdapter.registerOption(this));
     }
   }
 
@@ -72,23 +80,23 @@ export class NgrxSelectOption implements OnInit, OnDestroy {
    * @inheritdoc
    */
   public ngOnDestroy(): void {
-    if (this.id && this.viewAdapter) {
-      this.viewAdapter.deregisterOption(this.id);
+    if (this.viewAdapter) {
+      const id = untracked(this.id);
+      this.viewAdapter.deregisterOption(id);
     }
   }
 
   /**
-   * Update the option's value in view adapter. Restore teh default behaviour of Angular when an `option`
-   * is used without a form state.
+   * Update the option's value in view adapter.
    */
   private readonly updateOptionValue = effect(() => {
     const value = this.value();
-    if (this.id && this.viewAdapter) {
-      this.viewAdapter.updateOptionValue(this.id, value);
+    if (!this.viewAdapter) {
       return;
     }
 
-    this.setProperty('value', value);
+    const id = untracked(this.id);
+    this.viewAdapter.updateOptionValue(id, value);
   });
 
   /**

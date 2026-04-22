@@ -1,43 +1,33 @@
-import { Directive, HostListener, OnInit, inject, input } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Actions, MarkAsSubmittedAction } from '../actions';
+import { Directive, HostListener, inject, input, untracked } from '@angular/core';
+import { NGRX_FORM_ACTION_DISPATCHER, NgrxFormActionDispatcher } from '../dispatcher';
 import { FormGroupState, KeyValue } from '../state';
 
-// this interface just exists to prevent a direct reference to
-// `Event` in our code, which otherwise causes issues in NativeScript
-// applications
-type CustomEvent = Event;
-
 @Directive({
-  selector: 'form:not([ngrxFormsAction])[ngrxFormState]',
+  selector: 'form[ngrxFormState]',
+  providers: [{ provide: NGRX_FORM_ACTION_DISPATCHER, useClass: NgrxFormActionDispatcher }],
 })
-export class NgrxFormDirective<TStateValue extends KeyValue> implements OnInit {
-  private readonly store = inject<Store>(Store, { optional: true });
+export class NgrxFormDirective<TStateValue extends KeyValue> {
+  /**
+   * Used to dispatch actions such as mark as submitted.
+   */
+  private readonly dispatcher = inject(NGRX_FORM_ACTION_DISPATCHER);
 
-  public readonly ngrxFormState = input.required<FormGroupState<TStateValue>>();
+  /**
+   * The control state to bind to.
+   */
+  public readonly control = input.required<FormGroupState<TStateValue>>({ alias: 'ngrxFormState' });
 
-  protected dispatchAction(action: Actions<TStateValue>) {
-    if (this.store == null) {
-      throw new Error('Store must be present in order to dispatch actions!');
-    }
-
-    this.store.dispatch(action);
-  }
-
-  ngOnInit() {
-    const state = this.ngrxFormState();
-    if (!state) {
-      throw new Error('The form state must not be undefined!');
-    }
-  }
-
+  /**
+   * Sets the status of the field to `submitted`.
+   * @param event Event arguments.
+   */
   @HostListener('submit', ['$event'])
-  onSubmit(event: CustomEvent) {
+  public markAsSubmitted(event: { preventDefault: () => void }) {
     event.preventDefault();
 
-    const { id, isUnsubmitted } = this.ngrxFormState();
+    const { id, isUnsubmitted } = untracked(this.control);
     if (isUnsubmitted) {
-      this.dispatchAction(new MarkAsSubmittedAction(id));
+      this.dispatcher.markAsSubmitted(id);
     }
   }
 }

@@ -9,7 +9,6 @@ import {
   RemoveArrayControlAction,
 } from 'ngrx-form-state';
 import { map, take } from 'rxjs/operators';
-import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { CreateGroupElementAction, RemoveGroupElementAction, State } from './dynamic.reducer';
 
@@ -18,14 +17,7 @@ import { CreateGroupElementAction, RemoveGroupElementAction, State } from './dyn
   templateUrl: './dynamic.component.html',
   styleUrls: ['./dynamic.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    AsyncPipe,
-    CustomErrorStateMatcherDirective,
-    FormExampleComponent,
-    NgrxCheckboxViewAdapter,
-    NgrxFormControlDirective,
-    NgrxStatusCssClassesDirective,
-  ],
+  imports: [AsyncPipe, FormExampleComponent, NgrxCheckboxViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective],
 })
 export class DynamicPageComponent {
   private readonly store = inject(Store<State>);

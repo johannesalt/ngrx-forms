@@ -16,7 +16,6 @@ import {
   SetValueAction,
 } from 'ngrx-form-state';
 import { map, take } from 'rxjs/operators';
-import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { INITIAL_STATE, SetSubmittedValueAction, State } from './simple-form.reducer';
 
@@ -27,7 +26,6 @@ import { INITIAL_STATE, SetSubmittedValueAction, State } from './simple-form.red
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
-    CustomErrorStateMatcherDirective,
     FormExampleComponent,
     JsonPipe,
     NgrxCheckboxViewAdapter,

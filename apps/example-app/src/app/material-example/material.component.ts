@@ -19,8 +19,6 @@ import {
   SetValueAction,
 } from 'ngrx-form-state';
 import { filter, map, take } from 'rxjs/operators';
-import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
-import { NgrxMatSelectViewAdapter } from '../material/mat-select-view-adapter';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { INITIAL_STATE, SetSubmittedValueAction, State } from './material.reducer';
 
@@ -31,7 +29,6 @@ import { INITIAL_STATE, SetSubmittedValueAction, State } from './material.reduce
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
-    CustomErrorStateMatcherDirective,
     FormExampleComponent,
     JsonPipe,
     MatButton,
@@ -52,7 +49,6 @@ import { INITIAL_STATE, SetSubmittedValueAction, State } from './material.reduce
     NgrxDefaultViewAdapter,
     NgrxFormControlDirective,
     NgrxFormDirective,
-    NgrxMatSelectViewAdapter,
     NgrxStatusCssClassesDirective,
   ],
 })

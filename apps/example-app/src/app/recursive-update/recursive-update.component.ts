@@ -15,7 +15,6 @@ import {
 } from 'ngrx-form-state';
 import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CustomErrorStateMatcherDirective } from '../material/error-state-matcher';
 import { FormExampleComponent } from '../shared/form-example/form-example.component';
 import { BlockUIAction, State, UnblockUIAction } from './recursive-update.reducer';
 
@@ -26,7 +25,6 @@ import { BlockUIAction, State, UnblockUIAction } from './recursive-update.reduce
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
-    CustomErrorStateMatcherDirective,
     FormExampleComponent,
     NgrxCheckboxViewAdapter,
     NgrxDefaultViewAdapter,

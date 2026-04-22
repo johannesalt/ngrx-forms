@@ -1,9 +1,13 @@
-import { Directive, forwardRef, HostListener } from '@angular/core';
-import { ControlIdDirective } from './control-id.directive';
-import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { computed, Directive, forwardRef } from '@angular/core';
+import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { NgrxViewAdapter } from './view-adapter.directive';
 
 @Directive({
-  selector: 'input[type=number][ngrxFormControlState]',
+  host: {
+    '[disabled]': 'disabled()',
+    '[id]': 'name()',
+    '[value]': 'viewValue()',
+  },
   providers: [
     {
       provide: NGRX_FORM_VIEW_ADAPTER,
@@ -11,40 +15,22 @@ import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
       multi: true,
     },
   ],
+  selector: 'input[type=number][ngrxFormControlState]',
 })
-export class NgrxNumberViewAdapter extends ControlIdDirective implements FormViewAdapter {
-  onChange: (value: any) => void = () => void 0;
+export class NgrxNumberViewAdapter extends NgrxViewAdapter<HTMLInputElement, any, number | null> {
+  /**
+   * @inheritdoc
+   */
+  public override readonly viewValue = computed(() => {
+    const value = this.controlValue();
+    return value === null ? '' : value;
+  });
 
-  @HostListener('blur')
-  onTouched: () => void = () => void 0;
-
-  setViewValue(value: any): void {
-    // The value needs to be normalized for IE9, otherwise it is set to 'null' when null
-    const normalizedValue = value === null ? '' : value;
-    this.renderer.setProperty(this.elementRef.nativeElement, 'value', normalizedValue);
-  }
-
-  setOnChangeCallback(fn: (value: any) => void): void {
-    this.onChange = fn;
-  }
-
-  setOnTouchedCallback(fn: () => void): void {
-    this.onTouched = fn;
-  }
-
-  setIsDisabled(isDisabled: boolean): void {
-    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
-  }
-
-  @HostListener('change', ['$event'])
-  @HostListener('input', ['$event'])
-  handleInput({ target }: Event): void {
-    const input = target as HTMLInputElement;
-    if (!input) {
-      return;
-    }
-
-    const value = input.value;
-    this.onChange(value === '' ? null : parseFloat(value));
+  /**
+   * @inheritdoc
+   */
+  protected override getNativeControlValue(): number | null {
+    const el = this.element.nativeElement;
+    return el.value === '' ? null : parseFloat(el.value);
   }
 }

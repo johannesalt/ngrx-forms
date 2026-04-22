@@ -1,8 +1,5 @@
 import { Component, ElementRef, input, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Action, Store } from '@ngrx/store';
-import { provideMockStore } from '@ngrx/store/testing';
-import { MockInstance } from 'vitest';
 import { MarkAsSubmittedAction } from '../actions';
 import { createFormGroupState, FormGroupState } from '../state';
 import { NgrxLocalFormDirective } from './local-state-directive';
@@ -19,14 +16,14 @@ const INITIAL_STATE = createFormGroupState(FORM_GROUP_ID, INITIAL_FORM_CONTROL_V
     </form>
   `,
 })
-export class TestComponent {
+class TestComponent {
   private readonly button = viewChild<ElementRef<HTMLButtonElement>>('btn');
 
   public readonly formsAction = vi.fn();
 
   public readonly state = input<FormGroupState<any>>(INITIAL_STATE);
 
-  public submitForm() {
+  public submit() {
     const button = this.button();
     if (!button || !button.nativeElement) {
       throw 'Button cannot be null';
@@ -43,7 +40,6 @@ describe(NgrxLocalFormDirective, () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TestComponent],
-      providers: [provideMockStore()],
     }).compileComponents();
   });
 
@@ -53,41 +49,18 @@ describe(NgrxLocalFormDirective, () => {
     fixture.detectChanges();
   });
 
-  let dispatch: MockInstance<(action: Action) => void>;
-  beforeEach(() => {
-    const store = TestBed.inject(Store);
-    dispatch = vi.spyOn(store, 'dispatch');
+  it(`should dispatch a ${MarkAsSubmittedAction} to the event emitter if the form is submitted and the state is unsubmitted`, () => {
+    component.submit();
+
+    expect(component.formsAction).toHaveBeenCalledWith(new MarkAsSubmittedAction(INITIAL_STATE.id));
   });
 
-  describe('local action emit', () => {
-    it(`should not dispatch a ${MarkAsSubmittedAction} to the global store if the form is submitted and the state is unsubmitted`, () => {
-      component.submitForm();
+  it(`should not dispatch a ${MarkAsSubmittedAction.name} to the event emitter if the form is submitted and the state is submitted`, () => {
+    fixture.componentRef.setInput('state', { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false });
+    fixture.detectChanges();
 
-      expect(dispatch).not.toHaveBeenCalled();
-    });
+    component.submit();
 
-    it(`should dispatch a ${MarkAsSubmittedAction} to the event emitter if the form is submitted and the state is unsubmitted`, () => {
-      component.submitForm();
-
-      expect(component.formsAction).toHaveBeenCalledWith(new MarkAsSubmittedAction(INITIAL_STATE.id));
-    });
-
-    it(`should not dispatch a ${MarkAsSubmittedAction.name} to the global store if the form is submitted and the state is submitted`, () => {
-      fixture.componentRef.setInput('state', { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false });
-      fixture.detectChanges();
-
-      component.submitForm();
-
-      expect(dispatch).not.toHaveBeenCalled();
-    });
-
-    it(`should not dispatch a ${MarkAsSubmittedAction.name} to the event emitter if the form is submitted and the state is submitted`, () => {
-      fixture.componentRef.setInput('state', { ...INITIAL_STATE, isSubmitted: true, isUnsubmitted: false });
-      fixture.detectChanges();
-
-      component.submitForm();
-
-      expect(dispatch).not.toHaveBeenCalled();
-    });
+    expect(component.formsAction).not.toHaveBeenCalled();
   });
 });

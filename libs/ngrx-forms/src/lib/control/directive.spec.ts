@@ -1,10 +1,9 @@
 import { Component, ElementRef, input, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Action, Store } from '@ngrx/store';
-import { provideMockStore } from '@ngrx/store/testing';
 import { Mock, MockInstance } from 'vitest';
 import { FocusAction, MarkAsDirtyAction, MarkAsTouchedAction, SetValueAction, UnfocusAction } from '../actions';
+import { FormActionDispatcher, NGRX_FORM_ACTION_DISPATCHER } from '../dispatcher';
 import { createFormControlState } from '../state';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '../view-adapter/view-adapter';
 import { NGRX_UPDATE_ON_TYPE, NgrxFormControlDirective } from './directive';
@@ -51,13 +50,23 @@ describe(NgrxFormControlDirective, () => {
   let setOnChangeCallback: Mock<(fn: (value: any) => void) => void>;
   let onChange: (value: any) => void;
   beforeEach(() => {
-    setOnChangeCallback = vi.fn().mockImplementation((fn) => (onChange = fn));
+    setOnChangeCallback = vi.fn((fn) => {
+      onChange = (value) => {
+        fn(value);
+        fixture.detectChanges();
+      };
+    });
   });
 
   let setOnTouchedCallback: Mock<(fn: () => void) => void>;
   let onTouched: () => void;
   beforeEach(() => {
-    setOnTouchedCallback = vi.fn().mockImplementation((fn) => (onTouched = fn));
+    setOnTouchedCallback = vi.fn((fn) => {
+      onTouched = () => {
+        fn();
+        fixture.detectChanges();
+      };
+    });
   });
 
   let setViewValue: Mock<(value: any) => void>;
@@ -75,11 +84,29 @@ describe(NgrxFormControlDirective, () => {
     };
   });
 
+  let dispatcher: FormActionDispatcher;
+  beforeEach(() => {
+    dispatcher = {
+      focus: vi.fn(() => null),
+      markAsDirty: vi.fn(() => null),
+      markAsPristine: vi.fn(() => null),
+      markAsSubmitted: vi.fn(() => null),
+      markAsTouched: vi.fn(() => null),
+      markAsUntouched: vi.fn(() => null),
+      reset: vi.fn(() => null),
+      setValue: vi.fn(() => null),
+      unfocus: vi.fn(() => null),
+    };
+  });
+
   describe('ViewAdapter integration', () => {
     beforeEach(() => {
       TestBed.overrideDirective(NgrxFormControlDirective, {
         set: {
-          providers: [{ multi: true, provide: NGRX_FORM_VIEW_ADAPTER, useValue: viewAdapter }],
+          providers: [
+            { provide: NGRX_FORM_ACTION_DISPATCHER, useValue: dispatcher },
+            { provide: NGRX_FORM_VIEW_ADAPTER, useValue: viewAdapter, multi: true },
+          ],
         },
       });
     });
@@ -87,7 +114,6 @@ describe(NgrxFormControlDirective, () => {
     beforeEach(async () => {
       await TestBed.configureTestingModule({
         imports: [TestComponent],
-        providers: [provideMockStore()],
       }).compileComponents();
     });
 
@@ -100,12 +126,6 @@ describe(NgrxFormControlDirective, () => {
     beforeEach(() => {
       setIsDisabled.mockClear();
       setViewValue.mockClear();
-    });
-
-    let dispatch: MockInstance<(action: Action) => void>;
-    beforeEach(() => {
-      const store = TestBed.inject(Store);
-      dispatch = vi.spyOn(store, 'dispatch');
     });
 
     describe('writing values and dispatching value and dirty actions', () => {
@@ -180,20 +200,20 @@ describe(NgrxFormControlDirective, () => {
         const newValue = 'new value';
         onChange(newValue);
 
-        expect(dispatch).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, newValue));
+        expect(dispatcher.setValue).toHaveBeenCalledWith(INITIAL_STATE.id, newValue);
       });
 
       test(`should not dispatch a ${SetValueAction} if the view value is the same as the state`, () => {
         onChange(INITIAL_STATE.value);
 
-        expect(dispatch).not.toHaveBeenCalled();
+        expect(dispatcher.setValue).not.toHaveBeenCalled();
       });
 
       test(`should dispatch a ${MarkAsDirtyAction} if the view value changes when the state is not marked as dirty`, () => {
         const newValue = 'new value';
         onChange(newValue);
 
-        expect(dispatch).toHaveBeenCalledWith(new MarkAsDirtyAction(INITIAL_STATE.id));
+        expect(dispatcher.markAsDirty).toHaveBeenCalledWith(INITIAL_STATE.id);
       });
 
       test(`should not dispatch a ${MarkAsDirtyAction} if the view value changes when the state is marked as dirty`, () => {
@@ -203,7 +223,7 @@ describe(NgrxFormControlDirective, () => {
         const newValue = 'new value';
         onChange(newValue);
 
-        expect(dispatch).not.toHaveBeenCalledWith(new MarkAsDirtyAction(INITIAL_STATE.id));
+        expect(dispatcher.markAsDirty).not.toHaveBeenCalledWith(INITIAL_STATE.id);
       });
 
       test('should write the value when the state changes to the same value that was reported from the view before', () => {
@@ -244,7 +264,7 @@ describe(NgrxFormControlDirective, () => {
       test(`should dispatch a ${MarkAsTouchedAction} if the view adapter notifies and the state is not touched`, () => {
         onTouched();
 
-        expect(dispatch).toHaveBeenCalledWith(new MarkAsTouchedAction(INITIAL_STATE.id));
+        expect(dispatcher.markAsTouched).toHaveBeenCalledWith(INITIAL_STATE.id);
       });
 
       test(`should not dispatch a ${MarkAsTouchedAction} if the view adapter notifies and the state is touched`, () => {
@@ -253,7 +273,7 @@ describe(NgrxFormControlDirective, () => {
 
         onTouched();
 
-        expect(dispatch).not.toHaveBeenCalledWith(new MarkAsTouchedAction(INITIAL_STATE.id));
+        expect(dispatcher.markAsTouched).not.toHaveBeenCalledWith(INITIAL_STATE.id);
       });
     });
 
@@ -269,20 +289,20 @@ describe(NgrxFormControlDirective, () => {
         onChange(newValue);
         onTouched();
 
-        expect(dispatch).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, newValue));
+        expect(dispatcher.setValue).toHaveBeenCalledWith(INITIAL_STATE.id, newValue);
       });
 
       test('should not dispatch an action on blur if the view value has not changed with ngrxUpdateOn "blur"', () => {
         onTouched();
 
-        expect(dispatch).not.toHaveBeenCalled();
+        expect(dispatcher.setValue).not.toHaveBeenCalled();
       });
 
       test('should not dispatch an action if the view value changes with ngrxUpdateOn "blur"', () => {
         const newValue = 'new value';
         onChange(newValue);
 
-        expect(dispatch).not.toHaveBeenCalled();
+        expect(dispatcher.setValue).not.toHaveBeenCalled();
       });
 
       test('should not write the value when the state value does not change', () => {
@@ -291,7 +311,7 @@ describe(NgrxFormControlDirective, () => {
 
         setViewValue.mockClear();
 
-        fixture.componentRef.setInput('state', { ...INITIAL_STATE });
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: newValue });
         fixture.detectChanges();
 
         expect(setViewValue).not.toHaveBeenCalled();
@@ -309,7 +329,15 @@ describe(NgrxFormControlDirective, () => {
         onChange(newValue);
         onTouched();
 
-        expect(dispatch).not.toHaveBeenCalled();
+        expect(dispatcher.focus).not.toHaveBeenCalled();
+        expect(dispatcher.markAsDirty).not.toHaveBeenCalled();
+        expect(dispatcher.markAsPristine).not.toHaveBeenCalled();
+        expect(dispatcher.markAsSubmitted).not.toHaveBeenCalled();
+        expect(dispatcher.markAsTouched).not.toHaveBeenCalled();
+        expect(dispatcher.markAsUntouched).not.toHaveBeenCalled();
+        expect(dispatcher.reset).not.toHaveBeenCalled();
+        expect(dispatcher.setValue).not.toHaveBeenCalled();
+        expect(dispatcher.unfocus).not.toHaveBeenCalled();
       });
     });
 
@@ -384,7 +412,7 @@ describe(NgrxFormControlDirective, () => {
       test('should convert the view value if it changes', () => {
         onChange(VIEW_VALUE);
 
-        expect(dispatch).toHaveBeenCalledWith(new SetValueAction(INITIAL_STATE.id, STATE_VALUE));
+        expect(dispatcher.setValue).toHaveBeenCalledWith(INITIAL_STATE.id, STATE_VALUE);
       });
 
       test('should not write the value when the state value does not change with conversion', () => {
@@ -405,7 +433,15 @@ describe(NgrxFormControlDirective, () => {
 
         onChange(VIEW_VALUE);
 
-        expect(dispatch).not.toHaveBeenCalled();
+        expect(dispatcher.focus).not.toHaveBeenCalled();
+        expect(dispatcher.markAsDirty).not.toHaveBeenCalled();
+        expect(dispatcher.markAsPristine).not.toHaveBeenCalled();
+        expect(dispatcher.markAsSubmitted).not.toHaveBeenCalled();
+        expect(dispatcher.markAsTouched).not.toHaveBeenCalled();
+        expect(dispatcher.markAsUntouched).not.toHaveBeenCalled();
+        expect(dispatcher.reset).not.toHaveBeenCalled();
+        expect(dispatcher.setValue).not.toHaveBeenCalled();
+        expect(dispatcher.unfocus).not.toHaveBeenCalled();
       });
     });
 
@@ -486,7 +522,7 @@ describe(NgrxFormControlDirective, () => {
         test(`should dispatch a ${FocusAction} when element becomes focused and state is not focused`, () => {
           nativeElement.focus();
 
-          expect(dispatch).toHaveBeenCalledWith(new FocusAction(INITIAL_STATE.id));
+          expect(dispatcher.focus).toHaveBeenCalledWith(INITIAL_STATE.id);
         });
 
         test('should not dispatch an action when element becomes focused and state is focused', () => {
@@ -495,7 +531,7 @@ describe(NgrxFormControlDirective, () => {
 
           nativeElement.focus();
 
-          expect(dispatch).not.toHaveBeenCalled();
+          expect(dispatcher.focus).not.toHaveBeenCalled();
         });
 
         test(`should dispatch an ${UnfocusAction} when element becomes unfocused and state is focused`, () => {
@@ -505,14 +541,14 @@ describe(NgrxFormControlDirective, () => {
           nativeElement.focus();
           nativeElement.blur();
 
-          expect(dispatch).toHaveBeenCalledWith(new UnfocusAction(INITIAL_STATE.id));
+          expect(dispatcher.unfocus).toHaveBeenCalledWith(INITIAL_STATE.id);
         });
 
         test('should not dispatch an action when element becomes unfocused and state is unfocused', () => {
           nativeElement.focus();
           nativeElement.blur();
 
-          expect(dispatch).not.toHaveBeenCalledWith(new UnfocusAction(INITIAL_STATE.id));
+          expect(dispatcher.unfocus).not.toHaveBeenCalledWith(INITIAL_STATE.id);
         });
 
         test('should add the cdk focus attribute if state is focused', () => {
@@ -566,7 +602,7 @@ describe(NgrxFormControlDirective, () => {
         test(`should not dispatch an action when element becomes focused and state is not focused`, () => {
           nativeElement.focus();
 
-          expect(dispatch).not.toHaveBeenCalled();
+          expect(dispatcher.focus).not.toHaveBeenCalled();
         });
 
         test('should not dispatch an action when element becomes focused and state is focused', () => {
@@ -575,7 +611,7 @@ describe(NgrxFormControlDirective, () => {
 
           nativeElement.focus();
 
-          expect(dispatch).not.toHaveBeenCalled();
+          expect(dispatcher.focus).not.toHaveBeenCalled();
         });
 
         test(`should not dispatch an action when element becomes unfocused and state is focused`, () => {
@@ -585,42 +621,16 @@ describe(NgrxFormControlDirective, () => {
           nativeElement.focus();
           nativeElement.blur();
 
-          expect(dispatch).not.toHaveBeenCalled();
+          expect(dispatcher.unfocus).not.toHaveBeenCalled();
         });
 
         test('should not dispatch an action when element becomes unfocused and state is unfocused', () => {
           nativeElement.focus();
           nativeElement.blur();
 
-          expect(dispatch).not.toHaveBeenCalled();
+          expect(dispatcher.unfocus).not.toHaveBeenCalled();
         });
       });
-    });
-  });
-
-  describe('Without action subject', () => {
-    beforeEach(() => {
-      TestBed.overrideDirective(NgrxFormControlDirective, {
-        set: {
-          providers: [{ multi: true, provide: NGRX_FORM_VIEW_ADAPTER, useValue: viewAdapter }],
-        },
-      });
-    });
-
-    beforeEach(async () => {
-      await TestBed.configureTestingModule({
-        imports: [TestComponent],
-      }).compileComponents();
-    });
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(TestComponent);
-      fixture.detectChanges();
-    });
-
-    test('should throw while trying to emit actions if no Store was provided', () => {
-      const newValue = 'new value';
-      expect(() => onChange(newValue)).toThrow();
     });
   });
 
@@ -658,7 +668,10 @@ describe(NgrxFormControlDirective, () => {
     beforeEach(() => {
       TestBed.overrideDirective(NgrxFormControlDirective, {
         set: {
-          providers: [{ multi: true, provide: NG_VALUE_ACCESSOR, useValue: controlValueAccessor }],
+          providers: [
+            { provide: NGRX_FORM_ACTION_DISPATCHER, useValue: dispatcher },
+            { provide: NG_VALUE_ACCESSOR, useValue: controlValueAccessor, multi: true },
+          ],
         },
       });
     });
@@ -666,7 +679,6 @@ describe(NgrxFormControlDirective, () => {
     beforeEach(async () => {
       await TestBed.configureTestingModule({
         imports: [TestComponent],
-        providers: [provideMockStore()],
       }).compileComponents();
     });
 
@@ -694,54 +706,6 @@ describe(NgrxFormControlDirective, () => {
         fixture.detectChanges();
       };
       expect(fn).not.toThrow();
-    });
-  });
-
-  describe('Multiple ControlValueAccessors', () => {
-    let controlValueAccessor1: ControlValueAccessor;
-    beforeEach(() => {
-      controlValueAccessor1 = {
-        registerOnChange: vi.fn(),
-        registerOnTouched: vi.fn(),
-        setDisabledState: vi.fn(),
-        writeValue: vi.fn(),
-      };
-    });
-
-    let controlValueAccessor2: ControlValueAccessor;
-    beforeEach(() => {
-      controlValueAccessor2 = {
-        registerOnChange: vi.fn(),
-        registerOnTouched: vi.fn(),
-        setDisabledState: vi.fn(),
-        writeValue: vi.fn(),
-      };
-    });
-
-    beforeEach(() => {
-      TestBed.overrideDirective(NgrxFormControlDirective, {
-        set: {
-          providers: [
-            { multi: true, provide: NG_VALUE_ACCESSOR, useValue: controlValueAccessor1 },
-            { multi: true, provide: NG_VALUE_ACCESSOR, useValue: controlValueAccessor2 },
-          ],
-        },
-      });
-    });
-
-    beforeEach(async () => {
-      await TestBed.configureTestingModule({
-        imports: [TestComponent],
-        providers: [provideMockStore()],
-      }).compileComponents();
-    });
-
-    test('should throw if more than one control value accessor is provided', () => {
-      const fn = () => {
-        const fixture = TestBed.createComponent(TestComponent);
-        fixture.detectChanges();
-      };
-      expect(fn).toThrow();
     });
   });
 });

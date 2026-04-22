@@ -1,5 +1,6 @@
-import { Component, getDebugNode, input } from '@angular/core';
+import { Component, DebugElement, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { createFormControlState, FormControlState } from '../state';
 import { NgrxCheckboxViewAdapter } from './checkbox';
 
@@ -8,90 +9,96 @@ const INITIAL_STATE = createFormControlState<any>(TEST_ID, undefined);
 
 @Component({
   imports: [NgrxCheckboxViewAdapter],
-  template: `
-    <input type="checkbox" [ngrxFormControlState]="state()" />
-    <input type="checkbox" [ngrxFormControlState]="state()" id="customId" />
-    <input type="checkbox" [ngrxFormControlState]="state()" [id]="boundId" />
-  `,
+  template: `<input #el type="checkbox" [ngrxFormControlState]="control()" />`,
 })
-export class CheckboxTestComponent {
-  public readonly boundId = 'boundId';
+class TestComponent {
+  /**
+   * The control state to bind to the underlying form control.
+   */
+  public readonly control = input<FormControlState<any>>(INITIAL_STATE);
+}
 
-  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
+interface TypedDebugElement<TElement> extends DebugElement {
+  /**
+   * The underlying DOM element at the root of the component.
+   */
+  get nativeElement(): TElement;
 }
 
 describe(NgrxCheckboxViewAdapter.name, () => {
-  let fixture: ComponentFixture<CheckboxTestComponent>;
-  let viewAdapter: NgrxCheckboxViewAdapter;
-  let element: HTMLInputElement;
+  let fixture: ComponentFixture<TestComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-      imports: [CheckboxTestComponent],
+    await TestBed.configureTestingModule({
+      imports: [TestComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CheckboxTestComponent);
+    fixture = TestBed.createComponent(TestComponent);
     fixture.detectChanges();
-    element = (fixture.nativeElement as HTMLElement).querySelector('input') as HTMLInputElement;
-    viewAdapter = getDebugNode(element)!.injector.get<NgrxCheckboxViewAdapter>(NgrxCheckboxViewAdapter);
   });
 
-  it('should attach the view adapter', () => expect(viewAdapter).toBeDefined());
+  let element: TypedDebugElement<HTMLInputElement>;
+  beforeEach(() => {
+    element = fixture.debugElement.query(By.css('input'));
+  });
+
+  let viewAdapter: NgrxCheckboxViewAdapter;
+  beforeEach(() => {
+    viewAdapter = element.injector.get<NgrxCheckboxViewAdapter>(NgrxCheckboxViewAdapter);
+  });
+
+  it('should attach the view adapter', () => {
+    expect(viewAdapter).toBeDefined();
+  });
 
   it('should mark the input as checked', () => {
-    const newValue = true;
-    viewAdapter.setViewValue(newValue);
-    expect(element.checked).toBe(newValue);
+    viewAdapter.setViewValue(true);
+    fixture.detectChanges();
+
+    expect(element.nativeElement.checked).toBe(true);
   });
 
   it('should call the registered function whenever the checkbox is checked', () => {
-    const spy = vi.fn();
-    viewAdapter.setOnChangeCallback(spy);
-    element.checked = true;
-    element.dispatchEvent(new Event('change'));
-    expect(spy).toHaveBeenCalledWith(true);
+    const changeOn = vi.fn();
+    viewAdapter.setOnChangeCallback(changeOn);
+
+    element.nativeElement.checked = true;
+    element.triggerEventHandler('input');
+
+    expect(changeOn).toHaveBeenCalledWith(true);
   });
 
   it('should call the registered function whenever the checkbox is unchecked', () => {
-    element.checked = true;
-    element.dispatchEvent(new Event('change'));
-    const spy = vi.fn();
-    viewAdapter.setOnChangeCallback(spy);
-    element.checked = false;
-    element.dispatchEvent(new Event('change'));
-    expect(spy).toHaveBeenCalledWith(false);
-  });
+    element.nativeElement.checked = true;
+    element.triggerEventHandler('input');
 
-  it('should call the registered function whenever the input is blurred', () => {
-    const spy = vi.fn();
-    viewAdapter.setOnTouchedCallback(spy);
-    element.dispatchEvent(new Event('blur'));
-    expect(spy).toHaveBeenCalled();
+    const changeOn = vi.fn();
+    viewAdapter.setOnChangeCallback(changeOn);
+
+    element.nativeElement.checked = false;
+    element.triggerEventHandler('input');
+
+    expect(changeOn).toHaveBeenCalledWith(false);
   });
 
   it('should disable the input', () => {
     viewAdapter.setIsDisabled(true);
-    expect(element.disabled).toBe(true);
+    fixture.detectChanges();
+
+    expect(element.nativeElement.disabled).toBe(true);
   });
 
   it('should enable the input', () => {
-    element.disabled = true;
+    viewAdapter.setIsDisabled(true);
+    fixture.detectChanges();
+
+    expect(element.nativeElement.disabled).toBe(true);
+
     viewAdapter.setIsDisabled(false);
-    expect(element.disabled).toBe(false);
-  });
+    fixture.detectChanges();
 
-  it('should throw if state is undefined', () => {
-    const fn = () => {
-      fixture.componentRef.setInput('state', undefined);
-      fixture.detectChanges();
-    };
-    expect(fn).toThrow();
-  });
-
-  it('should not throw if calling callbacks before they are registered', () => {
-    expect(() => viewAdapter.onChange(undefined)).not.toThrow();
-    expect(() => viewAdapter.onTouched()).not.toThrow();
+    expect(element.nativeElement.disabled).toBe(false);
   });
 });

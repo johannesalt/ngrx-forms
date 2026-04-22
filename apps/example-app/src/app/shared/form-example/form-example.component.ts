@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatTooltip } from '@angular/material/tooltip';
 import { FormGroupState } from 'ngrx-form-state';
 import * as Prism from 'prismjs';
 import 'prismjs/components/prism-json';
@@ -10,7 +11,7 @@ import 'prismjs/components/prism-typescript';
   templateUrl: './form-example.component.html',
   styleUrls: ['./form-example.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatCard, MatCardContent],
+  imports: [MatCard, MatCardContent, MatCardTitle, MatCardHeader, MatTooltip],
 })
 export class FormExampleComponent {
   public readonly exampleName = input<string>('');
