@@ -15,11 +15,12 @@ import {
   untracked,
   WritableSignal,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { NGRX_FORM_ACTION_DISPATCHER, NgrxFormActionDispatcher } from '../dispatcher';
 import { FormControlState, FormControlValueTypes } from '../state';
 import { selectViewAdapter } from '../view-adapter/util';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '../view-adapter/view-adapter';
+import { InteropNgControl } from './ng-control';
 import { NgrxValueConverters } from './value-converter';
 
 export enum NGRX_UPDATE_ON_TYPE {
@@ -55,11 +56,24 @@ export type NgrxFormControlValueType<TStateValue> = TStateValue extends FormCont
   host: {
     '[attr.cdk-focus-region-start]': 'focusRegionStart()',
   },
-  providers: [{ provide: NGRX_FORM_ACTION_DISPATCHER, useClass: NgrxFormActionDispatcher }],
+  providers: [
+    { provide: NGRX_FORM_ACTION_DISPATCHER, useClass: NgrxFormActionDispatcher },
+    { provide: NgControl, useFactory: () => inject(NgrxFormControlDirective).interopNgControl },
+  ],
   selector: ':not([ngrxFormsAction])[ngrxFormControlState]',
 })
 export class NgrxFormControlDirective<TState, TView = TState> implements AfterViewInit, OnInit {
   private readonly injector = inject(Injector);
+
+  /**
+   * Any `ControlValueAccessor` instances provided on the host element.
+   */
+  private readonly controlValueAccessors = inject(NG_VALUE_ACCESSOR, { optional: true, self: true });
+
+  /**
+   * Any `FormViewAdapter` instances provided on the host element.
+   */
+  private readonly formViewAdapters = inject<FormViewAdapter[]>(NGRX_FORM_VIEW_ADAPTER, { optional: true, self: true });
 
   /**
    * Used to dispatch form actions.
@@ -70,6 +84,16 @@ export class NgrxFormControlDirective<TState, TView = TState> implements AfterVi
    * The DOM element hosting this field.
    */
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  /**
+   * Lazily form view adapter for this control.
+   */
+  private formViewAdapter: FormViewAdapter | undefined;
+
+  /**
+   * A lazily instantiated fake `NgControl`.
+   */
+  private ngControl: InteropNgControl<TState, TView> | undefined;
 
   /**
    * A signal indicating whether focus tracking is enabled.
@@ -223,16 +247,34 @@ export class NgrxFormControlDirective<TState, TView = TState> implements AfterVi
    */
   public readonly viewValue = this.viewValueSignal();
 
-  private viewAdapter: FormViewAdapter;
+  /**
+   * Lazily instantiates a fake `NgControl` for this control.
+   */
+  protected get interopNgControl(): InteropNgControl<TState, TView> {
+    return (this.ngControl ??= new InteropNgControl(this));
+  }
 
-  constructor() {
-    const valueAccessors = inject<ControlValueAccessor[]>(NG_VALUE_ACCESSOR, { self: true, optional: true }) ?? [];
-    if (valueAccessors.length > 1) {
-      throw new Error('More than one custom control value accessor matches!');
+  /**
+   * Returns the `ControlValueAccessor`, if configured, for the host component.
+   */
+  private get controlValueAccessor(): ControlValueAccessor | undefined {
+    if (!this.controlValueAccessors || this.controlValueAccessors.length === 0) {
+      return this.interopNgControl?.valueAccessor ?? undefined;
     }
 
-    const viewAdapters = inject<FormViewAdapter[]>(NGRX_FORM_VIEW_ADAPTER, { self: true, optional: true }) ?? [];
-    this.viewAdapter = valueAccessors.length > 0 ? new ControlValueAccessorAdapter(valueAccessors[0]) : selectViewAdapter(viewAdapters);
+    return this.controlValueAccessors[0];
+  }
+
+  /**
+   * Lazily form view adapter for this control.
+   */
+  private get viewAdapter(): FormViewAdapter {
+    if (!this.formViewAdapter) {
+      const controlValueAccessor = this.controlValueAccessor;
+      this.formViewAdapter = controlValueAccessor ? new ControlValueAccessorAdapter(controlValueAccessor) : selectViewAdapter(this.formViewAdapters ?? []);
+    }
+
+    return this.formViewAdapter;
   }
 
   /**
