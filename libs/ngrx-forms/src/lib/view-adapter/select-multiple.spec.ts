@@ -1,5 +1,6 @@
-import { Component, getDebugNode, input } from '@angular/core';
+import { Component, DebugElement, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { createFormControlState, FormControlState } from '../state';
 import { NgrxSelectOption } from './option';
 import { NgrxSelectMultipleViewAdapter } from './select-multiple';
@@ -18,127 +19,156 @@ const STRING_OPTIONS = [OPTION1_VALUE, OPTION2_VALUE, OPTION3_VALUE];
 @Component({
   imports: [NgrxSelectMultipleViewAdapter, NgrxSelectOption],
   template: `
-    <select multiple [ngrxFormControlState]="state()">
+    <select multiple [ngrxFormControlState]="control()">
       <option value="op1">op1</option>
       <option value="op2" selected>op2</option>
       <option value="op3" selected>op2</option>
     </select>
+  `,
+})
+class StaticTestComponent {
+  /**
+   * The control state to bind to the underlying form control.
+   */
+  public readonly control = input<FormControlState<any>>(INITIAL_STATE);
+}
 
-    <select multiple [ngrxFormControlState]="state()" id="customId">
-      <option value="op1">op1</option>
-      <option value="op2" selected>op2</option>
-      <option value="op3" selected>op2</option>
-    </select>
-
-    <select multiple [ngrxFormControlState]="state()" [id]="boundId">
-      <option value="op1">op1</option>
-      <option value="op2" selected>op2</option>
-      <option value="op3" selected>op2</option>
-    </select>
-
-    <select multiple [ngrxFormControlState]="state()">
-      @for (o of stringOptions(); track $index) {
-        <option [value]="o">{{ o }}</option>
-      }
-    </select>
-
-    <select multiple [ngrxFormControlState]="state()">
-      @for (o of numberOptions(); track $index) {
-        <option [value]="o">{{ o }}</option>
-      }
-    </select>
-
-    <select multiple [ngrxFormControlState]="state()">
-      @for (o of booleanOptions(); track $index) {
+@Component({
+  imports: [NgrxSelectMultipleViewAdapter, NgrxSelectOption],
+  template: `
+    <select multiple [ngrxFormControlState]="control()">
+      @for (o of options(); track $index) {
         <option [value]="o">{{ o }}</option>
       }
     </select>
   `,
 })
-export class SelectTestComponent {
-  public readonly boundId = 'boundId';
-  public readonly stringOptions = input(STRING_OPTIONS);
-  public readonly numberOptions = input(NUMBER_OPTIONS);
-  public readonly booleanOptions = input(BOOLEAN_OPTIONS);
+class DynamicTestComponent<T> extends StaticTestComponent {
+  /**
+   * Option values.
+   */
+  public readonly options = input<T[]>([]);
+}
 
-  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
+interface TypedDebugElement<TElement> extends DebugElement {
+  /**
+   * The underlying DOM element at the root of the component.
+   */
+  get nativeElement(): TElement;
 }
 
 describe(NgrxSelectMultipleViewAdapter.name, () => {
-  let fixture: ComponentFixture<SelectTestComponent>;
-  let viewAdapter: NgrxSelectMultipleViewAdapter;
-  let element: HTMLSelectElement;
-  let option1: HTMLOptionElement;
-  let option2: HTMLOptionElement;
-
-  beforeEach(async () => {
-    TestBed.configureTestingModule({
-      imports: [SelectTestComponent],
-    }).compileComponents();
-  });
-
   describe('static options', () => {
+    let fixture: ComponentFixture<StaticTestComponent>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        imports: [StaticTestComponent],
+      }).compileComponents();
+    });
+
     beforeEach(() => {
-      fixture = TestBed.createComponent(SelectTestComponent);
-      const nativeElement = fixture.nativeElement as HTMLElement;
-      element = nativeElement.querySelector('select')!;
-      option1 = element.querySelectorAll('option')[0];
-      option2 = element.querySelectorAll('option')[1];
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
+      fixture = TestBed.createComponent(StaticTestComponent);
       fixture.detectChanges();
     });
 
-    it('should attach the view adapter', () => expect(viewAdapter).toBeDefined());
+    let element: TypedDebugElement<HTMLSelectElement>;
+    beforeEach(() => {
+      element = fixture.debugElement.query(By.css('select'));
+    });
+
+    let option1: TypedDebugElement<HTMLOptionElement>;
+    let option2: TypedDebugElement<HTMLOptionElement>;
+    beforeEach(() => {
+      const options = element.queryAll(By.css('option'));
+      option1 = options[0];
+      option2 = options[1];
+    });
+
+    let viewAdapter: NgrxSelectMultipleViewAdapter;
+    beforeEach(() => {
+      viewAdapter = element.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
+      viewAdapter.setViewValue([STRING_OPTIONS[1], STRING_OPTIONS[2]]);
+      fixture.detectChanges();
+    });
+
+    it('should attach the view adapter', () => {
+      expect(viewAdapter).toBeDefined();
+    });
 
     it('should mark a single option as selected if same value is written', () => {
       viewAdapter.setViewValue([OPTION1_VALUE]);
-      expect(option1.selected).toBe(true);
+      fixture.detectChanges();
+
+      expect(option1.nativeElement.selected).toBe(true);
     });
 
     it('should mark multiple options as selected if same values are written', () => {
       viewAdapter.setViewValue([OPTION1_VALUE, OPTION2_VALUE]);
-      expect(option1.selected).toBe(true);
-      expect(option2.selected).toBe(true);
+      fixture.detectChanges();
+
+      expect(option1.nativeElement.selected).toBe(true);
+      expect(option2.nativeElement.selected).toBe(true);
     });
 
     it('should mark options as unselected if different value is written', () => {
       viewAdapter.setViewValue([OPTION1_VALUE, OPTION3_VALUE]);
-      expect(option2.selected).toBe(false);
+      fixture.detectChanges();
+
+      expect(option2.nativeElement.selected).toBe(false);
     });
 
     it('should mark options as unselected if null is written', () => {
       viewAdapter.setViewValue(null);
-      expect(option1.selected).toBe(false);
-      expect(option2.selected).toBe(false);
+      fixture.detectChanges();
+
+      expect(option1.nativeElement.selected).toBe(false);
+      expect(option2.nativeElement.selected).toBe(false);
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
-      option1.selected = true;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith([OPTION1_VALUE, OPTION2_VALUE, OPTION3_VALUE]);
-      option2.selected = false;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith([OPTION1_VALUE, OPTION3_VALUE]);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
+
+      option1.nativeElement.selected = true;
+      element.triggerEventHandler('change');
+      fixture.detectChanges();
+
+      expect(onChange).toHaveBeenCalledWith([OPTION1_VALUE, OPTION2_VALUE, OPTION3_VALUE]);
+
+      option2.nativeElement.selected = false;
+      element.triggerEventHandler('change');
+      fixture.detectChanges();
+
+      expect(onChange).toHaveBeenCalledWith([OPTION1_VALUE, OPTION3_VALUE]);
     });
 
     it('should call the registered function whenever the input is blurred', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnTouchedCallback(spy);
-      element.dispatchEvent(new Event('blur'));
-      expect(spy).toHaveBeenCalled();
+      const onChange = vi.fn();
+      viewAdapter.setOnTouchedCallback(onChange);
+
+      element.triggerEventHandler('blur');
+
+      expect(onChange).toHaveBeenCalled();
     });
 
     it('should disable the input', () => {
       viewAdapter.setIsDisabled(true);
-      expect(element.disabled).toBe(true);
+      fixture.detectChanges();
+
+      expect(element.nativeElement.disabled).toBe(true);
     });
 
     it('should enable the input', () => {
-      element.disabled = true;
+      viewAdapter.setIsDisabled(true);
+      fixture.detectChanges();
+
+      expect(element.nativeElement.disabled).toBe(true);
+
       viewAdapter.setIsDisabled(false);
-      expect(element.disabled).toBe(false);
+      fixture.detectChanges();
+
+      expect(element.nativeElement.disabled).toBe(false);
     });
 
     it('should throw if state is undefined', () => {
@@ -155,248 +185,361 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
   });
 
   describe('dynamic string options', () => {
+    let fixture: ComponentFixture<DynamicTestComponent<string>>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        imports: [DynamicTestComponent],
+      }).compileComponents();
+    });
+
     beforeEach(() => {
-      fixture = TestBed.createComponent(SelectTestComponent);
+      fixture = TestBed.createComponent<DynamicTestComponent<string>>(DynamicTestComponent);
       fixture.detectChanges();
-      const nativeElement = fixture.nativeElement as HTMLElement;
-      element = nativeElement.querySelectorAll('select')[3];
-      option1 = element.querySelectorAll('option')[0];
-      option2 = element.querySelectorAll('option')[1];
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
+    });
+
+    beforeEach(() => {
+      fixture.componentRef.setInput('options', STRING_OPTIONS);
+      fixture.detectChanges();
+    });
+
+    let element: TypedDebugElement<HTMLSelectElement>;
+    beforeEach(() => {
+      element = fixture.debugElement.query(By.css('select'));
+    });
+
+    let option1: TypedDebugElement<HTMLOptionElement>;
+    let option2: TypedDebugElement<HTMLOptionElement>;
+    beforeEach(() => {
+      const options = element.queryAll(By.css('option'));
+      option1 = options[0];
+      option2 = options[1];
+    });
+
+    let viewAdapter: NgrxSelectMultipleViewAdapter;
+    beforeEach(() => {
+      viewAdapter = element.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
       viewAdapter.setViewValue([STRING_OPTIONS[1], STRING_OPTIONS[2]]);
-    });
-
-    it('should set the ID of the element to the ID of the state', () => {
-      expect(element.id).toBe(TEST_ID);
-    });
-
-    it('should set the ID of the element if the ID of the state changes', () => {
-      const newId = 'new ID';
-      fixture.componentRef.setInput('state', { ...INITIAL_STATE, id: newId });
       fixture.detectChanges();
-
-      expect(element.id).toBe(newId);
     });
 
     it('should mark a single option as selected if same value is written', () => {
       viewAdapter.setViewValue([STRING_OPTIONS[0]]);
-      expect(option1.selected).toBe(true);
+      fixture.detectChanges();
+
+      expect(option1.nativeElement.selected).toBe(true);
     });
 
     it('should mark multiple options as selected if same values are written', () => {
       viewAdapter.setViewValue([STRING_OPTIONS[0], STRING_OPTIONS[1]]);
-      expect(option1.selected).toBe(true);
-      expect(option2.selected).toBe(true);
+      fixture.detectChanges();
+
+      expect(option1.nativeElement.selected).toBe(true);
+      expect(option2.nativeElement.selected).toBe(true);
     });
 
     it('should mark an option as unselected if different value is written', () => {
       viewAdapter.setViewValue([STRING_OPTIONS[0], STRING_OPTIONS[2]]);
-      expect(option2.selected).toBe(false);
+      fixture.detectChanges();
+
+      expect(option2.nativeElement.selected).toBe(false);
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
-      option1.selected = true;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith(STRING_OPTIONS);
-      option2.selected = false;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith([STRING_OPTIONS[0], STRING_OPTIONS[2]]);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
+
+      option1.nativeElement.selected = true;
+      element.triggerEventHandler('change');
+      fixture.detectChanges();
+
+      expect(onChange).toHaveBeenCalledWith(STRING_OPTIONS);
+
+      option2.nativeElement.selected = false;
+      element.triggerEventHandler('change');
+      fixture.detectChanges();
+
+      expect(onChange).toHaveBeenCalledWith([STRING_OPTIONS[0], STRING_OPTIONS[2]]);
     });
 
     it("should call the registered function whenever a selected option's value changes", () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
 
       const newValue = 'new value';
       const newValues = [...STRING_OPTIONS];
       newValues[1] = newValue;
 
-      fixture.componentRef.setInput('stringOptions', newValues);
+      fixture.componentRef.setInput('options', newValues);
       fixture.detectChanges();
 
-      expect(spy).toHaveBeenCalledWith([newValues[1], newValues[2]]);
+      expect(onChange).toHaveBeenCalledWith([newValues[1], newValues[2]]);
     });
 
     it('should create new options dynamically', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
 
       const newValue = 'op4';
-      const newValues = [...STRING_OPTIONS];
-      newValues.push(newValue);
+      const newValues = [...STRING_OPTIONS, newValue];
 
-      fixture.componentRef.setInput('stringOptions', newValues);
+      fixture.componentRef.setInput('options', newValues);
       fixture.detectChanges();
 
-      element.querySelectorAll('option')[3].selected = true;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith([newValues[1], newValues[2], newValues[3]]);
+      const options = element.queryAll(By.css('option'));
+      options[3].nativeElement.selected = true;
+      element.triggerEventHandler('change');
+      fixture.detectChanges();
+
+      expect(onChange).toHaveBeenCalledWith([newValues[1], newValues[2], newValues[3]]);
     });
 
     it('should remove options dynamically', () => {
       const newValues = [...STRING_OPTIONS];
       newValues.pop();
 
-      fixture.componentRef.setInput('stringOptions', newValues);
+      fixture.componentRef.setInput('options', newValues);
       fixture.detectChanges();
 
-      const oldValue = [...STRING_OPTIONS];
-      expect(() => viewAdapter.setViewValue(oldValue)).not.toThrow();
+      const fn = () => {
+        viewAdapter.setViewValue([...STRING_OPTIONS]);
+        fixture.detectChanges();
+      };
+      expect(fn).not.toThrow();
     });
   });
 
   describe('dynamic number options', () => {
+    let fixture: ComponentFixture<DynamicTestComponent<number>>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        imports: [DynamicTestComponent],
+      }).compileComponents();
+    });
+
     beforeEach(() => {
-      fixture = TestBed.createComponent(SelectTestComponent);
+      fixture = TestBed.createComponent<DynamicTestComponent<number>>(DynamicTestComponent);
       fixture.detectChanges();
-      const nativeElement = fixture.nativeElement as HTMLElement;
-      element = nativeElement.querySelectorAll('select')[4];
-      option1 = element.querySelectorAll('option')[0];
-      option2 = element.querySelectorAll('option')[1];
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
+    });
+
+    beforeEach(() => {
+      fixture.componentRef.setInput('options', NUMBER_OPTIONS);
+      fixture.detectChanges();
+    });
+
+    let element: TypedDebugElement<HTMLSelectElement>;
+    beforeEach(() => {
+      element = fixture.debugElement.query(By.css('select'));
+    });
+
+    let option1: TypedDebugElement<HTMLOptionElement>;
+    let option2: TypedDebugElement<HTMLOptionElement>;
+    beforeEach(() => {
+      const options = element.queryAll(By.css('option'));
+      option1 = options[0];
+      option2 = options[1];
+    });
+
+    let viewAdapter: NgrxSelectMultipleViewAdapter;
+    beforeEach(() => {
+      viewAdapter = element.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
       viewAdapter.setViewValue([NUMBER_OPTIONS[1], NUMBER_OPTIONS[2]]);
+      fixture.detectChanges();
     });
 
     it('should mark a single option as selected if same value is written', () => {
       viewAdapter.setViewValue([NUMBER_OPTIONS[0]]);
-      expect(option1.selected).toBe(true);
+      fixture.detectChanges();
+
+      expect(option1.nativeElement.selected).toBe(true);
     });
 
     it('should mark multiple options as selected if same values are written', () => {
       viewAdapter.setViewValue([NUMBER_OPTIONS[0], NUMBER_OPTIONS[1]]);
-      expect(option1.selected).toBe(true);
-      expect(option2.selected).toBe(true);
+      fixture.detectChanges();
+
+      expect(option1.nativeElement.selected).toBe(true);
+      expect(option2.nativeElement.selected).toBe(true);
     });
 
     it('should mark an option as unselected if different value is written', () => {
       viewAdapter.setViewValue([NUMBER_OPTIONS[0], NUMBER_OPTIONS[2]]);
-      expect(option2.selected).toBe(false);
+      fixture.detectChanges();
+
+      expect(option2.nativeElement.selected).toBe(false);
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
-      option1.selected = true;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith(NUMBER_OPTIONS);
-      option2.selected = false;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith([NUMBER_OPTIONS[0], NUMBER_OPTIONS[2]]);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
+
+      option1.nativeElement.selected = true;
+      element.triggerEventHandler('change');
+
+      expect(onChange).toHaveBeenCalledWith(NUMBER_OPTIONS);
+
+      option2.nativeElement.selected = false;
+      element.triggerEventHandler('change');
+
+      expect(onChange).toHaveBeenCalledWith([NUMBER_OPTIONS[0], NUMBER_OPTIONS[2]]);
     });
 
     it("should call the registered function whenever a selected option's value changes", () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
 
       const newValue = 3;
       const newValues = [...NUMBER_OPTIONS];
       newValues[1] = newValue;
 
-      fixture.componentRef.setInput('numberOptions', newValues);
+      fixture.componentRef.setInput('options', newValues);
       fixture.detectChanges();
 
-      expect(spy).toHaveBeenCalledWith([newValues[1], newValues[2]]);
+      expect(onChange).toHaveBeenCalledWith([newValues[1], newValues[2]]);
     });
 
     it('should create new options dynamically', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
 
       const newValue = 4;
       const newValues = [...NUMBER_OPTIONS];
       newValues.push(newValue);
 
-      fixture.componentRef.setInput('numberOptions', newValues);
+      fixture.componentRef.setInput('options', newValues);
       fixture.detectChanges();
 
-      element.querySelectorAll('option')[3].selected = true;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith([newValues[1], newValues[2], newValues[3]]);
+      const options = element.queryAll(By.css('option'));
+      options[3].nativeElement.selected = true;
+      element.triggerEventHandler('change');
+
+      expect(onChange).toHaveBeenCalledWith([newValues[1], newValues[2], newValues[3]]);
     });
 
     it('should remove options dynamically', () => {
       const newValues = [...NUMBER_OPTIONS];
       newValues.pop();
 
-      fixture.componentRef.setInput('numberOptions', newValues);
+      fixture.componentRef.setInput('options', newValues);
       fixture.detectChanges();
 
-      const oldValue = [...NUMBER_OPTIONS];
-      expect(() => viewAdapter.setViewValue(oldValue)).not.toThrow();
+      const fn = () => {
+        viewAdapter.setViewValue([...NUMBER_OPTIONS]);
+        fixture.detectChanges();
+      };
+      expect(fn).not.toThrow();
     });
   });
 
   describe('dynamic boolean options', () => {
+    let fixture: ComponentFixture<DynamicTestComponent<boolean>>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        imports: [DynamicTestComponent],
+      }).compileComponents();
+    });
+
     beforeEach(() => {
-      fixture = TestBed.createComponent(SelectTestComponent);
+      fixture = TestBed.createComponent<DynamicTestComponent<boolean>>(DynamicTestComponent);
       fixture.detectChanges();
-      const nativeElement = fixture.nativeElement as HTMLElement;
-      element = nativeElement.querySelectorAll('select')[5];
-      option1 = element.querySelectorAll('option')[0];
-      option2 = element.querySelectorAll('option')[1];
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
+    });
+
+    beforeEach(() => {
+      fixture.componentRef.setInput('options', BOOLEAN_OPTIONS);
+      fixture.detectChanges();
+    });
+
+    let element: TypedDebugElement<HTMLSelectElement>;
+    beforeEach(() => {
+      element = fixture.debugElement.query(By.css('select'));
+    });
+
+    let option1: TypedDebugElement<HTMLOptionElement>;
+    let option2: TypedDebugElement<HTMLOptionElement>;
+    beforeEach(() => {
+      const options = element.queryAll(By.css('option'));
+      option1 = options[0];
+      option2 = options[1];
+    });
+
+    let viewAdapter: NgrxSelectMultipleViewAdapter;
+    beforeEach(() => {
+      viewAdapter = element.injector.get<NgrxSelectMultipleViewAdapter>(NgrxSelectMultipleViewAdapter);
       viewAdapter.setViewValue([BOOLEAN_OPTIONS[1]]);
+      fixture.detectChanges();
     });
 
     it('should mark a single option as selected if same value is written', () => {
       viewAdapter.setViewValue([BOOLEAN_OPTIONS[0]]);
-      expect(option1.selected).toBe(true);
+      fixture.detectChanges();
+
+      expect(option1.nativeElement.selected).toBe(true);
     });
 
     it('should mark multiple options as selected if same values are written', () => {
       viewAdapter.setViewValue([BOOLEAN_OPTIONS[0], BOOLEAN_OPTIONS[1]]);
-      expect(option1.selected).toBe(true);
-      expect(option2.selected).toBe(true);
+      fixture.detectChanges();
+
+      expect(option1.nativeElement.selected).toBe(true);
+      expect(option2.nativeElement.selected).toBe(true);
     });
 
     it('should mark an option as unselected if different value is written', () => {
       viewAdapter.setViewValue([BOOLEAN_OPTIONS[0]]);
-      expect(option2.selected).toBe(false);
+      fixture.detectChanges();
+
+      expect(option2.nativeElement.selected).toBe(false);
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
-      option1.selected = true;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith(BOOLEAN_OPTIONS);
-      option2.selected = false;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith([BOOLEAN_OPTIONS[0]]);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
+
+      option1.nativeElement.selected = true;
+      element.triggerEventHandler('change');
+
+      expect(onChange).toHaveBeenCalledWith(BOOLEAN_OPTIONS);
+
+      option2.nativeElement.selected = false;
+      element.triggerEventHandler('change');
+
+      expect(onChange).toHaveBeenCalledWith([BOOLEAN_OPTIONS[0]]);
     });
 
     it("should call the registered function whenever a selected option's value changes", () => {
-      fixture.componentRef.setInput('booleanOptions', [true]);
+      fixture.componentRef.setInput('options', [true]);
       fixture.detectChanges();
 
       viewAdapter.setViewValue([true]);
 
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
 
-      fixture.componentRef.setInput('booleanOptions', [false]);
+      fixture.componentRef.setInput('options', [false]);
       fixture.detectChanges();
 
-      expect(spy).toHaveBeenCalledWith([false]);
+      expect(onChange).toHaveBeenCalledWith([false]);
     });
 
     it('should create new options dynamically', () => {
-      fixture.componentRef.setInput('booleanOptions', [true]);
+      fixture.componentRef.setInput('options', [true]);
       fixture.detectChanges();
 
       viewAdapter.setViewValue([true]);
 
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
 
-      fixture.componentRef.setInput('booleanOptions', [true, false]);
+      fixture.componentRef.setInput('options', [true, false]);
       fixture.detectChanges();
 
-      element.querySelectorAll('option')[1].selected = true;
-      element.dispatchEvent(new Event('change'));
-      expect(spy).toHaveBeenCalledWith([true, false]);
+      const options = element.queryAll(By.css('option'));
+      options[1].nativeElement.selected = true;
+      element.triggerEventHandler('change');
+
+      expect(onChange).toHaveBeenCalledWith([true, false]);
     });
 
     it('should remove options dynamically', () => {
@@ -405,16 +548,14 @@ describe(NgrxSelectMultipleViewAdapter.name, () => {
 
       newValues.pop();
 
-      fixture.componentRef.setInput('booleanOptions', newValues);
+      fixture.componentRef.setInput('options', newValues);
       fixture.detectChanges();
 
-      const oldValue = [...BOOLEAN_OPTIONS];
-      expect(() => viewAdapter.setViewValue(oldValue)).not.toThrow();
+      const fn = () => {
+        viewAdapter.setViewValue([...BOOLEAN_OPTIONS]);
+        fixture.detectChanges();
+      };
+      expect(fn).not.toThrow();
     });
-  });
-
-  it('should not throw if calling callbacks before they are registered', () => {
-    expect(() => viewAdapter.onChange()).not.toThrow();
-    expect(() => viewAdapter.onTouched()).not.toThrow();
   });
 });

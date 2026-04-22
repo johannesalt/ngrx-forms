@@ -1,10 +1,13 @@
-import { Directive, forwardRef, HostListener } from '@angular/core';
+import { computed, Directive, forwardRef, signal, untracked } from '@angular/core';
 import { NGRX_SELECT_VIEW_ADAPTER, NgrxSelectOption, SelectViewAdapter } from './option';
-import { ControlIdDirective } from './control-id.directive';
 import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { NgrxViewAdapter } from './view-adapter.directive';
 
 @Directive({
-  selector: 'select[multiple][ngrxFormControlState]',
+  host: {
+    '[disabled]': 'disabled()',
+    '[id]': 'name()',
+  },
   providers: [
     {
       provide: NGRX_FORM_VIEW_ADAPTER,
@@ -16,80 +19,94 @@ import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
       useExisting: forwardRef(() => NgrxSelectMultipleViewAdapter),
     },
   ],
+  selector: 'select[multiple][ngrxFormControlState]',
 })
-export class NgrxSelectMultipleViewAdapter extends ControlIdDirective implements SelectViewAdapter {
-  private options: { [id: string]: NgrxSelectOption } = {};
-  private optionValues: { [id: string]: any } = {};
-  private idCounter = 0;
-  private selectedIds: string[] = [];
+export class NgrxSelectMultipleViewAdapter extends NgrxViewAdapter<HTMLSelectElement, any, any> implements SelectViewAdapter {
+  protected counter = 1;
+  protected options: { readonly [id: string]: NgrxSelectOption } = {};
 
-  onChangeFn: (value: any) => void = () => void 0;
+  /**
+   * A signal containing the selected IDs.
+   */
+  public readonly selectedIds = signal<string[]>([]);
 
-  @HostListener('blur')
-  onTouched: () => void = () => void 0;
+  /**
+   * A signal containing the selected values.
+   */
+  public readonly selectedValues = computed(() => {
+    const ids = this.selectedIds();
+    return ids.map((id) => this.options[id]).map((option) => option.value());
+  });
 
-  setViewValue(value: any) {
-    if (value === null) {
-      value = [];
-    }
-
-    if (!Array.isArray(value)) {
-      throw new Error(`the value provided to a NgrxSelectMultipleViewAdapter must be null or an array; got ${value} of type ${typeof value}`); // `
-    }
-
-    this.selectedIds = value
-      .map((v) => this.getOptionId(v))
-      .filter((id) => id !== null)
-      .map((id) => id as string);
-    Object.keys(this.options).forEach((id) => (this.options[id].selected = this.selectedIds.indexOf(id) >= 0));
+  /**
+   * @inheritdoc
+   */
+  public deregisterOption(id: string | number) {
+    this.options = Object.entries(this.options)
+      .filter(([key]) => key !== id)
+      .reduce((result, [key, option]) => ({ ...result, [key]: option }), {});
   }
 
-  @HostListener('change')
-  onChange() {
-    this.selectedIds = Object.keys(this.options).filter((id) => this.options[id].selected);
-    const value = this.selectedIds.map((id) => this.optionValues[id]);
-    this.onChangeFn(value);
-  }
+  /**
+   * @inheritdoc
+   */
+  public registerOption(option: NgrxSelectOption): string {
+    const id = this.counter.toString();
 
-  setOnChangeCallback(fn: (value: any) => void) {
-    this.onChangeFn = fn;
-  }
+    this.counter += 1;
+    this.options = { ...(this.options ?? {}), [id]: option };
 
-  setOnTouchedCallback(fn: () => void) {
-    this.onTouched = fn;
-  }
-
-  setIsDisabled(isDisabled: boolean) {
-    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
-  }
-
-  registerOption(option: NgrxSelectOption): string {
-    const id = this.idCounter.toString();
-    this.options[id] = option;
-    this.idCounter += 1;
     return id;
   }
 
-  updateOptionValue(id: string, value: any) {
-    this.optionValues[id] = value;
+  /**
+   * @inheritdoc
+   */
+  public override setViewValue(values: any): void {
+    if (values === null) {
+      return this.setViewValue([]);
+    }
 
-    if (this.selectedIds.indexOf(id) >= 0) {
-      this.onChange();
+    if (!Array.isArray(values)) {
+      throw new Error(`the value provided to a NgrxSelectMultipleViewAdapter must be null or an array; got ${values} of type ${typeof values}`);
+    }
+
+    for (const option of Object.values(this.options)) {
+      option.selected = values.includes(option.value());
+    }
+
+    this.sync();
+
+    super.setViewValue(values);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public updateOptionValue(id: string, value: any) {
+    const selectedIds = untracked(this.selectedIds);
+    if (selectedIds.includes(id)) {
+      this.setValue();
     }
   }
 
-  deregisterOption(id: string) {
-    delete this.options[id];
-    delete this.optionValues[id];
+  /**
+   * @inheritdoc
+   */
+  protected override getNativeControlValue() {
+    this.sync();
+
+    return this.selectedValues();
   }
 
-  private getOptionId(value: any) {
-    for (const id of Array.from(Object.keys(this.optionValues))) {
-      if (this.optionValues[id] === value) {
-        return id;
-      }
-    }
-
-    return null;
+  /**
+   * Updates the list of selected Ids.
+   */
+  protected sync(): void {
+    const ids = Object.entries(this.options)
+      .filter(([, option]) => option.selected)
+      .map(([id]) => id);
+    this.selectedIds.set(ids);
   }
 }
