@@ -17,13 +17,7 @@ import { CreateGroupElementAction, RemoveGroupElementAction, State } from './dyn
   templateUrl: './dynamic.component.html',
   styleUrls: ['./dynamic.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    AsyncPipe,
-    FormExampleComponent,
-    NgrxCheckboxViewAdapter,
-    NgrxFormControlDirective,
-    NgrxStatusCssClassesDirective,
-  ],
+  imports: [AsyncPipe, FormExampleComponent, NgrxCheckboxViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective],
 })
 export class DynamicPageComponent {
   private readonly store = inject(Store<State>);

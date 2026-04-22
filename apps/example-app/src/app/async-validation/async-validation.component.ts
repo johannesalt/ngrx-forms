@@ -10,14 +10,7 @@ import { State } from './async-validation.reducer';
   templateUrl: './async-validation.component.html',
   styleUrls: ['./async-validation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    AsyncPipe,
-    FormExampleComponent,
-    NgrxDefaultViewAdapter,
-    NgrxFormControlDirective,
-    NgrxNumberViewAdapter,
-    NgrxStatusCssClassesDirective,
-  ],
+  imports: [AsyncPipe, FormExampleComponent, NgrxDefaultViewAdapter, NgrxFormControlDirective, NgrxNumberViewAdapter, NgrxStatusCssClassesDirective],
 })
 export class AsyncValidationPageComponent {
   private readonly store = inject(Store<State>);

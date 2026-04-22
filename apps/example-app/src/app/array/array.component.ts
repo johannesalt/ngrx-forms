@@ -10,13 +10,7 @@ import { State } from './array.reducer';
   templateUrl: './array.component.html',
   styleUrls: ['./array.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    AsyncPipe,
-    FormExampleComponent,
-    NgrxCheckboxViewAdapter,
-    NgrxFormControlDirective,
-    NgrxStatusCssClassesDirective,
-  ],
+  imports: [AsyncPipe, FormExampleComponent, NgrxCheckboxViewAdapter, NgrxFormControlDirective, NgrxStatusCssClassesDirective],
 })
 export class ArrayPageComponent {
   private readonly store = inject(Store<State>);

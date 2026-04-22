@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatSidenavContainer, MatSidenav } from '@angular/material/sidenav';
-import { MatNavList } from "@angular/material/list";
-import { NavItemComponent } from "../nav-item/nav-item.component";
+import { MatNavList } from '@angular/material/list';
+import { NavItemComponent } from '../nav-item/nav-item.component';
 
 @Component({
   selector: 'ngf-layout',
