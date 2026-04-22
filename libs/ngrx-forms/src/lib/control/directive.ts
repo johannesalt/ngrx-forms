@@ -16,8 +16,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { Actions, FocusAction, MarkAsDirtyAction, MarkAsTouchedAction, SetValueAction, UnfocusAction } from '../actions';
+import { NGRX_FORM_ACTION_DISPATCHER, NgrxFormActionDispatcher } from '../dispatcher';
 import { FormControlState, FormControlValueTypes } from '../state';
 import { selectViewAdapter } from '../view-adapter/util';
 import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from '../view-adapter/view-adapter';
@@ -56,12 +55,16 @@ export type NgrxFormControlValueType<TStateValue> = TStateValue extends FormCont
   host: {
     '[attr.cdk-focus-region-start]': 'focusRegionStart()',
   },
+  providers: [{ provide: NGRX_FORM_ACTION_DISPATCHER, useClass: NgrxFormActionDispatcher }],
   selector: ':not([ngrxFormsAction])[ngrxFormControlState]',
 })
 export class NgrxFormControlDirective<TState, TView = TState> implements AfterViewInit, OnInit {
   private readonly injector = inject(Injector);
 
-  private readonly store = inject(Store, { optional: true });
+  /**
+   * Used to dispatch form actions.
+   */
+  private readonly dispatcher = inject(NGRX_FORM_ACTION_DISPATCHER);
 
   /**
    * The DOM element hosting this field.
@@ -232,24 +235,6 @@ export class NgrxFormControlDirective<TState, TView = TState> implements AfterVi
     this.viewAdapter = valueAccessors.length > 0 ? new ControlValueAccessorAdapter(valueAccessors[0]) : selectViewAdapter(viewAdapters);
   }
 
-  protected dispatchAction(action: Actions<NgrxFormControlValueType<TState>>) {
-    if (this.store == null) {
-      throw new Error('Store must be present in order to dispatch actions!');
-    }
-
-    this.store.dispatch(action);
-  }
-
-  private dispatchSetValueAction() {
-    const { id, value } = untracked(this.state);
-
-    const controlValue = untracked(this.controlValue);
-    if (controlValue !== value) {
-      this.dispatchAction(new SetValueAction(id, controlValue as NgrxFormControlValueType<TState>));
-      this.markAsDirty();
-    }
-  }
-
   /**
    * @inheritdoc
    */
@@ -301,7 +286,7 @@ export class NgrxFormControlDirective<TState, TView = TState> implements AfterVi
     const id = untracked(this.id);
     const isFocused = untracked(this.isFocused);
     if (!isFocused) {
-      this.dispatchAction(new FocusAction(id));
+      this.dispatcher.focus(id);
     }
   }
 
@@ -318,7 +303,7 @@ export class NgrxFormControlDirective<TState, TView = TState> implements AfterVi
     const id = untracked(this.id);
     const isFocused = untracked(this.isFocused);
     if (isFocused) {
-      this.dispatchAction(new UnfocusAction(id));
+      this.dispatcher.unfocus(id);
     }
   }
 
@@ -328,7 +313,7 @@ export class NgrxFormControlDirective<TState, TView = TState> implements AfterVi
   private markAsDirty() {
     const { id, isPristine } = this.state();
     if (isPristine) {
-      this.dispatchAction(new MarkAsDirtyAction(id));
+      this.dispatcher.markAsDirty(id);
     }
   }
 
@@ -340,11 +325,11 @@ export class NgrxFormControlDirective<TState, TView = TState> implements AfterVi
     const updateOn = this.updateOn();
 
     if (!isTouched && updateOn !== NGRX_UPDATE_ON_TYPE.NEVER) {
-      this.dispatchAction(new MarkAsTouchedAction(id));
+      this.dispatcher.markAsTouched(id);
     }
 
     if (updateOn === NGRX_UPDATE_ON_TYPE.BLUR) {
-      this.dispatchSetValueAction();
+      this.setValue();
     }
   }
 
@@ -357,7 +342,7 @@ export class NgrxFormControlDirective<TState, TView = TState> implements AfterVi
 
     const updateOn = this.updateOn();
     if (updateOn === NGRX_UPDATE_ON_TYPE.CHANGE) {
-      this.dispatchSetValueAction();
+      this.setValue();
     }
   }
 
@@ -408,6 +393,19 @@ export class NgrxFormControlDirective<TState, TView = TState> implements AfterVi
     };
 
     return viewValue;
+  }
+
+  /**
+   * Sets the control value.
+   */
+  private setValue() {
+    const { id, value } = untracked(this.state);
+
+    const controlValue = untracked(this.controlValue);
+    if (controlValue !== value) {
+      this.dispatcher.setValue(id, controlValue);
+      this.markAsDirty();
+    }
   }
 
   /**
