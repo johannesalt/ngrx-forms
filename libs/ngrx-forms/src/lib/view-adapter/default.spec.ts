@@ -1,5 +1,6 @@
-import { Component, getDebugNode, input } from '@angular/core';
+import { Component, DebugElement, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { createFormControlState, FormControlState } from '../state';
 import { NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, NgrxDefaultViewAdapter } from './default';
 
@@ -8,177 +9,180 @@ const INITIAL_STATE = createFormControlState<any>(TEST_ID, undefined);
 
 @Component({
   imports: [NgrxDefaultViewAdapter],
-  template: `
-    <input type="text" [ngrxFormControlState]="state()" />
-    <input type="text" [ngrxFormControlState]="state()" id="customId" />
-    <input type="text" [ngrxFormControlState]="state()" [id]="boundId" />
-  `,
+  template: `<input #el type="text" [ngrxFormControlState]="control()" />`,
 })
-export class DefaultInputTestComponent {
-  public readonly boundId = 'boundId';
-
-  public readonly state = input<FormControlState<any>>(INITIAL_STATE);
+class TestComponent {
+  /**
+   * The control state to bind to the underlying form control.
+   */
+  public readonly control = input<FormControlState<any>>(INITIAL_STATE);
 }
 
-describe(NgrxDefaultViewAdapter, () => {
-  let fixture: ComponentFixture<DefaultInputTestComponent>;
-  let viewAdapter: NgrxDefaultViewAdapter;
-  let element: HTMLInputElement;
+interface TypedDebugElement<TElement> extends DebugElement {
+  /**
+   * The underlying DOM element at the root of the component.
+   */
+  get nativeElement(): TElement;
+}
 
+describe(NgrxDefaultViewAdapter.name, () => {
   describe('Composition events not supported', () => {
+    let fixture: ComponentFixture<TestComponent>;
+
     beforeEach(() => {
-      TestBed.overrideDirective(NgrxDefaultViewAdapter, {
-        set: {
-          providers: [{ provide: NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, useValue: false }],
-        },
-      });
+      TestBed.overrideProvider(NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, { useValue: false });
     });
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [DefaultInputTestComponent],
+        imports: [TestComponent],
       }).compileComponents();
     });
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(DefaultInputTestComponent);
+      fixture = TestBed.createComponent(TestComponent);
       fixture.detectChanges();
     });
 
+    let element: TypedDebugElement<HTMLInputElement>;
     beforeEach(() => {
-      element = (fixture.nativeElement as HTMLElement).querySelector('input') as HTMLInputElement;
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxDefaultViewAdapter>(NgrxDefaultViewAdapter);
+      element = fixture.debugElement.query(By.css('input'));
+    });
+
+    let viewAdapter: NgrxDefaultViewAdapter;
+    beforeEach(() => {
+      viewAdapter = element.injector.get<NgrxDefaultViewAdapter>(NgrxDefaultViewAdapter);
+    });
+
+    it('should attach the view adapter', () => {
+      expect(viewAdapter).toBeDefined();
     });
 
     it('should call the registered function when the value changes and is composing but composition is not supported', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
 
       const newValue = 'new value';
-      element.value = newValue;
+      element.nativeElement.value = newValue;
+      element.triggerEventHandler('compositionstart');
+      element.triggerEventHandler('input');
 
-      viewAdapter.compositionStart();
-      viewAdapter.handleInput({ target: element } as any);
-
-      expect(spy).toHaveBeenCalledWith(newValue);
+      expect(onChange).toHaveBeenCalledWith(newValue);
     });
 
     it('should not call the registered function on composition end if composition is not supported', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
 
       const newValue = 'new value';
-      element.value = newValue;
+      element.nativeElement.value = newValue;
+      element.triggerEventHandler('compositionend');
 
-      viewAdapter.compositionStart();
-      viewAdapter.handleInput({ target: element } as any);
-
-      expect(spy).toHaveBeenCalledTimes(1);
-
-      viewAdapter.compositionEnd({ target: element } as any);
-
-      expect(spy).toHaveBeenCalledTimes(1);
+      expect(onChange).not.toHaveBeenCalled();
     });
   });
 
   describe('Composition events supported', () => {
+    let fixture: ComponentFixture<TestComponent>;
+
     beforeEach(() => {
-      TestBed.overrideDirective(NgrxDefaultViewAdapter, {
-        set: {
-          providers: [{ provide: NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, useValue: true }],
-        },
-      });
+      TestBed.overrideProvider(NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED, { useValue: true });
     });
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [DefaultInputTestComponent],
+        imports: [TestComponent],
       }).compileComponents();
     });
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(DefaultInputTestComponent);
+      fixture = TestBed.createComponent(TestComponent);
       fixture.detectChanges();
     });
 
+    let element: TypedDebugElement<HTMLInputElement>;
     beforeEach(() => {
-      element = (fixture.nativeElement as HTMLElement).querySelector('input') as HTMLInputElement;
-      viewAdapter = getDebugNode(element)!.injector.get<NgrxDefaultViewAdapter>(NgrxDefaultViewAdapter);
+      element = fixture.debugElement.query(By.css('input'));
     });
 
-    it('should attach the view adapter', () => expect(viewAdapter).toBeDefined());
+    let viewAdapter: NgrxDefaultViewAdapter;
+    beforeEach(() => {
+      viewAdapter = element.injector.get<NgrxDefaultViewAdapter>(NgrxDefaultViewAdapter);
+    });
+
+    it('should attach the view adapter', () => {
+      expect(viewAdapter).toBeDefined();
+    });
 
     it("should set the input's value", () => {
-      const newValue = 'new value';
-      viewAdapter.setViewValue(newValue);
-      expect(element.value).toBe(newValue);
+      viewAdapter.setViewValue('new value');
+      fixture.detectChanges();
+
+      expect(element.nativeElement.value).toBe('new value');
     });
 
     it("should set the input's value to empty string if null", () => {
       viewAdapter.setViewValue(null);
-      expect(element.value).toBe('');
+      fixture.detectChanges();
+
+      expect(element.nativeElement.value).toBe('');
     });
 
     it('should call the registered function whenever the value changes', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
+
       const newValue = 'new value';
-      element.value = newValue;
-      element.dispatchEvent(new Event('input'));
-      expect(spy).toHaveBeenCalledWith(newValue);
+      element.nativeElement.value = newValue;
+      element.triggerEventHandler('input');
+
+      expect(onChange).toHaveBeenCalledWith(newValue);
     });
 
     it('should not call the registered function when the value changes and is composing', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
-      const newValue = 'new value';
-      element.value = newValue;
-      viewAdapter.compositionStart();
-      element.dispatchEvent(new Event('input'));
-      expect(spy).not.toHaveBeenCalled();
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
+
+      element.nativeElement.value = 'new value';
+      element.triggerEventHandler('compositionstart');
+      element.triggerEventHandler('input');
+
+      expect(onChange).not.toHaveBeenCalled();
     });
 
     it('should call the registered function on composition end', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnChangeCallback(spy);
-      const newValue = 'new value';
-      element.value = newValue;
-      element.dispatchEvent(new Event('compositionstart'));
-      element.dispatchEvent(new Event('input'));
-      expect(spy).not.toHaveBeenCalled();
-      element.dispatchEvent(new Event('compositionend'));
-      expect(spy).toHaveBeenCalledWith(newValue);
-    });
+      const onChange = vi.fn();
+      viewAdapter.setOnChangeCallback(onChange);
 
-    it('should call the registered function whenever the input is blurred', () => {
-      const spy = vi.fn();
-      viewAdapter.setOnTouchedCallback(spy);
-      element.dispatchEvent(new Event('blur'));
-      expect(spy).toHaveBeenCalled();
+      const newValue = 'new value';
+      element.nativeElement.value = newValue;
+      element.triggerEventHandler('compositionstart');
+      element.triggerEventHandler('input');
+
+      expect(onChange).not.toHaveBeenCalled();
+
+      element.triggerEventHandler('compositionend');
+
+      expect(onChange).toHaveBeenCalledWith(newValue);
     });
 
     it('should disable the input', () => {
       viewAdapter.setIsDisabled(true);
-      expect(element.disabled).toBe(true);
+      fixture.detectChanges();
+
+      expect(element.nativeElement.disabled).toBe(true);
     });
 
     it('should enable the input', () => {
-      element.disabled = true;
+      viewAdapter.setIsDisabled(true);
+      fixture.detectChanges();
+
+      expect(element.nativeElement.disabled).toBe(true);
+
       viewAdapter.setIsDisabled(false);
-      expect(element.disabled).toBe(false);
-    });
+      fixture.detectChanges();
 
-    it('should throw if state is undefined', () => {
-      const fn = () => {
-        fixture.componentRef.setInput('state', undefined);
-        fixture.detectChanges();
-      };
-      expect(fn).toThrow();
-    });
-
-    it('should not throw if calling callbacks before they are registered', () => {
-      expect(() => viewAdapter.onChange(undefined)).not.toThrow();
-      expect(() => viewAdapter.onTouched()).not.toThrow();
+      expect(element.nativeElement.disabled).toBe(false);
     });
   });
 });

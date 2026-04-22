@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Directive, forwardRef, HostListener, inject, InjectionToken, PLATFORM_ID, DOCUMENT } from '@angular/core';
-import { ControlIdDirective } from './control-id.directive';
-import { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { computed, Directive, DOCUMENT, forwardRef, HostListener, inject, InjectionToken, PLATFORM_ID, signal, untracked } from '@angular/core';
+import { NGRX_FORM_VIEW_ADAPTER } from './view-adapter';
+import { NgrxViewAdapter } from './view-adapter.directive';
 
 export const NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED = new InjectionToken<boolean>('NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED');
 
@@ -19,7 +19,11 @@ function isAndroid(navigator: Navigator | null | undefined): boolean {
 // out whether it is the "active" view adapter and only perform its side effects if it
 // is active
 @Directive({
-  selector: 'input:not([type=checkbox]):not([type=number]):not([type=radio]):not([type=range])[ngrxFormControlState],textarea[ngrxFormControlState]',
+  host: {
+    '[disabled]': 'disabled()',
+    '[id]': 'name()',
+    '[value]': 'viewValue()',
+  },
   providers: [
     {
       provide: NGRX_FORM_VIEW_ADAPTER,
@@ -34,64 +38,66 @@ function isAndroid(navigator: Navigator | null | undefined): boolean {
       },
     },
   ],
+  selector: 'input:not([type=checkbox]):not([type=number]):not([type=radio]):not([type=range])[ngrxFormControlState],textarea[ngrxFormControlState]',
 })
-export class NgrxDefaultViewAdapter extends ControlIdDirective implements FormViewAdapter, AfterViewInit {
+export class NgrxDefaultViewAdapter extends NgrxViewAdapter<HTMLInputElement, any, any> {
+  /**
+   * A value indicating whether composition is supported.
+   */
   private readonly isCompositionSupported = inject(NGRX_FORM_COMPOSITION_EVENTS_SUPPORTED);
 
-  onChange: (value: any) => void = () => void 0;
+  /**
+   * A signal indicating whether the user is creating a composition string (IME events).
+   */
+  private readonly isComposing = signal(false);
 
-  @HostListener('blur')
-  onTouched: () => void = () => void 0;
+  /**
+   * @inheritdoc
+   */
+  public override readonly viewValue = computed(() => {
+    const value = this.controlValue();
+    return value == null ? '' : value;
+  });
 
-  /** Whether the user is creating a composition string (IME events). */
-  private isComposing = false;
+  /**
+   * Completes the composition session and set / update the value in the underlying state.
+   */
+  @HostListener('compositionend')
+  public compositionEnd(): void {
+    this.isComposing.set(false);
 
-  setViewValue(value: any): void {
-    const normalizedValue = value == null ? '' : value;
-    this.renderer.setProperty(this.elementRef.nativeElement, 'value', normalizedValue);
-  }
-
-  setOnChangeCallback(fn: (value: any) => void): void {
-    this.onChange = fn;
-  }
-
-  setOnTouchedCallback(fn: () => void): void {
-    this.onTouched = fn;
-  }
-
-  setIsDisabled(isDisabled: boolean): void {
-    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
-  }
-
-  @HostListener('input', ['$event'])
-  handleInput({ target }: Event): void {
-    const input = target as HTMLInputElement;
-    if (!input) {
-      return;
-    }
-
-    if (this.isCompositionSupported && this.isComposing) {
-      return;
-    }
-
-    this.onChange(input.value);
-  }
-
-  @HostListener('compositionstart')
-  compositionStart(): void {
-    this.isComposing = true;
-  }
-
-  @HostListener('compositionend', ['$event'])
-  compositionEnd({ target }: Event): void {
-    const input = target as HTMLInputElement;
-    if (!input) {
-      return;
-    }
-
-    this.isComposing = false;
     if (this.isCompositionSupported) {
-      this.onChange(input.value);
+      super.setValue();
     }
+  }
+
+  /**
+   * Sets a value indicating that the user is creating a composition string (IME event).
+   */
+  @HostListener('compositionstart')
+  public compositionStart(): void {
+    this.isComposing.set(true);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  protected override getNativeControlValue() {
+    const el = this.element.nativeElement;
+    return el.value;
+  }
+
+  /**
+   * Sets / updates the value in the underlying state.
+   */
+  @HostListener('change')
+  @HostListener('input')
+  protected override setValue(): void {
+    const isComposing = untracked(this.isComposing);
+    if (this.isCompositionSupported && isComposing) {
+      return;
+    }
+
+    super.setValue();
   }
 }
