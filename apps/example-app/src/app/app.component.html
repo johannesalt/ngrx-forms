@@ -1,11 +1,3 @@
 <ngf-layout>
-  <ngf-sidenav>
-    <ngf-nav-item routerLink="/introduction"> Introduction </ngf-nav-item>
-    @for (example of examples; track example) {
-      <ngf-nav-item [routerLink]="example.path" [hint]="example.hint">
-        {{ example.label }}
-      </ngf-nav-item>
-    }
-  </ngf-sidenav>
   <router-outlet />
 </ngf-layout>

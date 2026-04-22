@@ -1,3 +1,12 @@
 <mat-sidenav-container>
+  <mat-sidenav mode="side" opened="true" disableClose>
+    <mat-nav-list>
+      <ngf-nav-item label="Introduction" routerLink="/introduction" />
+      @for (example of examples; track example) {
+        <ngf-nav-item [hint]="example.hint" [label]="example.label" [routerLink]="example.path"> </ngf-nav-item>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
   <ng-content />
 </mat-sidenav-container>
