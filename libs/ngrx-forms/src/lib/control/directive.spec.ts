@@ -51,13 +51,23 @@ describe(NgrxFormControlDirective, () => {
   let setOnChangeCallback: Mock<(fn: (value: any) => void) => void>;
   let onChange: (value: any) => void;
   beforeEach(() => {
-    setOnChangeCallback = vi.fn().mockImplementation((fn) => (onChange = fn));
+    setOnChangeCallback = vi.fn((fn) => {
+      onChange = (value) => {
+        fn(value);
+        fixture.detectChanges();
+      };
+    });
   });
 
   let setOnTouchedCallback: Mock<(fn: () => void) => void>;
   let onTouched: () => void;
   beforeEach(() => {
-    setOnTouchedCallback = vi.fn().mockImplementation((fn) => (onTouched = fn));
+    setOnTouchedCallback = vi.fn((fn) => {
+      onTouched = () => {
+        fn();
+        fixture.detectChanges();
+      };
+    });
   });
 
   let setViewValue: Mock<(value: any) => void>;
@@ -291,7 +301,7 @@ describe(NgrxFormControlDirective, () => {
 
         setViewValue.mockClear();
 
-        fixture.componentRef.setInput('state', { ...INITIAL_STATE });
+        fixture.componentRef.setInput('state', { ...INITIAL_STATE, value: newValue });
         fixture.detectChanges();
 
         expect(setViewValue).not.toHaveBeenCalled();

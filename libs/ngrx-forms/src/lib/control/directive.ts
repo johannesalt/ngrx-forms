@@ -1,4 +1,20 @@
-import { AfterViewInit, booleanAttribute, computed, Directive, effect, ElementRef, HostListener, inject, input, OnInit, untracked } from '@angular/core';
+import {
+  AfterViewInit,
+  booleanAttribute,
+  computed,
+  Directive,
+  effect,
+  EffectCleanupFn,
+  ElementRef,
+  HostListener,
+  inject,
+  Injector,
+  input,
+  linkedSignal,
+  OnInit,
+  untracked,
+  WritableSignal,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Actions, FocusAction, MarkAsDirtyAction, MarkAsTouchedAction, SetValueAction, UnfocusAction } from '../actions';
@@ -42,119 +58,169 @@ export type NgrxFormControlValueType<TStateValue> = TStateValue extends FormCont
   },
   selector: ':not([ngrxFormsAction])[ngrxFormControlState]',
 })
-export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> implements AfterViewInit, OnInit {
-  private readonly el = inject(ElementRef);
+export class NgrxFormControlDirective<TState, TView = TState> implements AfterViewInit, OnInit {
+  private readonly injector = inject(Injector);
 
   private readonly store = inject(Store, { optional: true });
 
-  public readonly ngrxEnableFocusTracking = input(false, { transform: booleanAttribute });
+  /**
+   * The DOM element hosting this field.
+   */
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  public readonly ngrxFormControlState = input.required<FormControlState<NgrxFormControlValueType<TStateValue>>>();
+  /**
+   * A signal indicating whether focus tracking is enabled.
+   */
+  public readonly focusTrackingEnabled = input(false, { alias: 'ngrxEnableFocusTracking', transform: booleanAttribute });
 
-  public readonly ngrxUpdateOn = input(NGRX_UPDATE_ON_TYPE.CHANGE);
+  /**
+   * A signal containing the current state for the bound control.
+   */
+  public readonly state = input.required<FormControlState<NgrxFormControlValueType<TState>>>({ alias: 'ngrxFormControlState' });
 
-  public readonly ngrxValueConverter = input(NgrxValueConverters.default<any>());
+  /**
+   * A signal indicating when to sync the view to the state.
+   */
+  public readonly updateOn = input(NGRX_UPDATE_ON_TYPE.CHANGE, { alias: 'ngrxUpdateOn' });
 
-  /** Used by the CDK to set initial focus */
+  /**
+   * A signal containing the value converter.
+   */
+  public readonly valueConverter = input(NgrxValueConverters.default<any>(), { alias: 'ngrxValueConverter' });
+
+  /**
+   * A signal containing the control's value.s
+   */
+  public readonly controlValue = this.controlValueSignal();
+
+  /**
+   * A signal containing the errors of this field and its descendants.
+   */
+  public readonly errors = computed(() => {
+    const { errors } = this.state();
+    return errors;
+  });
+
+  /**
+   * A signal containing a value used by the CDK to set the intial focus.
+   */
   public readonly focusRegionStart = computed(() => {
     const isFocused = this.isFocused();
     return isFocused ? '' : null;
   });
 
-  /** Current form control id. */
-  private readonly id = computed(() => {
-    const { id } = this.ngrxFormControlState();
+  /**
+   * A signal containing the unique Id of the control.
+   */
+  public readonly id = computed(() => {
+    const { id } = this.state();
     return id;
   });
 
-  /** A value indicating whether the form control is disabled or not (enabled). */
-  private readonly isDisabled = computed(() => {
-    const { isDisabled } = this.ngrxFormControlState();
+  /**
+   * A signal indicating whether the controls's value has been changed by user.
+   */
+  public readonly isDirty = computed(() => {
+    const { isDirty } = this.state();
+    return isDirty;
+  });
+
+  /**
+   * A signal indicating whether the control is currently disabled.
+   */
+  public readonly isDisabled = computed(() => {
+    const { isDisabled } = this.state();
     return isDisabled;
   });
 
-  /** A value indicating whether the form control is focused or not (unfocused). */
-  private readonly isFocused = computed(() => {
-    const { isFocused } = this.ngrxFormControlState();
+  /**
+   * A signal indicating whether the control is currently enabled.
+   */
+  public readonly isEnabled = computed(() => {
+    const { isEnabled } = this.state();
+    return isEnabled;
+  });
+
+  /**
+   * A signal indicating whether the control is focused.
+   */
+  public readonly isFocused = computed(() => {
+    const { isFocused } = this.state();
     return isFocused;
   });
 
-  /** Current form value. */
-  private readonly value = computed(() => {
-    const { value } = this.ngrxFormControlState();
-    return value;
+  /**
+   * A signal indicating whether the controls's value is currently invalid.
+   */
+  public readonly isInvalid = computed(() => {
+    const { isInvalid } = this.state();
+    return isInvalid;
   });
 
-  /** Update the view if control id changed. */
-  private readonly updateViewIfControlIdChanged = effect(() => {
-    this.id();
-
-    untracked(() => {
-      const value = this.value();
-      const valueConverter = this.ngrxValueConverter();
-      this.stateValue = value;
-
-      this.viewValue = valueConverter.convertStateToViewValue(this.stateValue);
-      this.viewAdapter.setViewValue(this.viewValue);
-
-      if (this.viewAdapter.setIsDisabled) {
-        const isDisabled = this.isDisabled();
-        this.viewAdapter.setIsDisabled(isDisabled);
-      }
-    });
+  /**
+   * A signal indicating the control value has not been changed by the user.
+   */
+  public readonly isPristine = computed(() => {
+    const { isPristine } = this.state();
+    return isPristine;
   });
 
-  /** Update the view if focus-flag changed. */
-  private readonly updateViewIfIsFocusedChanged = effect(() => {
+  /**
+   * A signal indicating whether the control is touched by the user.
+   */
+  public readonly isTouched = computed(() => {
+    const { isTouched } = this.state();
+    return isTouched;
+  });
+
+  /**
+   * A signal indicating whether the control is NOT touched by the user.
+   */
+  public readonly isUntouched = computed(() => {
+    const { isUntouched } = this.state();
+    return isUntouched;
+  });
+
+  /**
+   * A signal indicating whether the control's value is currently valid.
+   */
+  public readonly isValid = computed(() => {
+    const { isValid } = this.state();
+    return isValid;
+  });
+
+  /**
+   * A signal indicating whether there are any validators still pending for the control.
+   */
+  public readonly isValidationPending = computed(() => {
+    const { isValidationPending } = this.state();
+    return isValidationPending;
+  });
+
+  /**
+   * Set the focus depending on the state.
+   */
+  public readonly setFocusDependingOnState = effect(() => {
     const isFocused = this.isFocused();
 
-    const focusTrackingEnabled = this.ngrxEnableFocusTracking();
+    const focusTrackingEnabled = this.focusTrackingEnabled();
     if (!focusTrackingEnabled) {
       return;
     }
 
     if (isFocused) {
-      this.el.nativeElement.focus();
+      this.element.nativeElement.focus();
     } else {
-      this.el.nativeElement.blur();
+      this.element.nativeElement.blur();
     }
   });
 
-  /** Update the view if disabled-flag changed. */
-  private readonly updateViewIfIsDisabledChanged = effect(() => {
-    const isDisabled = this.isDisabled();
-    if (!this.viewAdapter.setIsDisabled) {
-      return;
-    }
-
-    this.viewAdapter.setIsDisabled(isDisabled);
-  });
-
-  /** Update the view if value changed. */
-  private readonly updateViewIfValueChanged = effect(() => {
-    const value = this.value();
-    const valueConverter = this.ngrxValueConverter();
-    this.stateValue = value;
-
-    const viewValue = valueConverter.convertStateToViewValue(this.stateValue);
-    if (viewValue !== this.viewValue) {
-      this.viewValue = viewValue;
-      this.viewAdapter.setViewValue(this.viewValue);
-    }
-  });
+  /**
+   * A signal containing the view value.
+   */
+  public readonly viewValue = this.viewValueSignal();
 
   private viewAdapter: FormViewAdapter;
-
-  // we have to store the latest known state value since most input elements don't play nicely with
-  // setting the same value again (e.g. input elements move the cursor to the end of the input when
-  // a new value is set which means whenever the user types something the cursor is forced to the
-  // end of the input) which would for example happen every time a new value is pushed to the state
-  // since when the action to update the state is dispatched a new state will be received inside
-  // the directive, which in turn would trigger a view update; to prevent this behavior we compare
-  // the latest known state value with the value to be set and filter out those values that are equal
-  // to the latest known value
-  private viewValue: TViewValue;
-  private stateValue: TStateValue;
 
   constructor() {
     const valueAccessors = inject<ControlValueAccessor[]>(NG_VALUE_ACCESSOR, { self: true, optional: true }) ?? [];
@@ -166,7 +232,7 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
     this.viewAdapter = valueAccessors.length > 0 ? new ControlValueAccessorAdapter(valueAccessors[0]) : selectViewAdapter(viewAdapters);
   }
 
-  protected dispatchAction(action: Actions<NgrxFormControlValueType<TStateValue>>) {
+  protected dispatchAction(action: Actions<NgrxFormControlValueType<TState>>) {
     if (this.store == null) {
       throw new Error('Store must be present in order to dispatch actions!');
     }
@@ -174,37 +240,104 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
     this.store.dispatch(action);
   }
 
-  private dispatchMarkAsDirtyAction() {
-    const { id, isPristine } = this.ngrxFormControlState();
+  private dispatchSetValueAction() {
+    const { id, value } = untracked(this.state);
+
+    const controlValue = untracked(this.controlValue);
+    if (controlValue !== value) {
+      this.dispatchAction(new SetValueAction(id, controlValue as NgrxFormControlValueType<TState>));
+      this.markAsDirty();
+    }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public ngOnInit() {
+    if (!this.state()) {
+      throw new Error('The form state must not be undefined!');
+    }
+
+    this.viewAdapter.setOnChangeCallback(this.setViewValue.bind(this));
+    this.viewAdapter.setOnTouchedCallback(this.markAsTouched.bind(this));
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public ngAfterViewInit() {
+    const createEffect = (fn: EffectCleanupFn) => effect(fn, { injector: this.injector });
+
+    // Some controls depdend on child elements for setting the value (e.g. select).
+    createEffect(() => {
+      this.id(); // Additional trigger
+
+      const value = this.viewValue();
+      this.viewAdapter.setViewValue(value);
+    });
+
+    createEffect(() => {
+      this.id(); // Additional trigger
+
+      const isDisabled = this.isDisabled();
+      if (!this.viewAdapter.setIsDisabled) {
+        return;
+      }
+
+      this.viewAdapter.setIsDisabled(isDisabled);
+    });
+  }
+
+  /**
+   * Sets the focus status of the field to `true`.
+   */
+  @HostListener('focusin')
+  public focus() {
+    const focusTrackingEnabled = untracked(this.focusTrackingEnabled);
+    if (!focusTrackingEnabled) {
+      return;
+    }
+
+    const id = untracked(this.id);
+    const isFocused = untracked(this.isFocused);
+    if (!isFocused) {
+      this.dispatchAction(new FocusAction(id));
+    }
+  }
+
+  /**
+   * Sets the focus status of the field to `false`.
+   */
+  @HostListener('focusout')
+  public unfocus() {
+    const focusTrackingEnabled = untracked(this.focusTrackingEnabled);
+    if (!focusTrackingEnabled) {
+      return;
+    }
+
+    const id = untracked(this.id);
+    const isFocused = untracked(this.isFocused);
+    if (isFocused) {
+      this.dispatchAction(new UnfocusAction(id));
+    }
+  }
+
+  /**
+   * Sets the dirty status of the field to `true`.
+   */
+  private markAsDirty() {
+    const { id, isPristine } = this.state();
     if (isPristine) {
       this.dispatchAction(new MarkAsDirtyAction(id));
     }
   }
 
-  private dispatchSetValueAction() {
-    const { id, value } = this.ngrxFormControlState();
-    const valueConverter = this.ngrxValueConverter();
-
-    this.stateValue = valueConverter.convertViewToStateValue(this.viewValue);
-    if (this.stateValue !== value) {
-      this.dispatchAction(new SetValueAction(id, this.stateValue as NgrxFormControlValueType<TStateValue>));
-
-      this.dispatchMarkAsDirtyAction();
-    }
-  }
-
-  private handleOnChange(viewValue: TViewValue) {
-    this.viewValue = viewValue;
-
-    const updateOn = this.ngrxUpdateOn();
-    if (updateOn === NGRX_UPDATE_ON_TYPE.CHANGE) {
-      this.dispatchSetValueAction();
-    }
-  }
-
-  private handleOnTouch() {
-    const { id, isTouched } = this.ngrxFormControlState();
-    const updateOn = this.ngrxUpdateOn();
+  /**
+   * Sets the touched status of the field to `true`.
+   */
+  private markAsTouched() {
+    const { id, isTouched } = this.state();
+    const updateOn = this.updateOn();
 
     if (!isTouched && updateOn !== NGRX_UPDATE_ON_TYPE.NEVER) {
       this.dispatchAction(new MarkAsTouchedAction(id));
@@ -215,49 +348,75 @@ export class NgrxFormControlDirective<TStateValue, TViewValue = TStateValue> imp
     }
   }
 
-  public ngOnInit() {
-    if (!this.ngrxFormControlState()) {
-      throw new Error('The form state must not be undefined!');
-    }
+  /**
+   * Sets the view value.
+   * @param {TView} viewValue New value.
+   */
+  private setViewValue(viewValue: TView) {
+    this.viewValue.set(viewValue);
 
-    this.viewAdapter.setOnChangeCallback(this.handleOnChange.bind(this));
-    this.viewAdapter.setOnTouchedCallback(this.handleOnTouch.bind(this));
-  }
-
-  public ngAfterViewInit() {
-    // we need to update the view again after it was initialized since some
-    // controls depend on child elements for setting the value (e.g. selects)
-    this.viewAdapter.setViewValue(this.viewValue);
-    if (this.viewAdapter.setIsDisabled) {
-      this.viewAdapter.setIsDisabled(this.isDisabled());
+    const updateOn = this.updateOn();
+    if (updateOn === NGRX_UPDATE_ON_TYPE.CHANGE) {
+      this.dispatchSetValueAction();
     }
   }
 
-  @HostListener('focusin')
-  public handleFocusIn() {
-    const focusTrackingEnabled = this.ngrxEnableFocusTracking();
-    if (!focusTrackingEnabled) {
-      return;
-    }
+  /**
+   * Creates a linked signal for the control value.
+   */
+  private controlValueSignal(): WritableSignal<TState> {
+    const controlValue = linkedSignal({
+      computation: (controlValue) => controlValue,
+      equal: (a, b) => a === b,
+      source: () => {
+        const { value } = this.state();
+        return value;
+      },
+    });
 
-    const id = this.id();
-    const isFocused = this.isFocused();
-    if (!isFocused) {
-      this.dispatchAction(new FocusAction(id));
-    }
+    return controlValue;
   }
 
-  @HostListener('focusout')
-  public handleFocusOut() {
-    const focusTrackingEnabled = this.ngrxEnableFocusTracking();
-    if (!focusTrackingEnabled) {
-      return;
-    }
+  /**
+   * Creates a linked signal for the view value.
+   */
+  private viewValueSignal(): WritableSignal<TView> {
+    const viewValue = linkedSignal({
+      computation: (viewValue) => viewValue,
+      equal: (a, b) => a === b,
+      source: () => {
+        const value = this.controlValue();
 
-    const id = this.id();
-    const isFocused = this.isFocused();
-    if (isFocused) {
-      this.dispatchAction(new UnfocusAction(id));
-    }
+        const converter = this.valueConverter();
+        if (converter) {
+          return converter.convertStateToViewValue(value);
+        }
+
+        return value;
+      },
+    });
+
+    const { set, update } = viewValue;
+    viewValue.set = (newValue) => {
+      set(newValue);
+      untracked(() => this.updateControlValue());
+    };
+
+    viewValue.update = (updateFn) => {
+      update(updateFn);
+      untracked(() => this.updateControlValue());
+    };
+
+    return viewValue;
+  }
+
+  /**
+   * Updates the control value.
+   */
+  private updateControlValue(): void {
+    const viewValue = this.viewValue();
+
+    const converter = this.valueConverter();
+    this.controlValue.set(converter ? converter.convertViewToStateValue(viewValue) : viewValue);
   }
 }
