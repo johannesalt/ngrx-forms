@@ -5,6 +5,12 @@ export const NGRX_FORM_ACTION_DISPATCHER = new InjectionToken<FormActionDispatch
 
 export interface FormActionDispatcher<TValue = any> {
   /**
+   * Sets the focus status of the field to `true`.
+   * @param {NgrxFormControlId} controlId Id of the control.
+   */
+  focus(controlId: NgrxFormControlId): void;
+
+  /**
    * Sets the dirty status of the field to `true`.
    * @param {NgrxFormControlId} controlId Id of the control.
    */
@@ -15,6 +21,12 @@ export interface FormActionDispatcher<TValue = any> {
    * @param {NgrxFormControlId} controlId Id of the control.
    */
   markAsPristine(controlId: NgrxFormControlId): void;
+
+  /**
+   * Sets the submitted status of the field to `true`.
+   * @param {NgrxFormControlId} controlId Id of the control.
+   */
+  markAsSubmitted(controlId: NgrxFormControlId): void;
 
   /**
    * Sets the touched status of the field to `true`.
@@ -40,4 +52,10 @@ export interface FormActionDispatcher<TValue = any> {
    * @param {TValue} value New value.
    */
   setValue(controlId: NgrxFormControlId, value: TValue): void;
+
+  /**
+   * Sets the focus status of the field to `false`.
+   * @param {NgrxFormControlId} controlId Id of the control.
+   */
+  unfocus(controlId: NgrxFormControlId): void;
 }
