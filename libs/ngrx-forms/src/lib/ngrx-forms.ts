@@ -1,28 +1,29 @@
 export * from './actions';
-export { box, isBoxed, unbox, Boxed, Unboxed, UnboxedObject } from './boxing';
+export { box, Boxed, isBoxed, unbox, Unboxed, UnboxedObject } from './boxing';
 export {
-  FormControlValueTypes,
-  NgrxFormControlId,
-  ValidationErrors,
-  KeyValue,
   AbstractControlState,
+  createFormArrayState,
+  createFormControlState,
+  createFormGroupState,
+  FormArrayState,
   FormControlState,
+  FormControlValueTypes,
   FormGroupControls,
   FormGroupState,
-  FormArrayState,
   FormState,
   InferenceWrapper,
   InferredFormState,
+  isFormState,
   isArrayState,
   isGroupState,
-  createFormControlState,
-  createFormGroupState,
-  createFormArrayState,
+  KeyValue,
+  NgrxFormControlId,
+  ValidationErrors,
 } from './state';
 
+export { formArrayReducer } from './array/reducer';
 export { formControlReducer } from './control/reducer';
 export { formGroupReducer } from './group/reducer';
-export { formArrayReducer } from './array/reducer';
 export {
   ActionConstructor,
   CreatedAction,
@@ -33,37 +34,36 @@ export {
   wrapReducerWithFormStateUpdate,
 } from './reducer';
 
+export * from './update-function/add-array-control';
+export * from './update-function/add-group-control';
+export * from './update-function/clear-async-error';
+export * from './update-function/disable';
+export * from './update-function/enable';
+export * from './update-function/focus';
+export * from './update-function/mark-as-dirty';
+export * from './update-function/mark-as-pristine';
+export * from './update-function/mark-as-submitted';
+export * from './update-function/mark-as-touched';
+export * from './update-function/mark-as-unsubmitted';
+export * from './update-function/mark-as-untouched';
+export * from './update-function/move-array-control';
+export * from './update-function/remove-array-control';
+export * from './update-function/remove-group-control';
+export * from './update-function/reset';
+export * from './update-function/set-async-error';
+export * from './update-function/set-errors';
+export * from './update-function/set-user-defined-property';
+export * from './update-function/set-value';
+export * from './update-function/start-async-validation';
+export * from './update-function/swap-array-control';
+export * from './update-function/unfocus';
 export * from './update-function/update-array';
 export * from './update-function/update-group';
 export * from './update-function/update-recursive';
-export * from './update-function/set-value';
-export * from './update-function/set-errors';
 export * from './update-function/validate';
-export * from './update-function/enable';
-export * from './update-function/disable';
-export * from './update-function/mark-as-dirty';
-export * from './update-function/mark-as-pristine';
-export * from './update-function/mark-as-touched';
-export * from './update-function/mark-as-untouched';
-export * from './update-function/mark-as-submitted';
-export * from './update-function/mark-as-unsubmitted';
-export * from './update-function/focus';
-export * from './update-function/unfocus';
-export * from './update-function/add-array-control';
-export * from './update-function/add-group-control';
-export * from './update-function/move-array-control';
-export * from './update-function/swap-array-control';
-export * from './update-function/remove-array-control';
-export * from './update-function/remove-group-control';
-export * from './update-function/set-user-defined-property';
-export * from './update-function/reset';
-export * from './update-function/start-async-validation';
-export * from './update-function/set-async-error';
-export * from './update-function/clear-async-error';
 
 export { compose, ProjectFn, ProjectFn2 } from './update-function/util';
 
-export { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter/view-adapter';
 export { NgrxCheckboxViewAdapter } from './view-adapter/checkbox';
 export { NgrxDefaultViewAdapter } from './view-adapter/default';
 export { NgrxNumberViewAdapter } from './view-adapter/number';
@@ -78,8 +78,9 @@ export { NgrxRadioViewAdapter } from './view-adapter/radio';
 export { NgrxRangeViewAdapter } from './view-adapter/range';
 export { NgrxSelectViewAdapter } from './view-adapter/select';
 export { NgrxSelectMultipleViewAdapter } from './view-adapter/select-multiple';
+export { FormViewAdapter, NGRX_FORM_VIEW_ADAPTER } from './view-adapter/view-adapter';
 
-export { NgrxFormControlDirective, NgrxFormControlValueType, NGRX_UPDATE_ON_TYPE } from './control/directive';
+export { NGRX_UPDATE_ON_TYPE, NgrxFormControlDirective, NgrxFormControlValueType } from './control/directive';
 export { NgrxLocalFormControlDirective } from './control/local-state-directive';
 export { NgrxFormDirective } from './group/directive';
 export { NgrxLocalFormDirective } from './group/local-state-directive';
@@ -88,4 +89,5 @@ export { NgrxValueConverter, NgrxValueConverters } from './control/value-convert
 
 export { NGRX_STATUS_CLASS_NAMES, NgrxStatusCssClassesDirective } from './status-css-classes.directive';
 
+export { BaseFormActionDispatcher, FormActionDispatcher, NGRX_FORM_ACTION_DISPATCHER, NgrxFormActionDispatcher } from './dispatcher';
 export { NgrxFormsModule } from './module';
