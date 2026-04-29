@@ -13,7 +13,7 @@ export class NgrxFormActionDispatcher<TValue = any> extends BaseFormActionDispat
   /**
    * @inheritdoc
    */
-  protected override dispatch(action: Actions<TValue>): void {
+  protected override dispatch(action: Actions<any>): void {
     this.store.dispatch(action);
   }
 }
