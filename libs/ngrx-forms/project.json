@@ -38,6 +38,14 @@
       "options": {
         "browsers": ["ChromiumHeadless"],
         "coverage": true,
+        "include": [
+          "**/*.spec.ts",
+          "**/*.test.ts",
+          "../signals/**/*.spec.ts",
+          "../signals/**/*.test.ts",
+          "../validation/**/*.spec.ts",
+          "../validation/**/*.test.ts"
+        ],
         "watch": false
       }
     },
