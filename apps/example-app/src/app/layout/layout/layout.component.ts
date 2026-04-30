@@ -72,5 +72,10 @@ export class LayoutComponent {
       hint: 'Managing form state and external data locally in the component ',
       label: 'Local State: Advanced',
     },
+    {
+      path: '/signalStore',
+      hint: 'How to integrate ngrx-form-state with @ngrx/signals',
+      label: 'Signal store',
+    },
   ];
 }

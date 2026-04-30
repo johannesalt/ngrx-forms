@@ -15,6 +15,12 @@ import { reducer as materialReducer } from './material-example/material.reducer'
 
 export const routes: Routes = [
   { path: '', redirectTo: '/introduction', pathMatch: 'full' },
+
+  {
+    loadComponent: () => import('./signal-store/signal-store.component').then((m) => m.SignalStoreComponent),
+    path: 'signalStore',
+  },
+
   {
     loadComponent: () => import('./introduction/introduction.component').then((m) => m.IntroductionPageComponent),
     path: 'introduction',
