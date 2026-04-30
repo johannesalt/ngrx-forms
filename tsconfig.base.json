@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "ngrx-form-state": ["libs/ngrx-forms/src/index.ts"],
+      "ngrx-form-state/signals": ["libs/ngrx-forms/signals/src/index.ts"],
       "ngrx-form-state/validation": ["libs/ngrx-forms/validation/src/index.ts"]
     }
   },

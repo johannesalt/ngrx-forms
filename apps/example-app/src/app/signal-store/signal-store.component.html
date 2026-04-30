@@ -1,0 +1,85 @@
+<ngf-form-example exampleName="Signal store" githubLinkOverride="signal-store" [formState]="form()">
+  <p>This example showcases a seamless integration of <b>ngrx-form-state</b> with <b>@ngrx/signals</b>.</p>
+  <form [ngrxFormState]="form()" (submit)="submit()">
+    <mat-form-field>
+      <mat-label>User Name</mat-label>
+      <input [ngrxFormControlState]="form().controls.userName" matInput />
+      @if (form().errors['_userName']?.required) {
+        <mat-error> A user name is required </mat-error>
+      }
+    </mat-form-field>
+
+    <div>
+      <mat-checkbox [ngrxFormControlState]="form().controls.createAccount">Create Account?</mat-checkbox>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Password {{ form().controls.password.isDisabled ? '(disabled)' : '' }}</mat-label>
+      <input matInput type="password" [ngrxFormControlState]="form().controls.password.controls.password" />
+      @if (form().errors['_password']?._password?.required) {
+        <mat-error> A password is required </mat-error>
+      } @else if (form().errors['_password']?._password?.minLength) {
+        <mat-error> Must be at least {{ form().errors['_password']._password.minLength.minLength }} characters long </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Confirm Password {{ form().controls.password.isDisabled ? '(disabled)' : '' }}</mat-label>
+      <input matInput type="password" [ngrxFormControlState]="form().controls.password.controls.confirmPassword" />
+      @if (form().errors['_password']?._confirmPassword?.equalTo) {
+        <mat-error> The passwords do not match </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-radio-group [ngrxFormControlState]="form().controls.sex">
+      <mat-radio-button value="male">Male</mat-radio-button>
+      <mat-radio-button value="female">Female</mat-radio-button>
+    </mat-radio-group>
+
+    <mat-form-field>
+      <mat-label>Favorite Color</mat-label>
+      <mat-select [ngrxFormControlState]="form().controls.favoriteColor">
+        <mat-option value=""></mat-option>
+        <mat-option value="ff0000">Red</mat-option>
+        <mat-option value="00ff00">Green</mat-option>
+        <mat-option value="0000ff">Blue</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div>
+      <mat-label>Hobbies:</mat-label>
+      <mat-selection-list [ngrxFormControlState]="form().controls.hobbies">
+        @for (op of hobbyOptions; track op) {
+          <mat-list-option [value]="op">
+            {{ op }}
+          </mat-list-option>
+        }
+      </mat-selection-list>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Date of Birth</mat-label>
+      <input matInput [matDatepicker]="picker" [ngrxFormControlState]="form().controls.dateOfBirth" [ngrxValueConverter]="dateValueConverter" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <div>
+      <mat-checkbox [ngrxFormControlState]="form().controls.agreeToTermsOfUse">Agree to terms of use </mat-checkbox>
+      @if (form().errors['_agreeToTermsOfUse']?.required && (form().controls.agreeToTermsOfUse.isTouched || form().controls.agreeToTermsOfUse.isSubmitted)) {
+        <mat-error class="terms-of-use-error"> You must agree to the terms of use </mat-error>
+      }
+    </div>
+    <div class="buttons">
+      <button mat-raised-button color="primary" type="submit" [disabled]="store.submitDisabled()">Register</button>
+      <button mat-raised-button type="button" [disabled]="store.resetDisabled()" (click)="reset()">Reset</button>
+    </div>
+  </form>
+  <br />
+  @if (store.submittedValue()) {
+    <div>
+      <p>The form was submitted with the following value:</p>
+      <ngf-prism language="json" [text]="store.submittedValue() | json" />
+    </div>
+  }
+</ngf-form-example>

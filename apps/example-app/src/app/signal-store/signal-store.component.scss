@@ -1,0 +1,19 @@
+ngf-signal-store {
+  display: block;
+
+  mat-form-field,
+  mat-checkbox,
+  mat-radio-group {
+    display: block;
+    width: 100%;
+  }
+
+  mat-radio-group {
+    margin-bottom: 1rem;
+  }
+
+  .buttons {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+}

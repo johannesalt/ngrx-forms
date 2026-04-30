@@ -38,15 +38,29 @@ describe(NgrxFormDirective, () => {
   let dispatcher: FormActionDispatcher;
   beforeEach(() => {
     dispatcher = {
-      focus: vi.fn(() => null),
-      markAsDirty: vi.fn(() => null),
-      markAsPristine: vi.fn(() => null),
-      markAsSubmitted: vi.fn(() => null),
-      markAsTouched: vi.fn(() => null),
-      markAsUntouched: vi.fn(() => null),
-      reset: vi.fn(() => null),
-      setValue: vi.fn(() => null),
-      unfocus: vi.fn(() => null),
+      addArrayControl: vi.fn(),
+      addGroupControl: vi.fn(),
+      clearAsyncError: vi.fn(),
+      disable: vi.fn(),
+      enable: vi.fn(),
+      focus: vi.fn(),
+      markAsDirty: vi.fn(),
+      markAsPristine: vi.fn(),
+      markAsSubmitted: vi.fn(),
+      markAsTouched: vi.fn(),
+      markAsUnsubmitted: vi.fn(),
+      markAsUntouched: vi.fn(),
+      moveArrayControl: vi.fn(),
+      removeArrayControl: vi.fn(),
+      removeGroupControl: vi.fn(),
+      reset: vi.fn(),
+      setAsyncError: vi.fn(),
+      setErrors: vi.fn(),
+      setUserDefinedProperty: vi.fn(),
+      setValue: vi.fn(),
+      startAsyncValidation: vi.fn(),
+      swapArrayControl: vi.fn(),
+      unfocus: vi.fn(),
     };
   });
 
