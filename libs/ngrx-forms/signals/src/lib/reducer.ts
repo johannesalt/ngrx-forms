@@ -2,6 +2,7 @@ import { signalStoreFeature, SignalStoreFeature } from '@ngrx/signals';
 import { EventCreator, on, withReducer } from '@ngrx/signals/events';
 import { Action, ActionReducer } from '@ngrx/store';
 import {
+  AbstractControlState,
   Actions,
   AddArrayControlAction,
   AddGroupControlAction,
@@ -125,7 +126,7 @@ function createReducer<Value>(config: FormConfig<Value>) {
  */
 function createFormReducer<Value>(config: FormConfig<Value>): ActionReducer<FormState<Value>> {
   return (state: FormState<Value> | undefined, action: Action): FormState<Value> => {
-    let newState = formStateReducer(state, action);
+    let newState = formStateReducer(state as AbstractControlState<Value>, action);
     if (state !== newState) {
       newState = config.stateChangeFnArray.reduce((s, f) => f(s), newState);
     }
