@@ -7,7 +7,7 @@ describe('withName', () => {
 
     const initial: FormConfig<number, Name> = { name: 'form' as Name, stateChangeFnArray: [], updateFnArray: [] };
 
-    const config = withName('signalForm')(initial);
+    const config = withName<number, Name>('signalForm')(initial);
     expect(config).not.toBe(initial);
     expect(config.name).toBe('signalForm');
   });
