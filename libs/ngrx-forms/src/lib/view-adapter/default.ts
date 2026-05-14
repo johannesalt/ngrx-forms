@@ -21,7 +21,7 @@ function isAndroid(navigator: Navigator | null | undefined): boolean {
 @Directive({
   host: {
     '[disabled]': 'disabled()',
-    '[id]': 'name()',
+    '[name]': 'name()',
     '[value]': 'viewValue()',
   },
   providers: [

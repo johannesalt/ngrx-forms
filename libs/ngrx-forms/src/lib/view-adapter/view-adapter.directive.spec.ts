@@ -24,15 +24,15 @@ class TestViewAdapter extends NgrxViewAdapter<HTMLInputElement, string, string> 
   imports: [TestViewAdapter],
   template: `
     <input [ngrxFormControlState]="control()" type="text" />
-    <input [ngrxFormControlState]="control()" type="text" id="customId" />
-    <input [ngrxFormControlState]="control()" type="text" [id]="boundId()" />
+    <input [ngrxFormControlState]="control()" type="text" name="customName" />
+    <input [ngrxFormControlState]="control()" type="text" [name]="boundName()" />
   `,
 })
 class TestComponent {
   /**
-   * Unique Id of the HTML input element.
+   * Unique name of the HTML input element.
    */
-  public readonly boundId = input('boundId');
+  public readonly boundName = input('boundName');
 
   /**
    * The control state to bind to the underlying form control.
@@ -68,19 +68,19 @@ describe(NgrxViewAdapter.name, () => {
       viewAdapters = elements.map((element) => element.injector.get<TestViewAdapter>(TestViewAdapter));
     });
 
-    it('should be the ID of the control state if the ID is not set in template', () => {
+    it('should be the ID of the control state if the name is not set in template', () => {
       const viewAdapter = viewAdapters[0];
       expect(viewAdapter.name()).toBe(TEST_ID);
     });
 
     it('should be the ID manually bound in template', () => {
       const viewAdapter = viewAdapters[1];
-      expect(viewAdapter.name()).toBe('customId');
+      expect(viewAdapter.name()).toBe('customName');
     });
 
     it('should be the ID bound via binding', () => {
       const viewAdapter = viewAdapters[2];
-      expect(viewAdapter.name()).toBe(component.boundId());
+      expect(viewAdapter.name()).toBe(component.boundName());
     });
   });
 
@@ -96,19 +96,19 @@ describe(NgrxViewAdapter.name, () => {
       fixture.detectChanges();
     });
 
-    it('should be the ID of the control state if the ID is not set in template', () => {
+    it('should be the ID of the control state if the name is not set in template', () => {
       const viewAdapter = viewAdapters[0];
       expect(viewAdapter.name()).toBe('new ID');
     });
 
     it('should be the ID manually bound in template', () => {
       const viewAdapter = viewAdapters[1];
-      expect(viewAdapter.name()).toBe('customId');
+      expect(viewAdapter.name()).toBe('customName');
     });
 
     it('should be the ID bound via binding', () => {
       const viewAdapter = viewAdapters[2];
-      expect(viewAdapter.name()).toBe(component.boundId());
+      expect(viewAdapter.name()).toBe(component.boundName());
     });
   });
 
