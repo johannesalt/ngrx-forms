@@ -6,7 +6,7 @@ import { NgrxViewAdapter } from './view-adapter.directive';
   host: {
     '[checked]': 'viewValue()',
     '[disabled]': 'disabled()',
-    '[id]': 'name()',
+    '[name]': 'name()',
   },
   providers: [
     {

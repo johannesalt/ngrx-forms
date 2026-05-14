@@ -20,7 +20,7 @@ export abstract class NgrxViewAdapter<TElement extends HTMLElement, TState, TVie
   /**
    * Unique Id of the HTML element.
    */
-  public readonly id = input<string | null | undefined>(undefined);
+  public readonly nameInput = input<string | null | undefined>(undefined, { alias: 'name' });
 
   /**
    * A signal indicating whether the field is currently is disabled.
@@ -31,13 +31,13 @@ export abstract class NgrxViewAdapter<TElement extends HTMLElement, TState, TVie
    * A signal containing the unique name of the field.
    */
   public readonly name = computed(() => {
-    const id = this.id();
-    if (id) {
-      return id;
+    const name = this.nameInput();
+    if (name) {
+      return name;
     }
 
-    const { id: name } = this.control();
-    return name;
+    const { id } = this.control();
+    return id;
   });
 
   /**

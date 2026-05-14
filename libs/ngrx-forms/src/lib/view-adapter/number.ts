@@ -5,7 +5,7 @@ import { NgrxViewAdapter } from './view-adapter.directive';
 @Directive({
   host: {
     '[disabled]': 'disabled()',
-    '[id]': 'name()',
+    '[name]': 'name()',
     '[value]': 'viewValue()',
   },
   providers: [
