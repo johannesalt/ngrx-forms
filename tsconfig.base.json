@@ -13,12 +13,14 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "baseUrl": ".",
     "paths": {
-      "ngrx-form-state": ["libs/ngrx-forms/src/index.ts"],
-      "ngrx-form-state/signals": ["libs/ngrx-forms/signals/src/index.ts"],
-      "ngrx-form-state/validation": ["libs/ngrx-forms/validation/src/index.ts"]
-    }
+      "ngrx-form-state": ["./libs/ngrx-forms/src/index.ts"],
+      "ngrx-form-state/signals": ["./libs/ngrx-forms/signals/src/index.ts"],
+      "ngrx-form-state/validation": ["./libs/ngrx-forms/validation/src/index.ts"]
+    },
+    "strict": false,
+    "noUncheckedSideEffectImports": false,
+    "types": ["*"]
   },
   "exclude": ["node_modules", "tmp"]
 }

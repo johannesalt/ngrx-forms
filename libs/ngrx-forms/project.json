@@ -16,6 +16,7 @@
     "build": {
       "executor": "@nx/angular:package",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "defaultConfiguration": "production",
       "options": {
         "project": "libs/ngrx-forms/ng-package.json",
         "tsConfig": "libs/ngrx-forms/tsconfig.lib.json"
@@ -25,8 +26,7 @@
           "tsConfig": "libs/ngrx-forms/tsconfig.lib.prod.json"
         },
         "development": {}
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "nx-release-publish": {
       "options": {
@@ -50,7 +50,17 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
     }
   }
 }
