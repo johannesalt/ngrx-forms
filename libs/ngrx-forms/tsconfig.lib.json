@@ -25,5 +25,13 @@
     "**/*.spec.jsx",
     "test-setup.ts"
   ],
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "warning",
+        "optionalChainNotNullable": "warning"
+      }
+    }
+  }
 }
